@@ -89,6 +89,7 @@ public class Projet extends Model {
     }
     @Override
     public String toString() {
-        return nom;
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return this.nom+"            "+df.format(this.dateDebut)+"-"+df.format(this.dateFinReelle);
     }
 }

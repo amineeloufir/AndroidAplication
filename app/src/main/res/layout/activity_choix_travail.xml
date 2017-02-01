@@ -11,12 +11,12 @@
     tools:context="miage.fr.gestionprojet.AvancementRessources.ActivityChoixTravail">
 
     <TextView
-        android:text="DOMAINE"
+        android:text="PROJET"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/textViewDomaine"
+        android:id="@+id/textViewNomProjetTrav"
         android:textAlignment="center" />
 
     <ListView

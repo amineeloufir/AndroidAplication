@@ -13,6 +13,9 @@ import java.util.List;
 @Table(name="Travail")
 public class Travail extends Model {
 
+    @Column(name="mesure_travail")
+    private String mesure;
+
     @Column(name="nb_unites_cibles")
     private int nbUnitesCibles;
 
@@ -121,6 +124,14 @@ public class Travail extends Model {
         this.chargeParSemaine = chargeParSemaine;
     }
 
+    public String getMesure() {
+        return mesure;
+    }
+
+    public void setMesure(String mesure) {
+        this.mesure = mesure;
+    }
+
     public Domaine getDomaine() {
         return domaine;
     }
@@ -129,5 +140,8 @@ public class Travail extends Model {
         this.domaine = domaine;
     }
 
-
+    @Override
+    public String toString() {
+        return this.mesure;
+    }
 }
