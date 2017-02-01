@@ -33,8 +33,11 @@ public class MainActivity  extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActiveAndroid.initialize(this);
-        insererDesProjets();
-
+        try {
+            insererDesProjets();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
 
         setContentView(R.layout.activity_main);
@@ -72,7 +75,7 @@ public class MainActivity  extends Activity {
 
 
 
-    private void insererDesProjets(){
+    private void insererDesProjets() throws ParseException {
         new Delete().from(Projet.class).execute();
         new Delete().from(Domaine.class).execute();
         new Delete().from(Travail.class).execute();
@@ -96,11 +99,16 @@ public class MainActivity  extends Activity {
         dom.save();
 
         Travail travail = new Travail();
-        travail.setChargeParSemaine(12);
+        travail.setMesure("travailTest1");
+        travail.setNbUnitesCibles(92);
+        travail.setTempsEstimeParUnite(10);
+        travail.setDateDebut(df.parse("12/02/2017"));
+        travail.setDateFinInitiale(df.parse("12/02/2017"));
+        travail.setDateFinModifiee(df.parse("00/00/0000"));
+        travail.setTempsTotalEstime(92*10);
+        travail.setNbSemaine(20);
+        travail.setChargeParSemaine(10);
         travail.setDomaine(dom);
-        travail.setNbUnitesCibles(20);
-        travail.setNbSemaine(5);
-        travail.setMesure("testTravail1");
         travail.save();
 
         Releve rel = new Releve();
@@ -110,11 +118,16 @@ public class MainActivity  extends Activity {
         rel.setTravail(travail);
 
         travail = new Travail();
+        travail.setMesure("travailTest2");
+        travail.setNbUnitesCibles(92);
+        travail.setTempsEstimeParUnite(10);
+        travail.setDateDebut(df.parse("12/02/2017"));
+        travail.setDateFinInitiale(df.parse("12/02/2017"));
+        travail.setDateFinModifiee(df.parse("00/00/0000"));
+        travail.setTempsTotalEstime(92*10);
+        travail.setNbSemaine(20);
         travail.setChargeParSemaine(10);
         travail.setDomaine(dom);
-        travail.setNbUnitesCibles(25);
-        travail.setNbSemaine(2);
-        travail.setMesure("testTravail2");
         travail.save();
 
         rel = new Releve();
@@ -133,11 +146,16 @@ public class MainActivity  extends Activity {
         dom.save();
 
         travail = new Travail();
-        travail.setChargeParSemaine(12);
+        travail.setMesure("travailTest3");
+        travail.setNbUnitesCibles(92);
+        travail.setTempsEstimeParUnite(10);
+        travail.setDateDebut(df.parse("12/02/2017"));
+        travail.setDateFinInitiale(df.parse("12/02/2017"));
+        travail.setDateFinModifiee(df.parse("00/00/0000"));
+        travail.setTempsTotalEstime(92*10);
+        travail.setNbSemaine(20);
+        travail.setChargeParSemaine(10);
         travail.setDomaine(dom);
-        travail.setNbUnitesCibles(20);
-        travail.setNbSemaine(5);
-        travail.setMesure("testTravail3");
         travail.save();
 
         rel = new Releve();
@@ -163,11 +181,16 @@ public class MainActivity  extends Activity {
         rel.save();
 
         travail = new Travail();
+        travail.setMesure("travailTest5");
+        travail.setNbUnitesCibles(92);
+        travail.setTempsEstimeParUnite(10);
+        travail.setDateDebut(df.parse("12/02/2017"));
+        travail.setDateFinInitiale(df.parse("12/02/2017"));
+        travail.setDateFinModifiee(df.parse("00/00/0000"));
+        travail.setTempsTotalEstime(92*10);
+        travail.setNbSemaine(20);
         travail.setChargeParSemaine(10);
         travail.setDomaine(dom);
-        travail.setNbUnitesCibles(25);
-        travail.setNbSemaine(2);
-        travail.setMesure("testTravail5");
         travail.save();
 
 
