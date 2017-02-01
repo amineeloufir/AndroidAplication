@@ -10,20 +10,28 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="miage.fr.gestionprojet.AvancementRessources.ActivityChoixTravail">
 
-    <TextView
-        android:text="PROJET"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/textViewNomProjetTrav"
-        android:textAlignment="center" />
+        android:layout_height="match_parent">
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewDomaine"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:id="@+id/listViewTravail" />
+        <TextView
+            android:text="PROJET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/textViewNomProjetTrav"
+            android:textAlignment="center" />
+
+        <ListView
+            android:id="@+id/listViewTravail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/textViewNomProjetTrav"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="18dp" />
+
+    </LinearLayout>
+
 </RelativeLayout>

@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">GestionProjet</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="app_name">Big Follow</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu_trie_domaine">Trier par Domaine</string>
+    <string name="menu_trie_date">Trier par Date</string>
+    <string name="menu_trie_criticite">Trier par Urgence</string>
+
 </resources>

@@ -31,7 +31,7 @@ public class DaoReleve {
     public Releve getDernierReleveByTravail (Travail travail){
         List<Releve> lst=  new Select()
                 .from(Releve.class)
-                .where("travail = ?",travail)
+                .where("travail = ?",travail.getId())
                 .orderBy("date_de_releve DESC")
                 .execute();
 

@@ -140,6 +140,10 @@ public class Travail extends Model {
         this.domaine = domaine;
     }
 
+    public List<Releve> getLstReleve(){
+        return getMany(Releve.class,"travail");
+    }
+
     @Override
     public String toString() {
         return this.mesure;

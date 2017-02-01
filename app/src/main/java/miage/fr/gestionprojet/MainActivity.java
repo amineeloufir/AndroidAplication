@@ -3,6 +3,8 @@ package miage.fr.gestionprojet;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,7 +26,7 @@ import miage.fr.gestionprojet.models.Releve;
 import miage.fr.gestionprojet.models.Travail;
 import miage.fr.gestionprojet.models.dao.DaoProjet;
 
-public class MainActivity  extends Activity {
+public class MainActivity  extends AppCompatActivity {
 
     private ListView liste = null;
     private List<Projet> lstProjets = null;
@@ -33,6 +35,8 @@ public class MainActivity  extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActiveAndroid.initialize(this);
+
+        // On insère une liste de projet test (à supprimer dans la version défnitive)
         try {
             insererDesProjets();
         } catch (ParseException e) {
@@ -42,9 +46,12 @@ public class MainActivity  extends Activity {
 
         setContentView(R.layout.activity_main);
 
+        //on récupère la liste des projet dont la date de fin n'est passé
         DaoProjet daoProjet = new DaoProjet();
         lstProjets = daoProjet.getProjetEnCours(new Date());
         liste = (ListView) findViewById(R.id.listViewProjet);
+
+        // si le nombre de projet en cours est supérieur à 1 on affiche une liste
         if(lstProjets.size()>1) {
             final ArrayAdapter<Projet> adapter = new ArrayAdapter<Projet>(this, android.R.layout.simple_list_item_1, lstProjets);
             liste.setAdapter(adapter);
@@ -58,11 +65,15 @@ public class MainActivity  extends Activity {
                 }
             });
         }else{
+
+            // sinon, on affiche directement les détails du projet en cours
             if(lstProjets.size()==1) {
                 Intent intent = new Intent(MainActivity.this, ActivityDetailsProjet.class);
                 intent.putExtra(EXTRA_PROJET, (lstProjets.get(0).getId()));
                 startActivity(intent);
             }else{
+
+                // sinon on affiche un message indiquand qu'il n'y a aucun projet en cours
                 ArrayList<String> list = new ArrayList<>(1);
                 list.add("Aucun projet en cours");
                 final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,list);
@@ -71,6 +82,7 @@ public class MainActivity  extends Activity {
         }
 
     }
+
 
 
 
@@ -116,6 +128,7 @@ public class MainActivity  extends Activity {
         rel.setNbUnitesProduites(10);
         rel.setNbSemainesPassees(2);
         rel.setTravail(travail);
+        rel.save();
 
         travail = new Travail();
         travail.setMesure("travailTest2");

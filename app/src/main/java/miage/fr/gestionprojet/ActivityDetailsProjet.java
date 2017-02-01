@@ -38,18 +38,23 @@ public class ActivityDetailsProjet extends AppCompatActivity {
 
         Intent intent = getIntent();
         long id = intent.getLongExtra(MainActivity.EXTRA_PROJET,0);
+        // s'il n'y pas d'erreur, un projet est sélectionné
         if (id > 0) {
+            // on récupère toutes les données de ce projet
             proj = Model.load(Projet.class, id);
 
+            // on récupère les différents élements de la vue
             TextView txtNomProj = (TextView) findViewById(R.id.textViewNomProjet);
             TextView txtDescription = (TextView) findViewById(R.id.textViewDescription);
             TextView txtDatesProjet = (TextView) findViewById(R.id.textViewDtProjet);
 
+            // on alimente ces différents éléments
             txtNomProj.setText(proj.getNom());
             txtDescription.setText(proj.getDescription());
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             txtDatesProjet.setText(df.format(proj.getDateDebut()) + "-" + df.format(proj.getDateFinInitiale()));
 
+            // on constitue une liste d'action
             liste = (ListView) findViewById(R.id.listViewAction);
             lstActions = new ArrayList<String>();
             lstActions.add(RESSOURCES);
@@ -62,6 +67,7 @@ public class ActivityDetailsProjet extends AppCompatActivity {
             final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lstActions);
             liste.setAdapter(adapter);
 
+
             liste.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -69,6 +75,8 @@ public class ActivityDetailsProjet extends AppCompatActivity {
                     switch (position) {
                         case 0:
                             intent = new Intent(ActivityDetailsProjet.this, ActivityChoixTravail.class);
+                            break;
+                        default:
                             break;
 
                     }
