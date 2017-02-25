@@ -5,6 +5,7 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +23,8 @@ public class Domaine extends Model {
 
     @Column(name="projet")
     private Projet projet;
+
+    private ArrayList<Action> lstActions;
 
     public Domaine(String nom, String description, Projet projet) {
         super();
@@ -58,8 +61,9 @@ public class Domaine extends Model {
         this.projet = projet;
     }
 
-    public List<Travail> getLstTravail() {
-        return getMany(Travail.class, "domaine");
+    public ArrayList<Action> getLstActions() {
+        this.lstActions = getMany(Action.class, "domaine");
+        return this.lstActions;
     }
 
     @Override
