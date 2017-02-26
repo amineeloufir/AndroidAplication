@@ -7,7 +7,6 @@ package miage.fr.gestionprojet;
 public class Calcul {
 
     public static int calculerPourcentage(double valeurReleve, double valeurCible){
-        int result = (int) ((valeurReleve/valeurCible)*100);
-        return result;
+        return (int) ((valeurReleve/valeurCible)*100);
     }
 }
