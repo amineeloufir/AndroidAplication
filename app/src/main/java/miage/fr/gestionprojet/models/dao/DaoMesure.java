@@ -18,11 +18,12 @@ public class DaoMesure {
                 new Select()
                 .from(Mesure.class)
                 .where("action=?", saisieCharge.getId())
+                .orderBy("dt_mesure DESC")
                 .execute();
         if(lstMesures.size()>0){
             return  lstMesures.get(0);
         }else{
-            return null;
+            return new Mesure();
         }
     }
 }

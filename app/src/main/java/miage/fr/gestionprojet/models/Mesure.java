@@ -4,7 +4,7 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * Created by Audrey on 25/02/2017.

@@ -17,12 +17,17 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import miage.fr.gestionprojet.R;
+import miage.fr.gestionprojet.models.Action;
 import miage.fr.gestionprojet.models.Domaine;
+import miage.fr.gestionprojet.models.Mesure;
 import miage.fr.gestionprojet.models.Projet;
+import miage.fr.gestionprojet.models.Ressource;
+import miage.fr.gestionprojet.models.SaisieCharge;
 import miage.fr.gestionprojet.models.dao.DaoProjet;
 
 public class MainActivity  extends AppCompatActivity {
@@ -34,7 +39,13 @@ public class MainActivity  extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActiveAndroid.initialize(this);
-        
+
+
+        try {
+            insererDonneesTests();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
 
         setContentView(R.layout.activity_main);
@@ -73,6 +84,92 @@ public class MainActivity  extends AppCompatActivity {
                 liste.setAdapter(adapter);
             }
         }
+
+    }
+
+    public void insererDonneesTests() throws ParseException {
+
+        new Delete().from(Projet.class).execute();
+        new Delete().from(Domaine.class).execute();
+        new Delete().from(Action.class).execute();
+        new Delete().from(SaisieCharge.class).execute();
+        new Delete().from(Ressource.class).execute();
+        new Delete().from(Mesure.class).execute();
+
+        Projet proj = new Projet();
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        proj.setDateDebut(df.parse("12/08/2016"));
+        proj.setDateFinInitiale(df.parse("12/08/2017"));
+        proj.setDescription("test test test");
+        proj.setNom("Test");
+        proj.save();
+
+        Domaine dom = new Domaine();
+        dom.setNom("PRJ - PROJET");
+        dom.setProjet(proj);
+        dom.setDescription("Ceci est un test");
+        dom.save();
+
+        dom = new Domaine();
+        dom.setNom("GC - GESTION COMMERCIALE");
+        dom.setProjet(proj);
+        dom.setDescription("Ceci est un deuxième test");
+        dom.save();
+
+        Ressource res = new Ressource();
+        res.setNom("Mercereau");
+        res.setPrenom("Nicolas");
+        res.setEmail("nm@vif.fr");
+        res.setEntreprise("vif");
+        res.setInitiales("NM");
+        res.setTelephoneFixe("0000000000");
+        res.setTelephoneMobile("0000000000");
+        res.save();
+
+        SaisieCharge saisie = new SaisieCharge();
+        saisie.setDomaine(dom);
+        saisie.setCode("SA - Article UL de type PF");
+        saisie.setTypeTravail("Saisie");
+        saisie.setNbUnitesCibles(92);
+        saisie.setHeureParUnite(2);
+        saisie.setApparaitrePlanning(true);
+        saisie.setOrdre(1);
+        saisie.setRespOeu(res);
+        saisie.setRespOuv(res);
+        saisie.setDtDeb(df.parse("02/02/2017"));
+        saisie.setDtFinPrevue(df.parse("15/04/2017"));
+        saisie.save();
+
+        Mesure mesure = new Mesure();
+        mesure.setAction(saisie);
+        mesure.setDtMesure(df.parse("20/02/2017"));
+        mesure.setNbUnitesMesures(50);
+        mesure.save();
+
+        mesure = new Mesure();
+        mesure.setAction(saisie);
+        mesure.setDtMesure(df.parse("27/02/2017"));
+        mesure.setNbUnitesMesures(65);
+        mesure.save();
+
+
+        saisie = new SaisieCharge();
+        saisie.setDomaine(dom);
+        saisie.setCode("SA - Clients");
+        saisie.setTypeTravail("Saisie");
+        saisie.setNbUnitesCibles(50);
+        saisie.setHeureParUnite(2);
+        saisie.setApparaitrePlanning(true);
+        saisie.setOrdre(1);
+        saisie.setRespOeu(res);
+        saisie.setRespOuv(res);
+        saisie.setDtDeb(df.parse("10/02/2017"));
+        saisie.setDtFinPrevue(df.parse("24/04/2017"));
+        saisie.save();
+
+
+
+
 
     }
 
