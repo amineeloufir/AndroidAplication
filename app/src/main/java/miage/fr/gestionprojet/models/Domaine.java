@@ -26,6 +26,8 @@ public class Domaine extends Model {
 
     private ArrayList<Action> lstActions;
 
+    private ArrayList<SaisieCharge> lstSaisieCharge;
+
     public Domaine(String nom, String description, Projet projet) {
         super();
         this.nom = nom;
@@ -64,6 +66,11 @@ public class Domaine extends Model {
     public ArrayList<Action> getLstActions() {
         this.lstActions = getMany(Action.class, "domaine");
         return this.lstActions;
+    }
+
+    public ArrayList<SaisieCharge> getLstSaisieCharge() {
+        this.lstSaisieCharge = getMany(SaisieCharge.class, "domaine");
+        return this.lstSaisieCharge;
     }
 
     @Override

@@ -16,15 +16,39 @@ public class SaisieCharge extends Action {
 
     @Column(name="heure_par_unite")
     private float heureParUnite;
+
+    // Les attributs suivants ne sont pas chargé à partir des fichiers, ils sont calculés et doivent être mis à jour à chaque nouvelle mesure enregistrée
+
+    @Column(name="charge_totale_estime_en_heure")
     private float chargeTotaleEstimeeEnHeure;
+
+    @Column(name="nb_semaines")
     private int nbSemaines;
+
+    @Column(name="charge_estime_par_semaine")
     private float chargeEstimeeParSemaine;
+
+    @Column(name="charge_restante_estime_en_heure")
     private float chargeRestanteEstimeeEnHeure;
+
+    @Column(name="nb_semaine_passee")
     private int nbSemainePassee;
+
+    @Column(name="nb_semaines_restantes")
     private int nbSemainesRestantes;
+
+    @Column(name="charge_restante_par_semaine")
     private float chargeRestanteParSemaine;
+
+    @Column(name="temps_passe_par_semaine")
     private float tempsPasseParSemaine;
+
+    @Column(name="prct_charge_faite_par_semaine_par_cahre_estimee")
     private float prctChargeFaiteParSemaineParChargeEstimee;
+
+
+
+
     private ArrayList<Mesure> lstMesures;
 
     public SaisieCharge() {

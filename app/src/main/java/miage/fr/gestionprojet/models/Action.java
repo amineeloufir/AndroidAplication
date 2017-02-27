@@ -29,6 +29,9 @@ public class Action extends Model{
     @Column(name="code")
     private String code;
 
+    @Column(name="domaine")
+    private Domaine domaine;
+
     @Column(name="apparaitr_planing")
     private boolean apparaitrePlanning;
 
@@ -184,5 +187,11 @@ public class Action extends Model{
         this.dtFinReelle = dtFinReelle;
     }
 
+    public Domaine getDomaine() {
+        return domaine;
+    }
 
+    public void setDomaine(Domaine domaine) {
+        this.domaine = domaine;
+    }
 }
