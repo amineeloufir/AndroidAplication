@@ -1,7 +1,7 @@
-package miage.fr.gestionprojet;
+package miage.fr.gestionprojet.outils;
 
 /**
- * Created by Audrey on 01/02/2017.
+ * Created by Audrey on 27/02/2017.
  */
 
 public class Calcul {

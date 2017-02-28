@@ -12,7 +12,7 @@
 
         <ImageView
             android:contentDescription="row"
-            android:id="@+id/icon_travail"
+            android:id="@+id/icon_domaine"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginLeft="6dp"
@@ -38,7 +38,7 @@
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:id="@+id/progress_bar_travail_crit"
+        android:id="@+id/progress_bar_saisiecharge_crit"
         android:layout_height="20dp" />
 
 </LinearLayout>

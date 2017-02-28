@@ -15,37 +15,37 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import java.util.List;
 
-import miage.fr.gestionprojet.AvancementRessources.ActivityChoixTravail;
-import miage.fr.gestionprojet.Calcul;
+import miage.fr.gestionprojet.models.Mesure;
+import miage.fr.gestionprojet.models.dao.DaoMesure;
+import miage.fr.gestionprojet.vues.ActivityIndicateursSaisieCharge;
+import miage.fr.gestionprojet.outils.Calcul;
 import miage.fr.gestionprojet.R;
-import miage.fr.gestionprojet.models.Releve;
-import miage.fr.gestionprojet.models.Travail;
-import miage.fr.gestionprojet.models.dao.DaoReleve;
+import miage.fr.gestionprojet.models.SaisieCharge;
 
 /**
  * Created by Audrey on 01/02/2017.
  */
 
-public class AdapterTravail extends ArrayAdapter<Travail>{
+public class AdapterSaisieCharge extends ArrayAdapter<SaisieCharge>{
 
-    private List<Travail> lstTravaux;
-    private ActivityChoixTravail activity;
+    private List<SaisieCharge> lstSaisieCharge;
+    private ActivityIndicateursSaisieCharge activity;
 
-    public AdapterTravail(ActivityChoixTravail context, int resource, List<Travail> objects) {
+    public AdapterSaisieCharge(ActivityIndicateursSaisieCharge context, int resource, List<SaisieCharge> objects) {
         super(context, resource, objects);
         this.activity = context;
-        this.lstTravaux = objects;
+        this.lstSaisieCharge = objects;
 
     }
 
     @Override
     public int getCount() {
-        return lstTravaux.size();
+        return lstSaisieCharge.size();
     }
 
     @Override
-    public Travail getItem(int position) {
-        return lstTravaux.get(position);
+    public SaisieCharge getItem(int position) {
+        return lstSaisieCharge.get(position);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class AdapterTravail extends ArrayAdapter<Travail>{
 
         // on récupère la vue à laquelle doit être ajouter l'image
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.list_view_layout_travail, parent, false);
+            convertView = inflater.inflate(R.layout.list_view_layout_saisie_charge, parent, false);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         } else {
@@ -84,9 +84,9 @@ public class AdapterTravail extends ArrayAdapter<Travail>{
         holder.imageView.setImageDrawable(drawable);
 
         // on affiche l'état d'avancment du travail
-        DaoReleve dao = new DaoReleve();
-        Releve rel = dao.getDernierReleveByTravail(getItem(position));
-        holder.avancement.setProgress(Calcul.calculerPourcentage(rel.getNbUnitesProduites(),getItem(position).getNbUnitesCibles()));
+        DaoMesure dao = new DaoMesure();
+        Mesure mesure = dao.getLastMesureBySaisieCharge(getItem(position));
+        holder.avancement.setProgress(Calcul.calculerPourcentage(mesure.getNbUnitesMesures(),getItem(position).getNbUnitesCibles()));
 
         return convertView;
     }
@@ -97,9 +97,9 @@ public class AdapterTravail extends ArrayAdapter<Travail>{
         private ProgressBar avancement;
 
         public ViewHolder(View v) {
-            imageView = (ImageView) v.findViewById(R.id.icon_travail);
+            imageView = (ImageView) v.findViewById(R.id.icon_domaine);
             travail = (TextView) v.findViewById(R.id.label);
-            avancement = (ProgressBar) v.findViewById(R.id.progress_bar_travail_crit);
+            avancement = (ProgressBar) v.findViewById(R.id.progress_bar_saisiecharge_crit);
         }
     }
 

@@ -13,24 +13,10 @@ import miage.fr.gestionprojet.models.Projet;
 
 public class DaoProjet {
 
-    public void insert(Projet proj) {
-        proj.save();
-
-    }
-
-    public void delete(Projet proj) {
-        proj.delete();
-
-    }
-
-    public void update(Projet proj) {
-        proj.save();
-    }
-
     public List<Projet> getProjetEnCours(Date dateDuJour){
         return new Select()
                 .from(Projet.class)
-                .where("date_fin_reelle>?", dateDuJour.getTime())
+                .where("date_fin_initiale>? or date_fin_reelle>?", dateDuJour.getTime(),dateDuJour.getTime())
                 .execute();
     }
 }

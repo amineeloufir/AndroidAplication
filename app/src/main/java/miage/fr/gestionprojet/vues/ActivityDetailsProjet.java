@@ -1,4 +1,4 @@
-package miage.fr.gestionprojet;
+package miage.fr.gestionprojet.vues;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +15,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import miage.fr.gestionprojet.AvancementRessources.ActivityChoixTravail;
+import miage.fr.gestionprojet.R;
 import miage.fr.gestionprojet.models.Projet;
 
 public class ActivityDetailsProjet extends AppCompatActivity {
@@ -74,9 +74,10 @@ public class ActivityDetailsProjet extends AppCompatActivity {
                     Intent intent = new Intent();
                     switch (position) {
                         case 0:
-                            intent = new Intent(ActivityDetailsProjet.this, ActivityChoixTravail.class);
+                            intent = new Intent(ActivityDetailsProjet.this, ActivityIndicateursSaisieCharge.class);
                             break;
                         default:
+                            System.out.println("Non instancié pour le moment");
                             break;
 
                     }
