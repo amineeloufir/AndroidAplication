@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -25,6 +27,8 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 
     private SaisieCharge saisieCharge = null;
     private TextView txtTravail;
+    public final static String EXTRA_INITIAL = "initial";
+    public String initialUtilisateur =null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,9 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 
         Intent intent = getIntent();
         long id = intent.getLongExtra(ActivityIndicateursSaisieCharge.SAISIECHARGE,0);
+        initialUtilisateur = intent.getStringExtra(ActivityIndicateursSaisieCharge.EXTRA_INITIAL);
+
+
         if(id > 0){
             saisieCharge = Model.load(SaisieCharge.class, id);
             DaoMesure dao = new DaoMesure();
@@ -60,5 +67,22 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 
     }
 
+    //ajout du menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.initial_utilisateur, menu);
+        menu.findItem(R.id.initial_utilisateur).setTitle(initialUtilisateur);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.initial_utilisateur) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 }

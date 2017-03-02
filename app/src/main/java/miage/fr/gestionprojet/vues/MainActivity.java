@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -34,12 +35,17 @@ public class MainActivity  extends AppCompatActivity {
 
     private ListView liste = null;
     private List<Projet> lstProjets = null;
+    private String initialUtilisateur = null;
     public final static String EXTRA_PROJET = "projetChoisi";
+    public final static String EXTRA_INITIAL = "initial";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActiveAndroid.initialize(this);
 
+        Intent intentInitial = getIntent();
+        initialUtilisateur = intentInitial.getStringExtra(ActivityGestionDesInitials.EXTRA_INITIAL);
 
         try {
             insererDonneesTests();
@@ -65,6 +71,8 @@ public class MainActivity  extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                     Intent intent = new Intent(MainActivity.this, ActivityDetailsProjet.class);
                     intent.putExtra(EXTRA_PROJET, (lstProjets.get(position).getId()));
+                    intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
+
                     startActivity(intent);
                 }
             });
@@ -74,6 +82,7 @@ public class MainActivity  extends AppCompatActivity {
             if(lstProjets.size()==1) {
                 Intent intent = new Intent(MainActivity.this, ActivityDetailsProjet.class);
                 intent.putExtra(EXTRA_PROJET, (lstProjets.get(0).getId()));
+                intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
                 startActivity(intent);
             }else{
 
@@ -167,16 +176,7 @@ public class MainActivity  extends AppCompatActivity {
         saisie.setDtFinPrevue(df.parse("24/04/2017"));
         saisie.save();
 
-
-
-
-
     }
-
-
-
-
-
 
 
 }
