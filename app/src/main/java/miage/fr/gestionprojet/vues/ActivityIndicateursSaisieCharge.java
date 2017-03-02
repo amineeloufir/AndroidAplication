@@ -27,6 +27,9 @@ public class ActivityIndicateursSaisieCharge extends AppCompatActivity {
     private List<SaisieCharge> lstSaisieCharge;
     private ListView liste;
     public static final String SAISIECHARGE = "saisie charge";
+    public final static String EXTRA_INITIAL = "initial";
+    public String initialUtilisateur =null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +38,8 @@ public class ActivityIndicateursSaisieCharge extends AppCompatActivity {
         //on récupère le projet sélectionné
         long id =  intent.getLongExtra(ActivityDetailsProjet.PROJET,0);
         liste = (ListView) findViewById(R.id.listViewSaisieCharge);
+        initialUtilisateur = intent.getStringExtra(ActivityDetailsProjet.EXTRA_INITIAL);
+
         if (id > 0 ) {
             // on récupère les données associées à ce projet
             proj = Model.load(Projet.class, id);
@@ -54,6 +59,7 @@ public class ActivityIndicateursSaisieCharge extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent(ActivityIndicateursSaisieCharge.this, ActivityDetailsIndicateursSaisieCharge.class);
                     intent.putExtra(SAISIECHARGE, lstSaisieCharge.get(position).getId());
+                    intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
                     startActivity(intent);
                 }
             });
@@ -69,6 +75,8 @@ public class ActivityIndicateursSaisieCharge extends AppCompatActivity {
     //ajout du menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.initial_utilisateur, menu);
+        menu.findItem(R.id.initial_utilisateur).setTitle(initialUtilisateur);
         getMenuInflater().inflate(R.menu.activity_indicateurs_saisie_charge, menu);
         return true;
     }

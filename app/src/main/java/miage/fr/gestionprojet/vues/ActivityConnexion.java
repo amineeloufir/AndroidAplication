@@ -252,7 +252,7 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
             is_signInBtn_clicked = true;
             progress_dialog.show();
             resolveSignInError();
-            Intent intent = new Intent(ActivityConnexion.this,MainActivity.class);
+            Intent intent = new Intent(ActivityConnexion.this,ActivityGestionDesInitials.class);
             startActivity(intent);
 
         }
@@ -434,5 +434,7 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
             bitmap_img.setImageBitmap(result_img);
         }
     }
+
+
 
 }

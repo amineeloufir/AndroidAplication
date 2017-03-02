@@ -3,6 +3,8 @@ package miage.fr.gestionprojet.vues;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,8 +31,11 @@ public class ActivityDetailsProjet extends AppCompatActivity {
     private final static String JALONS = "Suivi des jalons";
     public final static String PROJET = "projet visu";
     private ListView liste = null;
+    public final static String EXTRA_INITIAL = "initial";
     private ArrayList <String> lstActions;
     private Projet proj;
+    public String initialUtilisateur =null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +43,8 @@ public class ActivityDetailsProjet extends AppCompatActivity {
 
         Intent intent = getIntent();
         long id = intent.getLongExtra(MainActivity.EXTRA_PROJET,0);
+        initialUtilisateur = intent.getStringExtra(MainActivity.EXTRA_INITIAL);
+
         // s'il n'y pas d'erreur, un projet est sélectionné
         if (id > 0) {
             // on récupère toutes les données de ce projet
@@ -75,6 +82,7 @@ public class ActivityDetailsProjet extends AppCompatActivity {
                     switch (position) {
                         case 0:
                             intent = new Intent(ActivityDetailsProjet.this, ActivityIndicateursSaisieCharge.class);
+                            intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
                             break;
                         default:
                             System.out.println("Non instancié pour le moment");
@@ -89,4 +97,23 @@ public class ActivityDetailsProjet extends AppCompatActivity {
         }
 
     }
+
+    //ajout du menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.initial_utilisateur, menu);
+        menu.findItem(R.id.initial_utilisateur).setTitle(initialUtilisateur);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.initial_utilisateur) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

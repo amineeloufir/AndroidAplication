@@ -20,16 +20,17 @@
             android:name="AA_DB_VERSION"
             android:value="1" />
 
-        <activity android:name=".vues.MainActivity">
+        <activity android:name=".vues.ActivityConnexion">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".vues.ActivityConnexion" />
+        <activity android:name=".vues.MainActivity" />
         <activity android:name=".vues.ActivityDetailsProjet" />
         <activity android:name=".vues.ActivityIndicateursSaisieCharge" />
         <activity android:name=".vues.ActivityDetailsIndicateursSaisieCharge"></activity>
+        <activity android:name=".vues.ActivityGestionDesInitials"></activity>
     </application>
 
 </manifest>
