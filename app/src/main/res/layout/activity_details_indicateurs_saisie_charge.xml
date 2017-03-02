@@ -47,7 +47,14 @@
                     android:layout_alignParentEnd="true"
                     android:id="@+id/textViewDateSaisieCharge"
                     android:layout_weight="1" />
+
             </LinearLayout>
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewDescriptionDomaine" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -55,7 +62,7 @@
 
                 <com.mikhaellopez.circularprogressbar.CircularProgressBar
                     android:id="@+id/progressBarAvancement"
-                    android:layout_width="260dp"
+                    android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     app:cpb_background_progressbar_color="#FFCDD2"
                     app:cpb_background_progressbar_width="15dp"

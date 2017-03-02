@@ -194,4 +194,8 @@ public class Action extends Model{
     public void setDomaine(Domaine domaine) {
         this.domaine = domaine;
     }
+
+    public String toString(){
+        return this.code;
+    }
 }

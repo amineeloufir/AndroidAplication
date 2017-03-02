@@ -83,6 +83,8 @@ public class ActivityDetailsProjet extends AppCompatActivity {
                         case 0:
                             intent = new Intent(ActivityDetailsProjet.this, ActivityIndicateursSaisieCharge.class);
                             intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
+                            intent.putExtra(PROJET, proj.getId());
+                            startActivity(intent);
                             break;
                         default:
                             System.out.println("Non instancié pour le moment");
@@ -90,8 +92,8 @@ public class ActivityDetailsProjet extends AppCompatActivity {
 
                     }
 
-                    intent.putExtra(PROJET, proj.getId());
-                    startActivity(intent);
+                    //intent.putExtra(PROJET, proj.getId());
+                    //startActivity(intent);
                 }
             });
         }
