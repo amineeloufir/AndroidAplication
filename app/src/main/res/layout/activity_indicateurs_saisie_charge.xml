@@ -30,6 +30,7 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/textViewNomProjetSaisieCharge"
             android:layout_alignParentStart="true"
+            android:listSelector="#87CEFA"
             android:layout_marginTop="18dp" />
 
     </LinearLayout>
