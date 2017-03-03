@@ -67,10 +67,10 @@ public class AdapterSaisieCharge extends ArrayAdapter<SaisieCharge>{
         }
 
         // on définit le text à afficher
-        holder.travail.setText(getItem(position).toString());
+        holder.action.setText(getItem(position).toString());
 
         //on récupère la première lettre du domaine associé au travail
-        String firstLetter = String.valueOf(getItem(position).getDomaine().getNom().charAt(0));
+        String firstLetter = String.valueOf(getItem(position).getTypeTravail().charAt(0));
 
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
         // generate random color
@@ -88,18 +88,21 @@ public class AdapterSaisieCharge extends ArrayAdapter<SaisieCharge>{
         Mesure mesure = dao.getLastMesureBySaisieCharge(getItem(position));
         holder.avancement.setProgress(Calcul.calculerPourcentage(mesure.getNbUnitesMesures(),getItem(position).getNbUnitesCibles()));
 
+        holder.domaine.setText(getItem(position).getDomaine().toString());
         return convertView;
     }
 
     private class ViewHolder {
         private ImageView imageView;
-        private TextView travail;
+        private TextView action;
         private ProgressBar avancement;
+        private TextView domaine;
 
         public ViewHolder(View v) {
-            imageView = (ImageView) v.findViewById(R.id.icon_domaine);
-            travail = (TextView) v.findViewById(R.id.label);
+            imageView = (ImageView) v.findViewById(R.id.icon_ttravail);
+            action = (TextView) v.findViewById(R.id.label);
             avancement = (ProgressBar) v.findViewById(R.id.progress_bar_saisiecharge_crit);
+            domaine = (TextView) v.findViewById(R.id.textViewDomaineSaisieCharge);
         }
     }
 
