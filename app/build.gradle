@@ -1,9 +1,8 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'sonar-runner'
+//apply plugin: 'sonar-runner'
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "miage.fr.gestionprojet"
@@ -31,7 +30,7 @@ android {
     }
 }
 
-
+/*
 sonarRunner {
     sonarProperties {
         property "sonar.host.url", "http://localhost:9000" // Address of Sonar server
@@ -41,15 +40,15 @@ sonarRunner {
         property "sonar.projectDescription", "Processus developpement project" // Description of your project
     }
 }
-
+*/
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile files('libs/activeandroid-3.0.jar')
-    compile 'com.android.support:appcompat-v7:25.1.1'
-    compile 'com.android.support:design:25.1.1'
+    compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.android.support:design:25.2.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'de.hdodenhof:circleimageview:1.3.0'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
