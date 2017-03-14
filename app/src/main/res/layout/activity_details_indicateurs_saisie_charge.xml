@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="miage.fr.gestionprojet.AvancementRessources.ActivityApercuDetails">
+    tools:context="miage.fr.gestionprojet.vues.ActivityDetailsIndicateursSaisieCharge">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -29,12 +29,12 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:text="Travail"
+                    android:text="Saisie ou charge"
                     android:layout_width="130dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentStart="true"
-                    android:id="@+id/textViewTravail"
+                    android:id="@+id/textViewSaisieCharge"
                     android:textStyle="normal|bold"
                     android:textSize="18sp"
                     android:layout_weight="1.98" />
@@ -45,9 +45,16 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    android:id="@+id/textViewDateTravail"
+                    android:id="@+id/textViewDateSaisieCharge"
                     android:layout_weight="1" />
+
             </LinearLayout>
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewDescriptionDomaine" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -55,7 +62,7 @@
 
                 <com.mikhaellopez.circularprogressbar.CircularProgressBar
                     android:id="@+id/progressBarAvancement"
-                    android:layout_width="260dp"
+                    android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     app:cpb_background_progressbar_color="#FFCDD2"
                     app:cpb_background_progressbar_width="15dp"
@@ -75,7 +82,7 @@
             <ListView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/ListViewDetailsTravail" />
+                android:id="@+id/ListViewDetailsSaisieCharge" />
 
         </LinearLayout>
     </ScrollView>

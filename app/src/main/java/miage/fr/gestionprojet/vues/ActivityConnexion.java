@@ -1,4 +1,4 @@
-package miage.fr.gestionprojet;
+package miage.fr.gestionprojet.vues;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -6,14 +6,12 @@ import android.content.IntentSender;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,7 +24,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.drive.Drive;
 import com.google.android.gms.plus.People;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
@@ -34,6 +31,8 @@ import com.google.android.gms.plus.model.people.PersonBuffer;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+
+import miage.fr.gestionprojet.R;
 
 public class ActivityConnexion extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, GoogleApiClient.ConnectionCallbacks, ResultCallback<People.LoadPeopleResult> {
     GoogleApiClient google_api_client;
@@ -175,7 +174,6 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
 
     /*
       Will receive the activity result and check which request we are responding to
-
      */
     @Override
     protected void onActivityResult(int requestCode, int responseCode,
@@ -254,7 +252,7 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
             is_signInBtn_clicked = true;
             progress_dialog.show();
             resolveSignInError();
-            Intent intent = new Intent(ActivityConnexion.this,MainActivity.class);
+            Intent intent = new Intent(ActivityConnexion.this,ActivityGestionDesInitials.class);
             startActivity(intent);
 
         }
@@ -436,5 +434,7 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
             bitmap_img.setImageBitmap(result_img);
         }
     }
+
+
 
 }

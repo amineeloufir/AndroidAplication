@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'sonar-runner'
 
 android {
     compileSdkVersion 24
@@ -26,6 +28,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
+    }
+}
+
+
+sonarRunner {
+    sonarProperties {
+        property "sonar.host.url", "http://localhost:9000" // Address of Sonar server
+        property "sonar.sources", "src" // Sources
+        property "sonar.projectName", "BigFollow" // Name of your project
+        property "sonar.projectVersion", "1.0-SNAPSHOT" // Version of your project
+        property "sonar.projectDescription", "Processus developpement project" // Description of your project
     }
 }
 
