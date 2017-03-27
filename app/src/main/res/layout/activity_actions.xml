@@ -20,9 +20,12 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
-
-    <LinearLayout
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginTop="?actionBarSize"
+        >
+    <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -135,5 +138,13 @@
             android:id="@+id/actionRecycler"
             app:layoutManager="LinearLayoutManager"/>
     </LinearLayout>
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_gravity="center"
+            android:id="@+id/emptyView"
+            android:text="no action to show"
+            android:textColor="#000"/>
+    </FrameLayout>
 </android.support.design.widget.CoordinatorLayout>

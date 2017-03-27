@@ -37,6 +37,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
     private ImageButton weekMinus;
     private EditText yearEditText;
     private EditText weekEditText;
+    private TextView mEmptyView;
     private int year = 2017;
     private int week = 20;
 
@@ -61,6 +62,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
             e.printStackTrace();
             finish();
         }
+        mEmptyView = (TextView) findViewById(R.id.emptyView);
         mRecyclerView = (RecyclerView) findViewById(R.id.actionRecycler);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this));
@@ -128,18 +130,21 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
 
     private void loadActionsByDate(int year, int week) {
         //getAll
-        List<Action> actions = new Select().from(Action.class)
-                // .where("apparaitr_planing", true)
-                .execute();
+        List<Action> actions = new Select().from(Action.class).execute();
         refreshAdapter(actions);
     }
 
     private void refreshAdapter(List<Action> actions){
         if(actions != null && actions.size() > 0) {
+            mEmptyView.setVisibility(View.INVISIBLE);
+            mRecyclerView.setVisibility(View.VISIBLE);
             ActionsAdapter adapter = new ActionsAdapter(actions);
             adapter.setmListener(this);
             mRecyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
+        }else{
+            mEmptyView.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
         }
     }
 
@@ -221,13 +226,16 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                 return true;
             case R.id.domain:
                 return true;
+            case R.id.phase:
+                showPopUp("phase");
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     public void showPopUp(String cat){
         ContextThemeWrapper wrapper = new ContextThemeWrapper(this, R.style.MyPopupMenu);
-        PopupMenu popupMenu = new PopupMenu(wrapper, mRecyclerView);
+        PopupMenu popupMenu = new PopupMenu(wrapper, mEmptyView);
         Menu menu = popupMenu.getMenu();
         if(cat.equalsIgnoreCase("type")){
             popupMenu.getMenuInflater().inflate(R.menu.popup_menu_type, menu);
@@ -254,6 +262,32 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
             });
             popupMenu.show();
         }
+        if(cat.equalsIgnoreCase("phase")){
+            popupMenu.getMenuInflater().inflate(R.menu.popup_menu_phase, menu);
+            popupMenu.setGravity(Gravity.CENTER);
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.all:
+                            loadActionsByDate(year, week);
+                            return true;
+                        case R.id.phase1:
+                            loadActionsByPhase("1");
+                            return true;
+                        case R.id.phase2:
+                            loadActionsByPhase("2");
+                            return true;
+                        case R.id.phase3:
+                            loadActionsByPhase("3");
+                            return true;
+                    }
+                    return false;
+                }
+            });
+            popupMenu.show();
+        }
+
     }
 
     private void loadActionsByType(String type) {
@@ -263,4 +297,10 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
         refreshAdapter(actions);
     }
 
+    private void loadActionsByPhase(String phase) {
+        List<Action> actions = new Select().from(Action.class)
+                .where("phase = ?", phase)
+                .execute();
+        refreshAdapter(actions);
+    }
 }
