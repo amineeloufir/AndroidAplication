@@ -78,12 +78,17 @@ public class ActivityDetailsProjet extends AppCompatActivity {
             liste.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                    Intent intent = new Intent();
+                    Intent intent;
                     switch (position) {
                         case 0:
                             intent = new Intent(ActivityDetailsProjet.this, ActivityIndicateursSaisieCharge.class);
                             intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
                             intent.putExtra(PROJET, proj.getId());
+                            startActivity(intent);
+                            break;
+                        case 3:
+                            intent = new Intent(ActivityDetailsProjet.this, ActionsActivity.class);
+                            intent.putExtra(EXTRA_INITIAL, initialUtilisateur);
                             startActivity(intent);
                             break;
                         default:
