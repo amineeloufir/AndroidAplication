@@ -10,4 +10,9 @@
     <string name="sign_out">Sign Out</string>
     <string name="disconnect">Disconnect</string>
     <string name="title_activity_actions">ActionsActivity</string>
+
+    <!-- Planning détaillé -->
+    <string name="planning_detaille_mail_subject">[GestionProjet] Diagramme de Gantt</string>
+    <string name="planning_detaille_mail_text">Cet email vous est envoyé depuis l\'application . Vous trouverez en pièce jointe un diagramme de Gantt du projet</string>
+    <string name="planning_detaille_select_email_application">Choisir l\'application</string>
 </resources>

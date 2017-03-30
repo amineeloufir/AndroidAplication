@@ -1,7 +1,9 @@
 package miage.fr.gestionprojet.vues;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.PopupMenu;
@@ -18,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 
@@ -38,14 +41,17 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
     private EditText yearEditText;
     private EditText weekEditText;
     private TextView mEmptyView;
+    private FloatingActionButton sendEmail;
     private int year = 2017;
     private int week = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actions);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         if(toolbar!=null) {
             setSupportActionBar(toolbar);
             if (getSupportActionBar()!=null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -56,12 +62,14 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                 }
             });
         }
+
         try {
             initial = getIntent().getStringExtra(ActivityDetailsProjet.EXTRA_INITIAL);
-        }catch(Exception e){
+        } catch(Exception e) {
             e.printStackTrace();
             finish();
         }
+
         mEmptyView = (TextView) findViewById(R.id.emptyView);
         mRecyclerView = (RecyclerView) findViewById(R.id.actionRecycler);
         mRecyclerView.setHasFixedSize(true);
@@ -70,13 +78,18 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
         yearMinus = (ImageButton) findViewById(R.id.year_minus);
         weekPlus = (ImageButton) findViewById(R.id.week_plus);
         weekMinus = (ImageButton) findViewById(R.id.week_minus);
+        sendEmail = (FloatingActionButton) findViewById(R.id.sendEmail);
+
+
         yearPlus.setOnClickListener(this);
         yearMinus.setOnClickListener(this);
         weekPlus.setOnClickListener(this);
         weekMinus.setOnClickListener(this);
+        sendEmail.setOnClickListener(this);
         yearEditText = (EditText) findViewById(R.id.edit_text_year);
         weekEditText = (EditText) findViewById(R.id.edit_text_week);
         yearEditText.addTextChangedListener(new TextWatcher() {
+
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -98,6 +111,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                 }
             }
         });
+
         weekEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -173,6 +187,22 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 yearEditText.setText(String.valueOf(year));
                 break;
+            case R.id.sendEmail:
+                sendEmailAction();
+                break;
+        }
+    }
+
+    private void sendEmailAction() {
+        Intent email = new Intent(Intent.ACTION_SEND);
+        email.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.planning_detaille_mail_subject));
+        email.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.planning_detaille_mail_text));
+        email.setType("message/rfc822");
+
+        try {
+            startActivity(Intent.createChooser(email, getResources().getString(R.string.planning_detaille_select_email_application)));
+            finish();
+        } catch (android.content.ActivityNotFoundException ex) {
         }
     }
 
