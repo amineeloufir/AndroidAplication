@@ -2,7 +2,9 @@ package miage.fr.gestionprojet.vues;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
@@ -20,10 +22,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 import miage.fr.gestionprojet.R;
@@ -199,11 +204,78 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
         email.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.planning_detaille_mail_text));
         email.setType("message/rfc822");
 
+
+
+//        File file = createPdf();
+
+//        email.putExtra(Intent.EXTRA_STREAM, file);
+
+//        .putParcelableArrayListExtra(Intent.EXTRA_STREAM, pdfFiles);
+
         try {
-            startActivity(Intent.createChooser(email, getResources().getString(R.string.planning_detaille_select_email_application)));
+            startActivityForResult(Intent.createChooser(email, getResources().getString(R.string.planning_detaille_select_email_application)), 0);
             finish();
         } catch (android.content.ActivityNotFoundException ex) {
         }
+    }
+
+//    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private File createPdf() {
+
+        return new File("");
+
+/*        PdfDocument document = new PdfDocument();
+
+        // crate a page info with attributes as below
+// page number, height and width
+// i have used height and width to that of pdf content view
+        int pageNumber = 1;
+        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(30,
+                30, pageNumber).create();
+
+
+
+// create a new page from the PageInfo
+        PdfDocument.Page page = document.startPage(pageInfo);
+
+// repaint the user's text into the page
+//        content.draw(page.getCanvas());
+
+// do final processing of the page
+        document.finishPage(page);
+
+// saving pdf document to sdcard
+        String pdfName = "pdfdemo.pdf";
+
+// all created files will be saved at path /sdcard/PDFDemo_AndroidSRC/
+//        File outputFile = new File("/sdcard/PDFDemo_AndroidSRC/", pdfName);
+        File outputFile = new File(Environment.getDataDirectory(), pdfName);
+
+        try {
+            outputFile.createNewFile();
+            OutputStream out = new FileOutputStream(outputFile);
+            document.writeTo(out);
+            document.close();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return outputFile;
+
+
+//        new File("file:///test.txt");
+//        try {
+//            file.createNewFile();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//
+////        if (! file.canRead()) {
+////            Toast.makeText(this, "impossible d'ouvrir le pdf généré", Toast.LENGTH_LONG).show();
+////            return;
+////        }*/
     }
 
     @Override
