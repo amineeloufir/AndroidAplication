@@ -10,40 +10,71 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="miage.fr.gestionprojet.vues.ActivityDetailsProjet">
 
-    <TextView
-        android:text="Ce projet vise à produire ... "
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewNomProjet"
-        android:layout_alignParentStart="true"
-        android:id="@+id/textViewDescription" />
+        android:orientation="vertical">
 
-    <TextView
-        android:text="date de début - date de fin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewDtProjet"
-        android:layout_alignBaseline="@+id/textViewNomProjet"
-        android:layout_alignBottom="@+id/textViewNomProjet"
-        android:layout_alignParentEnd="true"
-        android:textSize="12sp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-    <TextView
-        android:text="Nom Du Projet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewNomProjet"
-        android:textSize="18sp"
-        android:textStyle="normal|bold"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+            <TextView
+                android:id="@+id/textViewNomProjet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Projet" />
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewDescription"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="18dp"
-        android:listSelector="#87CEFA"
-        android:id="@+id/listViewAction" />
+            <TextView
+                android:id="@+id/textViewDtProjet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Date début - Date fin"
+                android:textAlignment="textEnd" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnBudget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Budget" />
+
+            <Button
+                android:id="@+id/btnActions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Actions" />
+
+            <Button
+                android:id="@+id/btnFormations"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Formation" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBarProjet"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ListView
+            android:id="@+id/listViewAction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
 </RelativeLayout>

@@ -7,18 +7,9 @@
         android:title="@string/menu_trie_domaine"/>
 
     <item
-        android:id="@+id/menu_trie_date"
+        android:id="@+id/menu_trie_utilisateur"
         android:showAsAction="never"
-        android:title="@string/menu_trie_date"/>
+        android:title="@string/menu_trie_utilisateurs"/>
 
-    <item
-        android:id="@+id/menu_trie_criticite"
-        android:showAsAction="never"
-        android:title="@string/menu_trie_criticite"/>
-
-    <item
-        android:id="@+id/menu_trie_type_travail"
-        android:showAsAction="never"
-        android:title="@string/menu_trie_type_travail"/>
 
 </menu>

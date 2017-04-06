@@ -85,11 +85,8 @@ public class ActivityIndicateursSaisieCharge extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_trie_criticite:
+            case R.id.menu_trie_utilisateur:
                 // Comportement du bouton "Rafraichir"
-                return true;
-            case R.id.menu_trie_date:
-                // Comportement du bouton "Recherche"
                 return true;
             case R.id.menu_trie_domaine:
                 // Comportement du bouton "Paramètres"

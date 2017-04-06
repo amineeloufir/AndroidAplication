@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import miage.fr.gestionprojet.models.Mesure;
@@ -70,7 +72,7 @@ public class AdapterSaisieCharge extends ArrayAdapter<SaisieCharge>{
         holder.action.setText(getItem(position).toString());
 
         //on récupère la première lettre du domaine associé au travail
-        String firstLetter = String.valueOf(getItem(position).getTypeTravail().charAt(0));
+        String firstLetter = String.valueOf(getItem(position).getPhase());
 
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
         // generate random color
@@ -88,7 +90,8 @@ public class AdapterSaisieCharge extends ArrayAdapter<SaisieCharge>{
         Mesure mesure = dao.getLastMesureBySaisieCharge(getItem(position));
         holder.avancement.setProgress(Calcul.calculerPourcentage(mesure.getNbUnitesMesures(),getItem(position).getNbUnitesCibles()));
 
-        holder.domaine.setText(getItem(position).getDomaine().toString());
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        holder.date.setText(df.format(getItem(position).getDtFinPrevue()));
         return convertView;
     }
 
@@ -96,13 +99,13 @@ public class AdapterSaisieCharge extends ArrayAdapter<SaisieCharge>{
         private ImageView imageView;
         private TextView action;
         private ProgressBar avancement;
-        private TextView domaine;
+        private TextView date;
 
         public ViewHolder(View v) {
             imageView = (ImageView) v.findViewById(R.id.icon_ttravail);
             action = (TextView) v.findViewById(R.id.label);
             avancement = (ProgressBar) v.findViewById(R.id.progress_bar_saisiecharge_crit);
-            domaine = (TextView) v.findViewById(R.id.textViewDomaineSaisieCharge);
+            date = (TextView) v.findViewById(R.id.textViewDateSaisieCharge);
         }
     }
 
