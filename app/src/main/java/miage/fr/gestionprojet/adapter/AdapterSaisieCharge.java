@@ -1,7 +1,6 @@
 package miage.fr.gestionprojet.adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +12,13 @@ import android.widget.TextView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 import miage.fr.gestionprojet.models.Mesure;
 import miage.fr.gestionprojet.models.dao.DaoMesure;
 import miage.fr.gestionprojet.vues.ActivityIndicateursSaisieCharge;
-import miage.fr.gestionprojet.outils.Calcul;
+import miage.fr.gestionprojet.outils.Outils;
 import miage.fr.gestionprojet.R;
 import miage.fr.gestionprojet.models.SaisieCharge;
 
@@ -88,7 +86,7 @@ public class AdapterSaisieCharge extends ArrayAdapter<SaisieCharge>{
         // on affiche l'état d'avancment du travail
         DaoMesure dao = new DaoMesure();
         Mesure mesure = dao.getLastMesureBySaisieCharge(getItem(position));
-        holder.avancement.setProgress(Calcul.calculerPourcentage(mesure.getNbUnitesMesures(),getItem(position).getNbUnitesCibles()));
+        holder.avancement.setProgress(Outils.calculerPourcentage(mesure.getNbUnitesMesures(),getItem(position).getNbUnitesCibles()));
 
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         holder.date.setText(df.format(getItem(position).getDtFinPrevue()));
