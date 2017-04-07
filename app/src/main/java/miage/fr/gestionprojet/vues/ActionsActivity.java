@@ -26,6 +26,7 @@ import java.util.List;
 import miage.fr.gestionprojet.R;
 import miage.fr.gestionprojet.adapter.ActionsAdapter;
 import miage.fr.gestionprojet.models.Action;
+import miage.fr.gestionprojet.models.dao.DaoAction;
 import miage.fr.gestionprojet.outils.DividerItemDecoration;
 
 public class ActionsActivity extends AppCompatActivity implements View.OnClickListener, ActionsAdapter.ActionClicked{
@@ -91,7 +92,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
             public void afterTextChanged(Editable editable) {
                 try {
                     year = Integer.parseInt(editable.toString());
-                    loadActionsByDate(year, week);
+                    refreshAdapter(DaoAction.loadActionsByDate(year, week));
                 }catch(Exception e){
                     e.printStackTrace();
                     yearEditText.setError("");
@@ -113,7 +114,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
             public void afterTextChanged(Editable editable) {
                 try {
                     week = Integer.parseInt(editable.toString());
-                    loadActionsByDate(year, week);
+                    refreshAdapter(DaoAction.loadActionsByDate(year, week));
                 }catch(Exception e){
                     e.printStackTrace();
                     weekEditText.setError("");
@@ -125,14 +126,10 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onStart() {
         super.onStart();
-        loadActionsByDate(2017, 20);
+        refreshAdapter(DaoAction.loadActionsByDate(2017, 20));
     }
 
-    private void loadActionsByDate(int year, int week) {
-        //getAll
-        List<Action> actions = new Select().from(Action.class).execute();
-        refreshAdapter(actions);
-    }
+
 
     private void refreshAdapter(List<Action> actions){
         if(actions != null && actions.size() > 0) {
@@ -245,16 +242,16 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                 public boolean onMenuItemClick(MenuItem item) {
                     switch (item.getItemId()) {
                         case R.id.projet:
-                            loadActionsByType("Projet");
+                            refreshAdapter(DaoAction.loadActionsByType("Projet"));
                             return true;
                         case R.id.material:
-                            loadActionsByType("Materiel");
+                            refreshAdapter(DaoAction.loadActionsByType("Materiel"));
                             return true;
                         case R.id.analyse:
-                            loadActionsByType("Analyse");
+                            refreshAdapter(DaoAction.loadActionsByType("Analyse"));
                             return true;
                         case R.id.all:
-                            loadActionsByDate(year, week);
+                            refreshAdapter(DaoAction.loadActionsByDate(year, week));
                             return true;
                     }
                     return false;
@@ -270,16 +267,16 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                 public boolean onMenuItemClick(MenuItem item) {
                     switch (item.getItemId()) {
                         case R.id.all:
-                            loadActionsByDate(year, week);
+                            refreshAdapter(DaoAction.loadActionsByDate(year, week));
                             return true;
                         case R.id.phase1:
-                            loadActionsByPhase("1");
+                            refreshAdapter(DaoAction.loadActionsByPhase("1"));
                             return true;
                         case R.id.phase2:
-                            loadActionsByPhase("2");
+                            refreshAdapter(DaoAction.loadActionsByPhase("2"));
                             return true;
                         case R.id.phase3:
-                            loadActionsByPhase("3");
+                            refreshAdapter(DaoAction.loadActionsByPhase("3"));
                             return true;
                     }
                     return false;
@@ -290,17 +287,5 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    private void loadActionsByType(String type) {
-        List<Action> actions = new Select().from(Action.class)
-                .where("typeTravail = ?", type)
-                .execute();
-        refreshAdapter(actions);
-    }
 
-    private void loadActionsByPhase(String phase) {
-        List<Action> actions = new Select().from(Action.class)
-                .where("phase = ?", phase)
-                .execute();
-        refreshAdapter(actions);
-    }
 }

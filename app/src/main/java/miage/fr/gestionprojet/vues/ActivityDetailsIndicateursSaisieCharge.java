@@ -7,14 +7,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.activeandroid.Model;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
+import org.w3c.dom.Text;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import miage.fr.gestionprojet.models.Mesure;
@@ -52,20 +58,25 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
             circularProgressBar.setProgress(progression);
 
             TextView txtPrct = (TextView) findViewById(R.id.textViewPrct);
-            txtPrct.setText(progression+"%");
+            txtPrct.setText("Heure/unite:"+saisieCharge.getHeureParUnite()+"\n"+"ChargeTotale:"+saisieCharge.getChargeTotaleEstimeeEnHeure()
+            +"\n"+"Charge/semaine:"+saisieCharge.getChargeEstimeeParSemaine());
 
-            TextView txtDateSaisieCharge = (TextView) findViewById(R.id.textViewDateSaisieCharge);
+            TextView txtDateDeb = (TextView) findViewById(R.id.txtDtDeb);
+            TextView txtDateFin = (TextView) findViewById(R.id.txtDtFin);
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-            txtDateSaisieCharge.setText(df.format(saisieCharge.getDtDeb())+"-"+df.format(saisieCharge.getDtFinPrevue()));
+            txtDateDeb.setText(df.format(saisieCharge.getDtDeb()));
+            txtDateFin.setText(df.format(saisieCharge.getDtFinPrevue()));
 
-            TextView txtDescription = (TextView) findViewById(R.id.textViewDescriptionDomaine);
-            txtDescription.setText("Domaine : "+saisieCharge.getDomaine().getNom()+" - Type de travail : "+saisieCharge.getTypeTravail());
+            ProgressBar progressBarDate = (ProgressBar) findViewById(R.id.progressBarDate);
+            Calendar c = Calendar.getInstance();
+            int progress = Calcul.calculerPourcentage(c.getTimeInMillis()-saisieCharge.getDtDeb().getTime(),saisieCharge.getDtFinPrevue().getTime()-saisieCharge.getDtDeb().getTime());
+            progressBarDate.setProgress(progress);
+
             ListView lstViewIndicateur = (ListView) findViewById(R.id.ListViewDetailsSaisieCharge);
             List<String> indicateurs = new ArrayList<>();
             indicateurs.add("Nombre d'unités produites:"+mesure.getNbUnitesMesures()+"/"+saisieCharge.getNbUnitesCibles());
-            indicateurs.add("Semaines écoulées"+(saisieCharge.getNbSemainePassee()+"/"+saisieCharge.getNbSemaines()));
-            indicateurs.add("Temps passé: "+saisieCharge.getTempsPasseParSemaine()*saisieCharge.getNbSemainePassee());
-            indicateurs.add("Temps prévu: "+mesure.getNbUnitesMesures()*saisieCharge.getHeureParUnite());
+            indicateurs.add("Temps restant (semaines): "+saisieCharge.getNbSemainesRestantes());
+            indicateurs.add("Dernière mesure saisie:"+mesure.getDtMesure());
             final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, indicateurs);
             lstViewIndicateur.setAdapter(adapter);
 
