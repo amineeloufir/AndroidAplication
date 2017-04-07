@@ -92,7 +92,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
             public void afterTextChanged(Editable editable) {
                 try {
                     year = Integer.parseInt(editable.toString());
-                    loadActionsByDate(year, week);
+                    refreshAdapter(DaoAction.loadActionsByDate(year, week));
                 }catch(Exception e){
                     e.printStackTrace();
                     yearEditText.setError("");
@@ -114,7 +114,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
             public void afterTextChanged(Editable editable) {
                 try {
                     week = Integer.parseInt(editable.toString());
-                    loadActionsByDate(year, week);
+                    refreshAdapter(DaoAction.loadActionsByDate(year, week));
                 }catch(Exception e){
                     e.printStackTrace();
                     weekEditText.setError("");
@@ -126,14 +126,10 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onStart() {
         super.onStart();
-        loadActionsByDate(2017, 20);
+        refreshAdapter(DaoAction.loadActionsByDate(2017, 20));
     }
 
-    private void loadActionsByDate(int year, int week) {
-        //getAll
-        List<Action> actions = new Select().from(Action.class).execute();
-        refreshAdapter(actions);
-    }
+
 
     private void refreshAdapter(List<Action> actions){
         if(actions != null && actions.size() > 0) {
@@ -255,7 +251,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                             refreshAdapter(DaoAction.loadActionsByType("Analyse"));
                             return true;
                         case R.id.all:
-                            loadActionsByDate(year, week);
+                            refreshAdapter(DaoAction.loadActionsByDate(year, week));
                             return true;
                     }
                     return false;
@@ -271,7 +267,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                 public boolean onMenuItemClick(MenuItem item) {
                     switch (item.getItemId()) {
                         case R.id.all:
-                            loadActionsByDate(year, week);
+                            refreshAdapter(DaoAction.loadActionsByDate(year, week));
                             return true;
                         case R.id.phase1:
                             refreshAdapter(DaoAction.loadActionsByPhase("1"));

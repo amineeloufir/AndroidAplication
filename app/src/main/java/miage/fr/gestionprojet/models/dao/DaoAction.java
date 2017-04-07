@@ -25,4 +25,10 @@ public class DaoAction {
                 .execute();
         return actions;
     }
+
+    public static List<Action> loadActionsByDate(int year, int week) {
+        //getAll
+        List<Action> actions = new Select().from(Action.class).execute();
+        return actions;
+    }
 }
