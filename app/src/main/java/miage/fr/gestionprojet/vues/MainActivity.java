@@ -80,7 +80,7 @@ public class MainActivity  extends AppCompatActivity {
 
             // sinon, on affiche directement les détails du projet en cours
             if(lstProjets.size()==1) {
-                Intent intent = new Intent(MainActivity.this, ActivityDetailsProjet.class);
+                Intent intent = new Intent(MainActivity.this, ChargementDonnees.class);
                 intent.putExtra(EXTRA_PROJET, (lstProjets.get(0).getId()));
                 intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
                 startActivity(intent);
@@ -98,6 +98,11 @@ public class MainActivity  extends AppCompatActivity {
 
     public void insererDonneesTests() throws ParseException {
 
+
+
+/*
+  ChargementDonnees chargerDonne= new ChargementDonnees();
+        chargerDonne.chargerDonnees();
         new Delete().from(Projet.class).execute();
         new Delete().from(Domaine.class).execute();
         new Delete().from(Action.class).execute();
@@ -205,6 +210,9 @@ public class MainActivity  extends AppCompatActivity {
         action2.setRespOuv(res);
         action2.setLstUtilisateursOuv(ls);
         action2.save();
+    }*/
+
+
     }
 
 

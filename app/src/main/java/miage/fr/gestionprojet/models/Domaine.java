@@ -33,6 +33,7 @@ public class Domaine extends Model {
         this.nom = nom;
         this.description = description;
         this.projet = projet;
+
     }
 
     public Domaine() {
