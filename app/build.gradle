@@ -14,10 +14,16 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file("my-release-key.jks")
+            storeFile file('C:/Users/meloufir/git/android/AndroidAplication/app/my-release-key.jks')
             storePassword "bigfollow"
             keyAlias "bigfollow"
             keyPassword "bigfollow"
+        }
+        config {
+            keyAlias 'bigfollow'
+            keyPassword 'bigfollow'
+            storeFile file('C:/Users/meloufir/git/android/AndroidAplication/app/my-release-key.jks')
+            storePassword 'bigfollow'
         }
     }
 
@@ -25,7 +31,13 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.config
+        }
+        debug {
+            signingConfig signingConfigs.config
+        }
+        buildType {
+            signingConfig signingConfigs.config
         }
     }
 }
