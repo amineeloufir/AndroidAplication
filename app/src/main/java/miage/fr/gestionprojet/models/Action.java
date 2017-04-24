@@ -13,6 +13,24 @@ import java.util.ArrayList;
 
 @Table(name="Action")
 public class Action extends Model{
+  /*  public Action(String typeTravail, int ordre, String tarif, String phase, String code, Domaine domaine, boolean apparaitrePlanning, String typeFacturation, int nbJoursPrevus, float coutParJour, Date dtDeb, Date dtFinPrevue, Date dtFinReelle) {
+        this.typeTravail = typeTravail;
+        this.ordre = ordre;
+        this.tarif = tarif;
+        this.phase = phase;
+        this.code = code;
+        this.domaine = domaine;
+        this.apparaitrePlanning = apparaitrePlanning;
+        this.typeFacturation = typeFacturation;
+        this.nbJoursPrevus = nbJoursPrevus;
+        this.coutParJour = coutParJour;
+        RespOeu = respOeu;
+        RespOuv = respOuv;
+        this.lstUtilisateursOuv = lstUtilisateursOuv;
+        this.dtDeb = dtDeb;
+        this.dtFinPrevue = dtFinPrevue;
+        this.dtFinReelle = dtFinReelle;
+    }*/
 
     @Column(name="typeTravail")
     private String typeTravail;
@@ -30,7 +48,7 @@ public class Action extends Model{
     private String code;
 
     @Column(name="domaine")
-    private Domaine domaine;
+    private String domaine;
 
     @Column(name="apparaitr_planing")
     private boolean apparaitrePlanning;
@@ -39,7 +57,7 @@ public class Action extends Model{
     private String typeFacturation;
 
     @Column(name="nb_jours_prevus")
-    private int nbJoursPrevus;
+    private Float nbJoursPrevus;
 
     @Column(name="cout_par_pour")
     private float coutParJour;
@@ -123,11 +141,11 @@ public class Action extends Model{
         this.typeFacturation = typeFacturation;
     }
 
-    public int getNbJoursPrevus() {
+    public Float getNbJoursPrevus() {
         return nbJoursPrevus;
     }
 
-    public void setNbJoursPrevus(int nbJoursPrevus) {
+    public void setNbJoursPrevus(Float nbJoursPrevus) {
         this.nbJoursPrevus = nbJoursPrevus;
     }
 
@@ -187,11 +205,11 @@ public class Action extends Model{
         this.dtFinReelle = dtFinReelle;
     }
 
-    public Domaine getDomaine() {
+    public String getDomaine() {
         return domaine;
     }
 
-    public void setDomaine(Domaine domaine) {
+    public void setDomaine(String domaine) {
         this.domaine = domaine;
     }
 
