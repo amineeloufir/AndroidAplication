@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:title="All" android:id="@+id/all"/>
-    <item android:title="Projet" android:id="@+id/projet"/>
-    <item android:title="Materiel" android:id="@+id/material"/>
-    <item android:title="Analyse" android:id="@+id/analyse"/>
 </menu>
