@@ -21,13 +21,18 @@ import android.widget.TextView;
 
 import com.activeandroid.query.Select;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import miage.fr.gestionprojet.R;
 import miage.fr.gestionprojet.adapter.ActionsAdapter;
 import miage.fr.gestionprojet.models.Action;
+import miage.fr.gestionprojet.models.Domaine;
 import miage.fr.gestionprojet.models.dao.DaoAction;
 import miage.fr.gestionprojet.outils.DividerItemDecoration;
+import miage.fr.gestionprojet.outils.Outils;
 
 public class ActionsActivity extends AppCompatActivity implements View.OnClickListener, ActionsAdapter.ActionClicked{
     private String initial;
@@ -39,14 +44,17 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
     private EditText yearEditText;
     private EditText weekEditText;
     private TextView mEmptyView;
-    private int year = 2017;
-    private int week = 20;
-
+    private int year;
+    private int week;
+    private Date dateSaisie;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actions);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Calendar c = Calendar.getInstance();
+        week = c.get(Calendar.WEEK_OF_YEAR);
+        year = c.get(Calendar.YEAR);
         if(toolbar!=null) {
             setSupportActionBar(toolbar);
             if (getSupportActionBar()!=null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -92,7 +100,8 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
             public void afterTextChanged(Editable editable) {
                 try {
                     year = Integer.parseInt(editable.toString());
-                    refreshAdapter(DaoAction.loadActionsByDate(year, week));
+                    dateSaisie = Outils.weekOfYearToDate(year,week);
+                    refreshAdapter(DaoAction.loadActionsByDate(dateSaisie));
                 }catch(Exception e){
                     e.printStackTrace();
                     yearEditText.setError("");
@@ -114,7 +123,8 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
             public void afterTextChanged(Editable editable) {
                 try {
                     week = Integer.parseInt(editable.toString());
-                    refreshAdapter(DaoAction.loadActionsByDate(year, week));
+                    dateSaisie = Outils.weekOfYearToDate(year,week);
+                    refreshAdapter(DaoAction.loadActionsByDate(dateSaisie));
                 }catch(Exception e){
                     e.printStackTrace();
                     weekEditText.setError("");
@@ -126,7 +136,8 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onStart() {
         super.onStart();
-        refreshAdapter(DaoAction.loadActionsByDate(2017, 20));
+        dateSaisie = Outils.weekOfYearToDate(year,week);
+        refreshAdapter(DaoAction.loadActionsByDate(dateSaisie));
     }
 
 
@@ -160,10 +171,12 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.year_plus:
                 year = (Integer.parseInt(yearEditText.getText().toString()) + 1);
+                dateSaisie = Outils.weekOfYearToDate(year,week);
                 yearEditText.setText(String.valueOf(year));
                 break;
             case R.id.year_minus :
-                week = Integer.parseInt(weekEditText.getText().toString()) - 1;
+                year = Integer.parseInt(yearEditText.getText().toString()) - 1;
+                dateSaisie = Outils.weekOfYearToDate(year,week);
                 if(year < 2000){
                     yearEditText.setError("");
                     return;
@@ -217,11 +230,13 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nom:
+                refreshAdapter(DaoAction.loadActionsOrderByNomAndDate(dateSaisie));
                 return true;
             case R.id.type:
                 showPopUp("type");
                 return true;
             case R.id.domain:
+                showPopUp("domaine");
                 return true;
             case R.id.phase:
                 showPopUp("phase");
@@ -237,53 +252,106 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
         if(cat.equalsIgnoreCase("type")){
             popupMenu.getMenuInflater().inflate(R.menu.popup_menu_type, menu);
             popupMenu.setGravity(Gravity.CENTER);
+            ArrayList<String> types = getTypeTravailAffiche();
+            int i = 0;
+            for(i=0; i<types.size();i++){
+                menu.add(0, i, 0, types.get(i));
+            }
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.projet:
-                            refreshAdapter(DaoAction.loadActionsByType("Projet"));
-                            return true;
-                        case R.id.material:
-                            refreshAdapter(DaoAction.loadActionsByType("Materiel"));
-                            return true;
-                        case R.id.analyse:
-                            refreshAdapter(DaoAction.loadActionsByType("Analyse"));
-                            return true;
-                        case R.id.all:
-                            refreshAdapter(DaoAction.loadActionsByDate(year, week));
-                            return true;
+                    if(item.getItemId()==R.id.all) {
+                        refreshAdapter(DaoAction.loadActionsByDate(dateSaisie));
+                    }else{
+                        refreshAdapter(DaoAction.loadActionsByType(item.getTitle().toString()));
                     }
-                    return false;
+                    return true;
                 }
             });
             popupMenu.show();
+
         }
         if(cat.equalsIgnoreCase("phase")){
             popupMenu.getMenuInflater().inflate(R.menu.popup_menu_phase, menu);
             popupMenu.setGravity(Gravity.CENTER);
+            ArrayList<String> phases = getPhasesAffiches();
+            int i = 0 ;
+            for(i=0; i<phases.size(); i++){
+                menu.add(0, i, 0, phases.get(i));
+            }
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.all:
-                            refreshAdapter(DaoAction.loadActionsByDate(year, week));
-                            return true;
-                        case R.id.phase1:
-                            refreshAdapter(DaoAction.loadActionsByPhase("1"));
-                            return true;
-                        case R.id.phase2:
-                            refreshAdapter(DaoAction.loadActionsByPhase("2"));
-                            return true;
-                        case R.id.phase3:
-                            refreshAdapter(DaoAction.loadActionsByPhase("3"));
-                            return true;
+
+                    if(item.getItemId()==R.id.all) {
+                        refreshAdapter(DaoAction.loadActionsByDate(dateSaisie));
+                    }else{
+                        refreshAdapter(DaoAction.loadActionsByPhaseAndDate(item.getTitle().toString(),dateSaisie));
                     }
-                    return false;
+                    return true;
                 }
             });
             popupMenu.show();
         }
+
+        if(cat.equalsIgnoreCase("domaine")){
+            popupMenu.getMenuInflater().inflate(R.menu.popup_menu_domaine, menu);
+            popupMenu.setGravity(Gravity.CENTER);
+            ArrayList<Domaine> doms = getDomainesAffiches();
+            int i = 0 ;
+            for(Domaine d : doms){
+                menu.add(0,(int)(long) d.getId(), 0, d.getNom());
+            }
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+
+                    if(item.getItemId()==R.id.all) {
+                        refreshAdapter(DaoAction.loadActionsByDate(dateSaisie));
+                    }else{
+                        refreshAdapter(DaoAction.loadActionsByDomaineAndDate(item.getItemId(),dateSaisie));
+                    }
+                    return true;
+                }
+            });
+            popupMenu.show();
+        }
+
+    }
+
+    private ArrayList<String> getTypeTravailAffiche(){
+        ArrayList<String> result = new ArrayList<>();
+        List<Action> lstActions = DaoAction.loadActionsByDate(dateSaisie);
+        for(Action a : lstActions){
+            if(result.indexOf(a.getTypeTravail())<0){
+                result.add(a.getTypeTravail());
+            }
+        }
+        return result;
+
+    }
+
+    private ArrayList<String> getPhasesAffiches(){
+        ArrayList<String> result = new ArrayList<>();
+        List<Action> lstActions = DaoAction.loadActionsByDate(dateSaisie);
+        for(Action a : lstActions){
+            if(result.indexOf(a.getPhase())<0){
+                result.add(a.getPhase());
+            }
+        }
+        return result;
+
+    }
+
+    private ArrayList<Domaine> getDomainesAffiches(){
+        ArrayList<Domaine> result = new ArrayList<>();
+        List<Action> lstActions = DaoAction.loadActionsByDate(dateSaisie);
+        for(Action a : lstActions){
+            if(result.indexOf(a.getDomaine())<0){
+                result.add(a.getDomaine());
+            }
+        }
+        return result;
 
     }
 

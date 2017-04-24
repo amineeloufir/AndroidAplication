@@ -8,25 +8,21 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.activeandroid.Model;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
-import org.w3c.dom.Text;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import miage.fr.gestionprojet.models.Mesure;
 import miage.fr.gestionprojet.models.SaisieCharge;
 import miage.fr.gestionprojet.models.dao.DaoMesure;
-import miage.fr.gestionprojet.outils.Calcul;
+import miage.fr.gestionprojet.outils.Outils;
 import miage.fr.gestionprojet.R;
 
 public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
@@ -53,7 +49,7 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
             txtSaisieCharge = (TextView) findViewById(R.id.textViewSaisieCharge);
             txtSaisieCharge.setText(saisieCharge.toString());
 
-            int progression = Calcul.calculerPourcentage(mesure.getNbUnitesMesures(),saisieCharge.getNbUnitesCibles());
+            int progression = Outils.calculerPourcentage(mesure.getNbUnitesMesures(),saisieCharge.getNbUnitesCibles());
             CircularProgressBar circularProgressBar = (CircularProgressBar)findViewById(R.id.progressBarAvancement);
             circularProgressBar.setProgress(progression);
 
@@ -69,7 +65,7 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 
             ProgressBar progressBarDate = (ProgressBar) findViewById(R.id.progressBarDate);
             Calendar c = Calendar.getInstance();
-            int progress = Calcul.calculerPourcentage(c.getTimeInMillis()-saisieCharge.getDtDeb().getTime(),saisieCharge.getDtFinPrevue().getTime()-saisieCharge.getDtDeb().getTime());
+            int progress = Outils.calculerPourcentage(c.getTimeInMillis()-saisieCharge.getDtDeb().getTime(),saisieCharge.getDtFinPrevue().getTime()-saisieCharge.getDtDeb().getTime());
             progressBarDate.setProgress(progress);
 
             ListView lstViewIndicateur = (ListView) findViewById(R.id.ListViewDetailsSaisieCharge);
