@@ -523,6 +523,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                     mOutputText.setText("The following error occurred:\n"
                             + mLastError.getMessage());
                 }
+                
             } else {
                 mOutputText.setText("Request cancelled.");
             }
