@@ -81,6 +81,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         LinearLayout activityLayout = new LinearLayout(this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -604,7 +605,13 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             } else {
                 output.add(0, "Data retrieved using the Google Sheets API:");
                 mOutputText.setText(TextUtils.join("\n", output));
+
             }
+            Intent intentInitial = getIntent();
+            String initialUtilisateur = intentInitial.getStringExtra(ActivityGestionDesInitials.EXTRA_INITIAL);
+            Intent intent = new Intent(ChargementDonnees.this, MainActivity.class);
+            intent.putExtra(ActivityGestionDesInitials.EXTRA_INITIAL, initialUtilisateur);
+            startActivity(intent);
         }
 
         @Override

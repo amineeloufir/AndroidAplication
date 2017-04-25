@@ -57,6 +57,10 @@ public class ActivityGestionDesInitials extends AppCompatActivity {
                     Intent intent = new Intent(ActivityGestionDesInitials.this, ChargementDonnees.class);
                     intent.putExtra(EXTRA_INITIAL, (lstInitials.get(position)));
                     startActivity(intent);
+
+//                    Intent intent = new Intent(ActivityGestionDesInitials.this, MainActivity.class);
+//                    intent.putExtra(EXTRA_INITIAL, (lstInitials.get(position)));
+//                    startActivity(intent);
                 }
             });
         }else{

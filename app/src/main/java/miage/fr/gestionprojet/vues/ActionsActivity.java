@@ -21,6 +21,8 @@ import android.widget.TextView;
 
 import com.activeandroid.query.Select;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -48,6 +50,8 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
     private int week;
     private Date dateSaisie;
     @Override
+
+    //TODO voir problème de date
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actions);
@@ -85,6 +89,8 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
         weekMinus.setOnClickListener(this);
         yearEditText = (EditText) findViewById(R.id.edit_text_year);
         weekEditText = (EditText) findViewById(R.id.edit_text_week);
+        weekEditText.setText(String.valueOf(week));
+        yearEditText.setText(String.valueOf(year));
         yearEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -137,7 +143,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
     protected void onStart() {
         super.onStart();
         dateSaisie = Outils.weekOfYearToDate(year,week);
-        refreshAdapter(DaoAction.loadActionsByDate(dateSaisie));
+        refreshAdapter(DaoAction.loadAll());
     }
 
 
@@ -160,14 +166,23 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view) {
         yearEditText.setError(null);
         weekEditText.setError(null);
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         switch (view.getId()){
             case R.id.week_minus:
                 week = (Integer.parseInt(weekEditText.getText().toString()) - 1) % 53;
                 weekEditText.setText(String.valueOf(week));
+                if(week == 0){
+                    week = 52;
+                    year = year -1;
+                    weekEditText.setText(String.valueOf(week));
+                    yearEditText.setText(String.valueOf(year));
+                }
+                dateSaisie = Outils.weekOfYearToDate(year,week);
                 break;
             case R.id.week_plus:
                 week = (Integer.parseInt(weekEditText.getText().toString()) + 1) % 53;
                 weekEditText.setText(String.valueOf(week));
+                dateSaisie = Outils.weekOfYearToDate(year,week);
                 break;
             case R.id.year_plus:
                 year = (Integer.parseInt(yearEditText.getText().toString()) + 1);
@@ -184,6 +199,8 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                 yearEditText.setText(String.valueOf(year));
                 break;
         }
+
+        refreshAdapter(DaoAction.loadActionsByDate(dateSaisie));
     }
 
     @Override
@@ -345,7 +362,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
 
     private ArrayList<Domaine> getDomainesAffiches() {
         ArrayList<Domaine> result = new ArrayList<>();
-       /* List<Action> lstActions = DaoAction.loadActionsByDate(dateSaisie);
+        List<Action> lstActions = DaoAction.loadActionsByDate(dateSaisie);
         for(Action a : lstActions){
             if(result.indexOf(a.getDomaine())<0){
                 result.add(a.getDomaine());
@@ -353,7 +370,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
         }
 
 
-   */
+
         return result;
     }
 
