@@ -343,16 +343,18 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    private ArrayList<Domaine> getDomainesAffiches(){
+    private ArrayList<Domaine> getDomainesAffiches() {
         ArrayList<Domaine> result = new ArrayList<>();
-        List<Action> lstActions = DaoAction.loadActionsByDate(dateSaisie);
+       /* List<Action> lstActions = DaoAction.loadActionsByDate(dateSaisie);
         for(Action a : lstActions){
             if(result.indexOf(a.getDomaine())<0){
                 result.add(a.getDomaine());
             }
         }
-        return result;
 
+
+   */
+        return result;
     }
 
 

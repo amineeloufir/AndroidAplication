@@ -1,5 +1,6 @@
 package miage.fr.gestionprojet.models.dao;
 
+import com.activeandroid.Model;
 import com.activeandroid.query.Select;
 
 import java.util.ArrayList;
@@ -57,5 +58,11 @@ public class DaoAction {
                 .where("domaine=? and dt_fin_prevue>=? and dt_debut<=?",idDomaine,d.getTime(),d.getTime())
                 .execute();
         return result;
+    }
+    public static ArrayList<Action> getActionbyCode(String id) {
+        return new Select()
+                .from(Action.class)
+                .where("code = ?", id)
+                .execute();
     }
 }

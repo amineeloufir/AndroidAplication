@@ -3,6 +3,7 @@ package miage.fr.gestionprojet.models;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 
 import java.util.Date;
 import java.util.ArrayList;
@@ -13,24 +14,7 @@ import java.util.ArrayList;
 
 @Table(name="Action")
 public class Action extends Model{
-  /*  public Action(String typeTravail, int ordre, String tarif, String phase, String code, Domaine domaine, boolean apparaitrePlanning, String typeFacturation, int nbJoursPrevus, float coutParJour, Date dtDeb, Date dtFinPrevue, Date dtFinReelle) {
-        this.typeTravail = typeTravail;
-        this.ordre = ordre;
-        this.tarif = tarif;
-        this.phase = phase;
-        this.code = code;
-        this.domaine = domaine;
-        this.apparaitrePlanning = apparaitrePlanning;
-        this.typeFacturation = typeFacturation;
-        this.nbJoursPrevus = nbJoursPrevus;
-        this.coutParJour = coutParJour;
-        RespOeu = respOeu;
-        RespOuv = respOuv;
-        this.lstUtilisateursOuv = lstUtilisateursOuv;
-        this.dtDeb = dtDeb;
-        this.dtFinPrevue = dtFinPrevue;
-        this.dtFinReelle = dtFinReelle;
-    }*/
+
 
     @Column(name="typeTravail")
     private String typeTravail;
@@ -48,7 +32,7 @@ public class Action extends Model{
     private String code;
 
     @Column(name="domaine")
-    private String domaine;
+    private Domaine domaine;
 
     @Column(name="apparaitr_planing")
     private boolean apparaitrePlanning;
@@ -62,14 +46,14 @@ public class Action extends Model{
     @Column(name="cout_par_pour")
     private float coutParJour;
 
-    @Column(name="resp_oeu")
-    private Ressource RespOeu;
+    //@Column(name="resp_oeu")
+    //private Ressource RespOeu;
 
-    @Column(name="resp_ouv")
-    private Ressource RespOuv;
+    //@Column(name="resp_ouv")
+   // private Ressource RespOuv;
 
-    @Column(name="utilisateurs_ouv")
-    private ArrayList<Ressource> lstUtilisateursOuv;
+    //@Column(name="utilisateurs_ouv")
+   // private ArrayList<Ressource> lstUtilisateursOuv;
 
     @Column(name="dt_debut")
     private Date dtDeb;
@@ -156,7 +140,7 @@ public class Action extends Model{
     public void setCoutParJour(float coutParJour) {
         this.coutParJour = coutParJour;
     }
-
+/*
     public Ressource getRespOeu() {
         return RespOeu;
     }
@@ -180,7 +164,7 @@ public class Action extends Model{
     public void setLstUtilisateursOuv(ArrayList<Ressource> lstUtilisateursOuv) {
         this.lstUtilisateursOuv = lstUtilisateursOuv;
     }
-
+*/
     public Date getDtDeb() {
         return dtDeb;
     }
@@ -205,15 +189,16 @@ public class Action extends Model{
         this.dtFinReelle = dtFinReelle;
     }
 
-    public String getDomaine() {
+    public Domaine getDomaine() {
         return domaine;
     }
 
-    public void setDomaine(String domaine) {
+    public void setDomaine(Domaine domaine) {
         this.domaine = domaine;
     }
 
     public String toString(){
         return this.code;
     }
+
 }

@@ -44,11 +44,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-
+import miage.fr.gestionprojet.models.Formation;
 import miage.fr.gestionprojet.models.Action;
 import miage.fr.gestionprojet.models.Domaine;
 import miage.fr.gestionprojet.models.Projet;
+import miage.fr.gestionprojet.models.Ressource;
+import miage.fr.gestionprojet.models.dao.DaoAction;
+
+import miage.fr.gestionprojet.models.dao.DaoProjet;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -62,6 +67,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
+
 
     private static final String BUTTON_TEXT = "Charger la base de données ";
     private static final String PREF_ACCOUNT_NAME = "accountName";
@@ -330,7 +336,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
      * An asynchronous task that handles the Google Sheets API call.
      * Placing the API calls in their own task ensures the UI stays responsive.
      */
-    private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
+    public class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
         private com.google.api.services.sheets.v4.Sheets mService = null;
         private Exception mLastError = null;
 
@@ -367,22 +373,50 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
          * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException, ParseException {
+            /*tables des feuilles à parcourir
+            HashMap<String,String>feuilles= new HashMap<>();
+            feuilles.put("rangeActions","Liste des actions projet!A3:Z");
+            feuilles.put("rangeRessources","Ressources!A2:Z");
+            */
             String spreadsheetId = "1yw_8OO4oFYR6Q25KH0KE4LOr86UfwoNl_E6hGgq2UD4";
-            String range = "Liste des actions projet!A3:Z";
+            String rangeActions = "Liste des actions projet!A3:Z";
+            //String rangeRessources = "Ressources!A2:Z";
+            String rangeFormation = "Indicateurs formation!A3:Z";
+
             List<String> results = new ArrayList<String>();
-            ValueRange response = this.mService.spreadsheets().values()
-                    .get(spreadsheetId, range)
+            ValueRange responseAction = this.mService.spreadsheets().values()
+                    .get(spreadsheetId, rangeActions)
                     .execute();
-            List<List<Object>> values = response.getValues();
+           // ValueRange responseressources = this.mService.spreadsheets().values()
+             //       .get(spreadsheetId, rangeRessources)
+               //     .execute();
+            ValueRange responseformation = this.mService.spreadsheets().values()
+                    .get(spreadsheetId, rangeFormation)
+                    .execute();
+            List<List<Object>> values = responseAction.getValues();
             if (values != null) {
 
 
-                initialiserAction(reglerDonnees(values));
-                //reglerDonnees(values);
-                for (List row : values) {
-                    results.add(row.get(0) + ", " + row.get(14));
+               initialiserAction(reglerDonnees(values));
+                reglerDonnees(values);
 
-                }
+            }
+          //  List<List<Object>> valuesressources = responseressources.getValues();
+            //if (valuesressources != null) {
+              //initialiserressource(reglerDonnees(valuesressources));
+
+
+           //}
+            List<List<Object>> valuesformation = responseformation.getValues();
+            if (valuesformation != null) {
+                intialiserFormation(reglerDonnees(valuesformation));
+
+
+            }
+
+            for (List row : valuesformation) {
+                results.add(row.get(6) + ", " + row.get(8));
+
             }
             return results;
         }
@@ -454,11 +488,45 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             return resultat;
         }
 
+        public void initialiserressource(List<List<Object>> values) {
+            new Delete().from(Ressource.class).execute();
+
+            Ressource resource = new Ressource();
+            for (List row : values) {
+                resource.setNom(row.get(2).toString());
+                resource.setEmail(row.get(5).toString());
+                resource.setEntreprise(row.get(3).toString());
+                resource.setFonction(row.get(4).toString());
+                resource.setInformationsDiverses(row.get(8).toString());
+                resource.setInitiales(row.get(0).toString());
+                resource.setPrenom(row.get(1).toString());
+                resource.setTelephoneFixe(row.get(6).toString());
+                resource.setTelephoneMobile(row.get(7).toString());
+            }
+        }
+
         public void initialiserAction(List<List<Object>> values) throws ParseException {
             new Delete().from(Action.class).execute();
+            /*
+
+             */
+            Projet projet = new Projet();
+
+            projet.setNom("Projet processus de dév");
+            Date datedeb = chainetoDate("10/01/2017");
+            Date datefinproj = chainetoDate("10/06/2017");
+            projet.setDateDebut(datedeb);
+            projet.setDateFinInitiale(datefinproj);
+            projet.setDateFinReelle(datefinproj);
+            projet.setDescription("projet M2 MIAGE ");
+
+            projet.save();
+            /*
+
+             */
             for (List row : values) {
                 Action action = new Action();
-
+                action.setCode(row.get(5).toString());
                 action.setOrdre(chainetoint(row.get(1).toString()));
                 action.setTarif(row.get(2).toString());
 
@@ -466,12 +534,11 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                 action.setPhase(row.get(0).toString());
                 action.setCode(row.get(5).toString());
 
-                Projet projet = new Projet();
 
-               /*   Domaine domaine = new Domaine(row.get(3).toString(),"description demo",projet);
-                domaine.save();*/
+                Domaine domaine = new Domaine(row.get(3).toString(), "description demo", projet);
+                domaine.save();
 
-                action.setDomaine(row.get(3).toString());
+                action.setDomaine(domaine);
 
                 action.setApparaitrePlanning(chainetoBoolean(row.get(6).toString()));
                 action.setTypeFacturation(row.get(7).toString());
@@ -488,7 +555,40 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             }
 
         }
+        public void intialiserFormation(List<List<Object>> values) {
+            new Delete().from(Formation.class).execute();
 
+            Formation formation = new Formation();
+            ArrayList<Action> actionList = new ArrayList<>();
+
+
+            for (List row : values) {
+
+
+                formation.setAvancementObjectif(chainetofloat(row.get(8).toString().replace('%', ' ')));
+                formation.setAvancementTotal(chainetofloat(row.get(6).toString().replace('%', ' ')));
+                formation.setAvancementPreRequis(chainetofloat(row.get(7).toString().replace('%', ' ')));
+
+                formation.setAvancementPostFormation(chainetofloat(row.get(9).toString().replace('%', ' ')));
+                ArrayList<Action> arrayAction= (ArrayList<Action>) DaoAction.loadAll();
+                ArrayList<Projet> projets = (ArrayList<Projet>) DaoProjet.loadAll();
+
+                actionList = DaoAction.getActionbyCode(row.get(5).toString());
+                Action action = new Action();
+                if (actionList.size() == 0) {
+                    action = new Action();
+                    action.save();
+                } else {
+                    action = actionList.get(0);
+                }
+
+                formation.setAction(action);
+
+
+            }
+
+
+        }
 
         @Override
         protected void onPreExecute() {
@@ -523,7 +623,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                     mOutputText.setText("The following error occurred:\n"
                             + mLastError.getMessage());
                 }
-                
+
             } else {
                 mOutputText.setText("Request cancelled.");
             }
