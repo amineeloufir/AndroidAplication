@@ -1,5 +1,6 @@
 package miage.fr.gestionprojet.models;
 
+import com.activeandroid.Model;
 import com.activeandroid.annotation.Table;
 
 import java.util.ArrayList;
@@ -8,8 +9,11 @@ import java.util.ArrayList;
  * Created by Audrey on 25/02/2017.
  */
 
-@Table(name="Formation")
-public class Formation extends Action {
+@Table(name = "Formation")
+public class Formation extends Model {
+
+    private Action action;
+
 
 
     private float avancementTotal;
@@ -66,5 +70,12 @@ public class Formation extends Action {
 
     public void setLstEtapesFormation(ArrayList<EtapeFormation> lstEtapesFormation) {
         this.lstEtapesFormation = lstEtapesFormation;
+    }
+    public Action getAction() {
+        return action;
+    }
+
+    public void setAction(Action action) {
+        this.action = action;
     }
 }

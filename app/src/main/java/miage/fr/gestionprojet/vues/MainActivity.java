@@ -80,9 +80,15 @@ public class MainActivity  extends AppCompatActivity {
 
             // sinon, on affiche directement les détails du projet en cours
             if(lstProjets.size()==1) {
-                Intent intent = new Intent(MainActivity.this, ChargementDonnees.class);
+//                Intent intent = new Intent(MainActivity.this, ChargementDonnees.class);
+//                intent.putExtra(EXTRA_PROJET, (lstProjets.get(0).getId()));
+//                intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
+//                startActivity(intent);
+
+                Intent intent = new Intent(MainActivity.this, ActivityDetailsProjet.class);
                 intent.putExtra(EXTRA_PROJET, (lstProjets.get(0).getId()));
                 intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
+
                 startActivity(intent);
             }else{
 
