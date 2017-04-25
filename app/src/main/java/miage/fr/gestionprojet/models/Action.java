@@ -64,6 +64,12 @@ public class Action extends Model{
     @Column(name="dt_fin_reelle")
     private Date dtFinReelle;
 
+    @Column(name="reste_a_faire")
+    private float resteAFaire;
+
+    @Column(name="ecart_projete")
+    private float ecartProjete;
+
 
     public Action() {
         super();
@@ -201,4 +207,11 @@ public class Action extends Model{
         return this.code;
     }
 
+    public float getResteAFaire() {
+        return resteAFaire;
+    }
+
+    public float getEcartProjete() {
+        return ecartProjete;
+    }
 }
