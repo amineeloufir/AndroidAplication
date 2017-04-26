@@ -84,6 +84,11 @@ public class ActivityDetailsProjet extends AppCompatActivity {
                             intent.putExtra(EXTRA_INITIAL, initialUtilisateur);
                             startActivity(intent);
                             break;
+                        case 3:
+                            intent = new Intent(ActivityDetailsProjet.this, ActivityBudget.class);
+                            intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
+                            startActivity(intent);
+                            break;
                         default:
                             System.out.println("Non instancié pour le moment");
                             break;

@@ -532,7 +532,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                 action.setTarif(row.get(2).toString());
 
                 action.setTypeTravail(row.get(0).toString());
-                action.setPhase(row.get(0).toString());
+                action.setPhase(row.get(4).toString());
                 action.setCode(row.get(5).toString());
 
 
