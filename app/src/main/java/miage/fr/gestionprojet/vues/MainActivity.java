@@ -47,13 +47,6 @@ public class MainActivity  extends AppCompatActivity {
         Intent intentInitial = getIntent();
         initialUtilisateur = intentInitial.getStringExtra(ActivityGestionDesInitials.EXTRA_INITIAL);
 
-        try {
-            insererDonneesTests();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-
         setContentView(R.layout.activity_main);
 
         //on récupère la liste des projet dont la date de fin n'est passé
@@ -102,123 +95,20 @@ public class MainActivity  extends AppCompatActivity {
 
     }
 
-    public void insererDonneesTests() throws ParseException {
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.initial_utilisateur, menu);
+        menu.findItem(R.id.initial_utilisateur).setTitle(initialUtilisateur);
+        return true;
+    }
 
-
-
-/*
-  ChargementDonnees chargerDonne= new ChargementDonnees();
-        chargerDonne.chargerDonnees();
-        new Delete().from(Projet.class).execute();
-        new Delete().from(Domaine.class).execute();
-        new Delete().from(Action.class).execute();
-        new Delete().from(SaisieCharge.class).execute();
-        new Delete().from(Ressource.class).execute();
-        new Delete().from(Mesure.class).execute();
-
-        Projet proj = new Projet();
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        proj.setDateDebut(df.parse("12/08/2016"));
-        proj.setDateFinInitiale(df.parse("12/08/2017"));
-        proj.setDescription("test test test");
-        proj.setNom("Test");
-        proj.save();
-
-        Domaine dom = new Domaine();
-        dom.setNom("PRJ - PROJET");
-        dom.setProjet(proj);
-        dom.setDescription("Ceci est un test");
-        dom.save();
-
-        dom = new Domaine();
-        dom.setNom("GC - GESTION COMMERCIALE");
-        dom.setProjet(proj);
-        dom.setDescription("Ceci est un deuxième test");
-        dom.save();
-
-        Ressource res = new Ressource();
-        res.setNom("Mercereau");
-        res.setPrenom("Nicolas");
-        res.setEmail("nm@vif.fr");
-        res.setEntreprise("vif");
-        res.setInitiales("NM");
-        res.setTelephoneFixe("0000000000");
-        res.setTelephoneMobile("0000000000");
-        res.save();
-
-        SaisieCharge saisie = new SaisieCharge();
-        saisie.setDomaine(dom);
-        saisie.setCode("SA - Article UL de type PF");
-        saisie.setTypeTravail("Saisie");
-        saisie.setNbUnitesCibles(92);
-        saisie.setHeureParUnite(2);
-        saisie.setApparaitrePlanning(true);
-        saisie.setOrdre(1);
-        saisie.setRespOeu(res);
-        saisie.setRespOuv(res);
-        saisie.setDtDeb(df.parse("02/02/2017"));
-        saisie.setDtFinPrevue(df.parse("15/04/2017"));
-        saisie.save();
-
-        Mesure mesure = new Mesure();
-        mesure.setAction(saisie);
-        mesure.setDtMesure(df.parse("20/02/2017"));
-        mesure.setNbUnitesMesures(50);
-        mesure.save();
-
-        mesure = new Mesure();
-        mesure.setAction(saisie);
-        mesure.setDtMesure(df.parse("27/02/2017"));
-        mesure.setNbUnitesMesures(65);
-        mesure.save();
-
-
-        saisie = new SaisieCharge();
-        saisie.setDomaine(dom);
-        saisie.setCode("SA - Clients");
-        saisie.setTypeTravail("Saisie");
-        saisie.setNbUnitesCibles(50);
-        saisie.setHeureParUnite(2);
-        saisie.setApparaitrePlanning(true);
-        saisie.setOrdre(1);
-        saisie.setRespOeu(res);
-        saisie.setRespOuv(res);
-        saisie.setDtDeb(df.parse("10/02/2017"));
-        saisie.setDtFinPrevue(df.parse("24/04/2017"));
-        saisie.save();
-
-        Action action = new Action();
-        action.setDomaine(dom);
-        action.setTypeTravail("Projet");
-        action.setCode("Action 1");
-        action.setApparaitrePlanning(true);
-        action.setCoutParJour(2);
-        action.setDtDeb(df.parse("10/05/2017"));
-        action.setDtFinPrevue(df.parse("10/07/2017"));
-        action.setPhase("2");
-        action.setRespOeu(res);
-        action.setRespOuv(res);
-        ArrayList<Ressource> ls = new ArrayList<>();
-        ls.add(res);
-        action.setLstUtilisateursOuv(ls);
-        action.save();
-
-        Action action2 = new Action();
-        action2.setDomaine(dom);
-        action2.setTypeTravail("Analyse");
-        action2.setCode("Action 2");
-        action2.setApparaitrePlanning(true);
-        action2.setCoutParJour(2);
-        action2.setDtDeb(df.parse("10/05/2017"));
-        action2.setDtFinPrevue(df.parse("10/07/2017"));
-        action2.setPhase("1");
-        action2.setRespOeu(res);
-        action2.setRespOuv(res);
-        action2.setLstUtilisateursOuv(ls);
-        action2.save();
-    }*/
-
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.initial_utilisateur) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 

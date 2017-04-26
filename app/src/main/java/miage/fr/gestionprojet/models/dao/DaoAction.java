@@ -71,6 +71,7 @@ public class DaoAction {
                 .execute();
     }
 
+
     public static HashMap<String,Integer> getNbActionRealiseeGroupByDomaine(){
         Cursor c = ActiveAndroid
                 .getDatabase()
