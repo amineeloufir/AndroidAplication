@@ -39,7 +39,7 @@ public class ActivityBudget extends AppCompatActivity {
                 String valeurSelectionne = lstChoixAffichage.get(i);
                 switch(valeurSelectionne){
                     case DOMAINE:
-
+                        AffichageDomaine();
                         break;
                     case TYPE:
                         break;
@@ -49,5 +49,8 @@ public class ActivityBudget extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void AffichageDomaine(){
     }
 }

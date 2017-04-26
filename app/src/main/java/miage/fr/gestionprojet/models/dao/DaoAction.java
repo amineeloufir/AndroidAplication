@@ -87,4 +87,21 @@ public class DaoAction {
 
         return lstResult;
     }
+
+    public static HashMap<String,Integer> getNbActionTotalGroupByDomaine(){
+        Cursor c = ActiveAndroid
+                .getDatabase()
+                .rawQuery("SELECT COUNT(*) as total, domaine FROM " + new Action().getTableName() + " GROUP BY domaine", null);
+        HashMap<String,Integer> lstResult = new HashMap<>();
+
+        try {
+            while (c.moveToNext()) {
+                lstResult.put(c.getString(1),c.getInt(0));
+            }
+        } finally {
+            c.close();
+        }
+
+        return lstResult;
+    }
 }
