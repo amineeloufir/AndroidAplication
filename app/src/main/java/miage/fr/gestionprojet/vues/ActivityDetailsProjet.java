@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,13 +23,10 @@ import miage.fr.gestionprojet.models.Projet;
 
 public class ActivityDetailsProjet extends AppCompatActivity {
 
-    private final static String RESSOURCES = "Etat d'avancement des ressources";
-    private final static String FORMATIONS = "Etat d'avancement des formations";
-    private final static String ACTIONS = "Etat d'avancement des actions à réaliser";
+    private final static String RESSOURCES = "Avancement des saisies";
+    private final static String FORMATIONS = "Avancement des formations";
     private final static String PLANNING = "Planning détaillé";
     private final static String BUDGET = "Suivi du budget";
-    private final static String TESTS = "Suivi du plan de test et de recettage";
-    private final static String JALONS = "Suivi des jalons";
     public final static String PROJET = "projet visu";
     private ListView liste = null;
     public final static String EXTRA_INITIAL = "initial";
@@ -52,12 +50,10 @@ public class ActivityDetailsProjet extends AppCompatActivity {
 
             // on récupère les différents élements de la vue
             TextView txtNomProj = (TextView) findViewById(R.id.textViewNomProjet);
-            TextView txtDescription = (TextView) findViewById(R.id.textViewDescription);
             TextView txtDatesProjet = (TextView) findViewById(R.id.textViewDtProjet);
 
             // on alimente ces différents éléments
             txtNomProj.setText(proj.getNom());
-            txtDescription.setText(proj.getDescription());
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             txtDatesProjet.setText(df.format(proj.getDateDebut()) + "-" + df.format(proj.getDateFinInitiale()));
 
@@ -66,11 +62,8 @@ public class ActivityDetailsProjet extends AppCompatActivity {
             lstActions = new ArrayList<String>();
             lstActions.add(RESSOURCES);
             lstActions.add(FORMATIONS);
-            lstActions.add(ACTIONS);
             lstActions.add(PLANNING);
             lstActions.add(BUDGET);
-            lstActions.add(TESTS);
-            lstActions.add(JALONS);
             final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lstActions);
             liste.setAdapter(adapter);
 
@@ -78,11 +71,18 @@ public class ActivityDetailsProjet extends AppCompatActivity {
             liste.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                    Intent intent = new Intent();
+                    Intent intent;
                     switch (position) {
                         case 0:
                             intent = new Intent(ActivityDetailsProjet.this, ActivityIndicateursSaisieCharge.class);
                             intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
+                            intent.putExtra(PROJET, proj.getId());
+                            startActivity(intent);
+                            break;
+                        case 2:
+                            intent = new Intent(ActivityDetailsProjet.this, ActionsActivity.class);
+                            intent.putExtra(EXTRA_INITIAL, initialUtilisateur);
+                            startActivity(intent);
                             break;
                         default:
                             System.out.println("Non instancié pour le moment");
@@ -90,10 +90,21 @@ public class ActivityDetailsProjet extends AppCompatActivity {
 
                     }
 
+                    //intent.putExtra(PROJET, proj.getId());
+                    //startActivity(intent);
+                }
+            });
+
+            final Button button = (Button) findViewById(R.id.btnActions);
+            button.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent intent = new Intent(ActivityDetailsProjet.this, ActivityIndicateursSaisieCharge.class);
+                    intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
                     intent.putExtra(PROJET, proj.getId());
                     startActivity(intent);
                 }
             });
+
         }
 
     }
@@ -116,4 +127,7 @@ public class ActivityDetailsProjet extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void definirCouleurBouton(){
+
+    }
 }

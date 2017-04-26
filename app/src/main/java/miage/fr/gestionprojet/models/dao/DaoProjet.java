@@ -5,6 +5,7 @@ import com.activeandroid.query.Select;
 import java.util.Date;
 import java.util.List;
 
+import miage.fr.gestionprojet.models.Action;
 import miage.fr.gestionprojet.models.Projet;
 
 /**
@@ -18,5 +19,9 @@ public class DaoProjet {
                 .from(Projet.class)
                 .where("date_fin_initiale>? or date_fin_reelle>?", dateDuJour.getTime(),dateDuJour.getTime())
                 .execute();
+    }
+    public static List<Projet> loadAll(){
+        List<Projet> projets = new Select().from(Projet.class).execute();
+        return projets;
     }
 }

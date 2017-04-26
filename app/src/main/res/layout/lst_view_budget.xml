@@ -10,16 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:contentDescription="row"
-            android:id="@+id/icon_ttravail"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp">
-        </ImageView>
+
 
         <LinearLayout
             android:orientation="vertical"
@@ -27,23 +18,22 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/label"
+                android:id="@+id/typeAffiche"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
                 android:text="text"
-                android:textSize="26sp"
-                android:layout_weight="1">
-            </TextView>
+                android:textSize="26sp"></TextView>
 
             <TextView
-                android:text="TextView"
+                android:id="@+id/nbActionRealisees"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textViewDateSaisieCharge"
                 android:layout_weight="1"
+                android:text="TextView"
                 android:textSize="10sp" />
 
         </LinearLayout>
@@ -51,9 +41,9 @@
     </LinearLayout>
 
     <ProgressBar
+        android:id="@+id/progress_bar_budget"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:id="@+id/progress_bar_saisiecharge_crit"
         android:layout_height="20dp" />
 
 </LinearLayout>

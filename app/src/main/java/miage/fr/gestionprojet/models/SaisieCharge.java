@@ -329,4 +329,8 @@ public class SaisieCharge extends Model {
     public void setLstMesures(ArrayList<Mesure> lstMesures) {
         this.lstMesures = lstMesures;
     }
+
+    public String toString(){
+        return this.code;
+    }
 }

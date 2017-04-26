@@ -1,7 +1,6 @@
 package miage.fr.gestionprojet.vues;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,19 +13,22 @@ import android.widget.TextView;
 import com.activeandroid.Model;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import miage.fr.gestionprojet.models.Mesure;
 import miage.fr.gestionprojet.models.SaisieCharge;
 import miage.fr.gestionprojet.models.dao.DaoMesure;
-import miage.fr.gestionprojet.outils.Calcul;
+import miage.fr.gestionprojet.outils.Outils;
 import miage.fr.gestionprojet.R;
 
 public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 
     private SaisieCharge saisieCharge = null;
-    private TextView txtTravail;
+    private TextView txtSaisieCharge;
     public final static String EXTRA_INITIAL = "initial";
     public String initialUtilisateur =null;
 
@@ -44,21 +46,33 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
             saisieCharge = Model.load(SaisieCharge.class, id);
             DaoMesure dao = new DaoMesure();
             Mesure mesure = dao.getLastMesureBySaisieCharge(saisieCharge);
-            txtTravail = (TextView) findViewById(R.id.textViewSaisieCharge);
-            txtTravail.setText(saisieCharge.getDomaine().getNom());
+            txtSaisieCharge = (TextView) findViewById(R.id.textViewSaisieCharge);
+            txtSaisieCharge.setText(saisieCharge.toString());
 
-            int progression = Calcul.calculerPourcentage(mesure.getNbUnitesMesures(),saisieCharge.getNbUnitesCibles());
+            int progression = Outils.calculerPourcentage(mesure.getNbUnitesMesures(),saisieCharge.getNbUnitesCibles());
             CircularProgressBar circularProgressBar = (CircularProgressBar)findViewById(R.id.progressBarAvancement);
             circularProgressBar.setProgress(progression);
 
             TextView txtPrct = (TextView) findViewById(R.id.textViewPrct);
-            txtPrct.setText(progression+"%");
+            txtPrct.setText("Heure/unite:"+saisieCharge.getHeureParUnite()+"\n"+"ChargeTotale:"+saisieCharge.getChargeTotaleEstimeeEnHeure()
+            +"\n"+"Charge/semaine:"+saisieCharge.getChargeEstimeeParSemaine());
+
+            TextView txtDateDeb = (TextView) findViewById(R.id.txtDtDeb);
+            TextView txtDateFin = (TextView) findViewById(R.id.txtDtFin);
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            txtDateDeb.setText(df.format(saisieCharge.getDtDeb()));
+            txtDateFin.setText(df.format(saisieCharge.getDtFinPrevue()));
+
+            ProgressBar progressBarDate = (ProgressBar) findViewById(R.id.progressBarDate);
+            Calendar c = Calendar.getInstance();
+            int progress = Outils.calculerPourcentage(c.getTimeInMillis()-saisieCharge.getDtDeb().getTime(),saisieCharge.getDtFinPrevue().getTime()-saisieCharge.getDtDeb().getTime());
+            progressBarDate.setProgress(progress);
 
             ListView lstViewIndicateur = (ListView) findViewById(R.id.ListViewDetailsSaisieCharge);
             List<String> indicateurs = new ArrayList<>();
-            indicateurs.add("Nombre d'unités produites"+mesure.getNbUnitesMesures()+"/"+saisieCharge.getNbUnitesCibles());
-            //indicateurs.add("Charge réalisée:"+(saisieCharge.get()-mesure.getChargeRestante())+"/"+saisieCharge.getTempsTotalEstime());
-            //indicateurs.add("Semaines écoulées"+(saisieCharge.getNbSemaine()-mesure.getNbSemainesRestantes())+"/"+saisieCharge.getNbSemaine());
+            indicateurs.add("Nombre d'unités produites:"+mesure.getNbUnitesMesures()+"/"+saisieCharge.getNbUnitesCibles());
+            indicateurs.add("Temps restant (semaines): "+saisieCharge.getNbSemainesRestantes());
+            indicateurs.add("Dernière mesure saisie:"+mesure.getDtMesure());
             final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, indicateurs);
             lstViewIndicateur.setAdapter(adapter);
 

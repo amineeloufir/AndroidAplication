@@ -3,6 +3,7 @@ package miage.fr.gestionprojet.models;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 
 import java.util.Date;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 
 @Table(name="Action")
 public class Action extends Model{
+
 
     @Column(name="typeTravail")
     private String typeTravail;
@@ -39,19 +41,19 @@ public class Action extends Model{
     private String typeFacturation;
 
     @Column(name="nb_jours_prevus")
-    private int nbJoursPrevus;
+    private Float nbJoursPrevus;
 
     @Column(name="cout_par_pour")
     private float coutParJour;
 
-    @Column(name="resp_oeu")
-    private Ressource RespOeu;
+    //@Column(name="resp_oeu")
+    //private Ressource RespOeu;
 
-    @Column(name="resp_ouv")
-    private Ressource RespOuv;
+    //@Column(name="resp_ouv")
+   // private Ressource RespOuv;
 
-    @Column(name="utilisateurs_ouv")
-    private ArrayList<Ressource> lstUtilisateursOuv;
+    //@Column(name="utilisateurs_ouv")
+   // private ArrayList<Ressource> lstUtilisateursOuv;
 
     @Column(name="dt_debut")
     private Date dtDeb;
@@ -61,6 +63,12 @@ public class Action extends Model{
 
     @Column(name="dt_fin_reelle")
     private Date dtFinReelle;
+
+    @Column(name="reste_a_faire")
+    private float resteAFaire;
+
+    @Column(name="ecart_projete")
+    private float ecartProjete;
 
 
     public Action() {
@@ -123,11 +131,11 @@ public class Action extends Model{
         this.typeFacturation = typeFacturation;
     }
 
-    public int getNbJoursPrevus() {
+    public Float getNbJoursPrevus() {
         return nbJoursPrevus;
     }
 
-    public void setNbJoursPrevus(int nbJoursPrevus) {
+    public void setNbJoursPrevus(Float nbJoursPrevus) {
         this.nbJoursPrevus = nbJoursPrevus;
     }
 
@@ -138,7 +146,7 @@ public class Action extends Model{
     public void setCoutParJour(float coutParJour) {
         this.coutParJour = coutParJour;
     }
-
+/*
     public Ressource getRespOeu() {
         return RespOeu;
     }
@@ -162,7 +170,7 @@ public class Action extends Model{
     public void setLstUtilisateursOuv(ArrayList<Ressource> lstUtilisateursOuv) {
         this.lstUtilisateursOuv = lstUtilisateursOuv;
     }
-
+*/
     public Date getDtDeb() {
         return dtDeb;
     }
@@ -193,5 +201,17 @@ public class Action extends Model{
 
     public void setDomaine(Domaine domaine) {
         this.domaine = domaine;
+    }
+
+    public String toString(){
+        return this.code;
+    }
+
+    public float getResteAFaire() {
+        return resteAFaire;
+    }
+
+    public float getEcartProjete() {
+        return ecartProjete;
     }
 }

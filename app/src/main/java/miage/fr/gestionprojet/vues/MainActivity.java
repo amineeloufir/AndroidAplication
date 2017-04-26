@@ -80,9 +80,15 @@ public class MainActivity  extends AppCompatActivity {
 
             // sinon, on affiche directement les détails du projet en cours
             if(lstProjets.size()==1) {
+//                Intent intent = new Intent(MainActivity.this, ChargementDonnees.class);
+//                intent.putExtra(EXTRA_PROJET, (lstProjets.get(0).getId()));
+//                intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
+//                startActivity(intent);
+
                 Intent intent = new Intent(MainActivity.this, ActivityDetailsProjet.class);
                 intent.putExtra(EXTRA_PROJET, (lstProjets.get(0).getId()));
                 intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
+
                 startActivity(intent);
             }else{
 
@@ -98,6 +104,11 @@ public class MainActivity  extends AppCompatActivity {
 
     public void insererDonneesTests() throws ParseException {
 
+
+
+/*
+  ChargementDonnees chargerDonne= new ChargementDonnees();
+        chargerDonne.chargerDonnees();
         new Delete().from(Projet.class).execute();
         new Delete().from(Domaine.class).execute();
         new Delete().from(Action.class).execute();
@@ -175,6 +186,38 @@ public class MainActivity  extends AppCompatActivity {
         saisie.setDtDeb(df.parse("10/02/2017"));
         saisie.setDtFinPrevue(df.parse("24/04/2017"));
         saisie.save();
+
+        Action action = new Action();
+        action.setDomaine(dom);
+        action.setTypeTravail("Projet");
+        action.setCode("Action 1");
+        action.setApparaitrePlanning(true);
+        action.setCoutParJour(2);
+        action.setDtDeb(df.parse("10/05/2017"));
+        action.setDtFinPrevue(df.parse("10/07/2017"));
+        action.setPhase("2");
+        action.setRespOeu(res);
+        action.setRespOuv(res);
+        ArrayList<Ressource> ls = new ArrayList<>();
+        ls.add(res);
+        action.setLstUtilisateursOuv(ls);
+        action.save();
+
+        Action action2 = new Action();
+        action2.setDomaine(dom);
+        action2.setTypeTravail("Analyse");
+        action2.setCode("Action 2");
+        action2.setApparaitrePlanning(true);
+        action2.setCoutParJour(2);
+        action2.setDtDeb(df.parse("10/05/2017"));
+        action2.setDtFinPrevue(df.parse("10/07/2017"));
+        action2.setPhase("1");
+        action2.setRespOeu(res);
+        action2.setRespOuv(res);
+        action2.setLstUtilisateursOuv(ls);
+        action2.save();
+    }*/
+
 
     }
 
