@@ -54,7 +54,7 @@ public class ActivityGestionDesInitials extends AppCompatActivity {
             liste.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                    Intent intent = new Intent(ActivityGestionDesInitials.this, ChargementDonnees.class);
+                    Intent intent = new Intent(ActivityGestionDesInitials.this, MainActivity.class);
                     intent.putExtra(EXTRA_INITIAL, (lstInitials.get(position)));
                     startActivity(intent);
                 }

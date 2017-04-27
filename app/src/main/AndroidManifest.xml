@@ -19,7 +19,7 @@
             android:value="BigFollow.db" />
         <meta-data
             android:name="AA_DB_VERSION"
-            android:value="2" />
+            android:value="3" />
 
         <activity android:name=".vues.ActivityConnexion">
             <intent-filter>
@@ -36,8 +36,9 @@
         <activity android:name=".vues.ActivityGestionDesInitials" />
         <activity
             android:name=".vues.ActionsActivity"
-            android:theme="@style/AppThemeNoActionBar"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeNoActionBar" />
+        <activity android:name=".vues.ActivityBudget"></activity>
     </application>
 
 </manifest>

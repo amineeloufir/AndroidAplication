@@ -53,6 +53,7 @@ import miage.fr.gestionprojet.models.Projet;
 import miage.fr.gestionprojet.models.Ressource;
 import miage.fr.gestionprojet.models.dao.DaoAction;
 
+import miage.fr.gestionprojet.models.dao.DaoDomaine;
 import miage.fr.gestionprojet.models.dao.DaoProjet;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -81,6 +82,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         LinearLayout activityLayout = new LinearLayout(this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -380,13 +382,21 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             */
             String spreadsheetId = "1yw_8OO4oFYR6Q25KH0KE4LOr86UfwoNl_E6hGgq2UD4";
             String rangeActions = "Liste des actions projet!A3:Z";
+            String rangeDcConso = "DC et détails conso!A5:Z";
+
             //String rangeRessources = "Ressources!A2:Z";
             String rangeFormation = "Indicateurs formation!A3:Z";
 
             List<String> results = new ArrayList<String>();
+
             ValueRange responseAction = this.mService.spreadsheets().values()
                     .get(spreadsheetId, rangeActions)
                     .execute();
+
+            ValueRange responseDcConso = this.mService.spreadsheets().values()
+                    .get(spreadsheetId, rangeDcConso)
+                    .execute();
+
            // ValueRange responseressources = this.mService.spreadsheets().values()
              //       .get(spreadsheetId, rangeRessources)
                //     .execute();
@@ -394,11 +404,14 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                     .get(spreadsheetId, rangeFormation)
                     .execute();
             List<List<Object>> values = responseAction.getValues();
-            if (values != null) {
+
+            List<List<Object>> valuesDcConso = responseDcConso.getValues();
+
+            mProgress.setProgress(1/7);
+            if (values != null && valuesDcConso != null) {
 
 
-               initialiserAction(reglerDonnees(values));
-                reglerDonnees(values);
+               initialiserAction(reglerDonnees(values),reglerDonnees(valuesDcConso));
 
             }
           //  List<List<Object>> valuesressources = responseressources.getValues();
@@ -408,6 +421,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
 
            //}
             List<List<Object>> valuesformation = responseformation.getValues();
+            mProgress.setProgress(2/7);
             if (valuesformation != null) {
                 intialiserFormation(reglerDonnees(valuesformation));
 
@@ -427,7 +441,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
          */
         public List<List<Object>> reglerDonnees(List<List<Object>> values) {
             for (List row : values) {
-                int indexe = 15 - row.size();
+                int indexe = 26 - row.size();
                 for (int i = 0; i < indexe; i++) {
                     row.add("");
 
@@ -505,8 +519,10 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             }
         }
 
-        public void initialiserAction(List<List<Object>> values) throws ParseException {
+        public void initialiserAction(List<List<Object>> values,List<List<Object>> valuesDcConso) throws ParseException {
             new Delete().from(Action.class).execute();
+            new Delete().from(Domaine.class).execute();
+            new Delete().from(Projet.class).execute();
             /*
 
              */
@@ -531,12 +547,14 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                 action.setTarif(row.get(2).toString());
 
                 action.setTypeTravail(row.get(0).toString());
-                action.setPhase(row.get(0).toString());
+                action.setPhase(row.get(4).toString());
                 action.setCode(row.get(5).toString());
 
-
-                Domaine domaine = new Domaine(row.get(3).toString(), "description demo", projet);
-                domaine.save();
+                Domaine domaine = DaoDomaine.getByName(row.get(3).toString());
+                if(domaine == null) {
+                    domaine = new Domaine(row.get(3).toString(), "description demo", projet);
+                    domaine.save();
+                }
 
                 action.setDomaine(domaine);
 
@@ -550,6 +568,25 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                 action.setDtDeb(datedebut);
                 action.setDtFinPrevue(datefin);
                 action.setDtFinReelle(datefin);
+
+                for (List row_Dc : valuesDcConso) {
+
+                    if(action.getCode().equals(row_Dc.get(5).toString())){
+
+                        if(row_Dc.get(20).toString() ==null || row_Dc.get(20).toString().length()==0){
+                            action.setEcartProjete(0);
+                        }else {
+                            action.setEcartProjete(chainetofloat(row_Dc.get(20).toString()));
+                        }
+
+                        if(row_Dc.get(18).toString() ==null || row_Dc.get(18).toString().length()==0){
+                            action.setResteAFaire(0);
+                        }else {
+                            action.setResteAFaire(chainetofloat(row_Dc.get(18).toString()));
+                        }
+                    }
+                }
+
                /*  */
                 action.save();
             }
@@ -604,7 +641,13 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             } else {
                 output.add(0, "Data retrieved using the Google Sheets API:");
                 mOutputText.setText(TextUtils.join("\n", output));
+
             }
+            Intent intentInitial = getIntent();
+            String initialUtilisateur = intentInitial.getStringExtra(ActivityGestionDesInitials.EXTRA_INITIAL);
+            Intent intent = new Intent(ChargementDonnees.this, MainActivity.class);
+            intent.putExtra(ActivityGestionDesInitials.EXTRA_INITIAL, initialUtilisateur);
+            startActivity(intent);
         }
 
         @Override
