@@ -113,8 +113,8 @@ public class ActivityIndicateursSaisieCharge extends AppCompatActivity {
     private ArrayList<Domaine> getDomainesAffiches(){
         ArrayList<Domaine> doms = new ArrayList<>();
         for(SaisieCharge s : lstSaisieCharge){
-            if(doms.indexOf(s.getDomaine())<0){
-                doms.add(s.getDomaine());
+            if(doms.indexOf(s.getAction().getDomaine())<0){
+                doms.add(s.getAction().getDomaine());
             }
         }
         return doms;
@@ -123,11 +123,11 @@ public class ActivityIndicateursSaisieCharge extends AppCompatActivity {
     private ArrayList<Ressource> getRessourcesAffiches(){
         ArrayList<Ressource> res = new ArrayList<>();
         for(SaisieCharge s : lstSaisieCharge){
-            if(res.indexOf(s.getRespOeu())<0){
-                res.add(s.getRespOeu());
+            if(res.indexOf(s.getAction().getRespOeu())<0){
+                res.add(s.getAction().getRespOeu());
             }
-            if(res.indexOf(s.getRespOuv())<0){
-                res.add(s.getRespOuv());
+            if(res.indexOf(s.getAction().getRespOuv())<0){
+                res.add(s.getAction().getRespOuv());
             }
         }
         return res;

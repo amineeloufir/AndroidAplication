@@ -410,21 +410,21 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             List<List<Object>> values = responseAction.getValues();
 
             List<List<Object>> valuesDcConso = responseDcConso.getValues();
-
             mProgress.setProgress(Outils.calculerPourcentage(5,7));
+            List<List<Object>> valuesressources = responseressources.getValues();
+            if (valuesressources != null) {
+                initialiserressource(reglerDonnees(valuesressources));
+
+
+            }
+            mProgress.setProgress(Outils.calculerPourcentage(6,7));
             if (values != null && valuesDcConso != null) {
 
 
                initialiserAction(reglerDonnees(values),reglerDonnees(valuesDcConso));
 
             }
-            mProgress.setProgress(Outils.calculerPourcentage(6,7));
-            List<List<Object>> valuesressources = responseressources.getValues();
-            if (valuesressources != null) {
-              initialiserressource(reglerDonnees(valuesressources));
 
-
-           }
             mProgress.setProgress(Outils.calculerPourcentage(7,7));
             List<List<Object>> valuesformation = responseformation.getValues();
             if (valuesformation != null) {
@@ -531,6 +531,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                 resource.setPrenom(row.get(1).toString());
                 resource.setTelephoneFixe(row.get(6).toString());
                 resource.setTelephoneMobile(row.get(7).toString());
+                resource.save();
             }
         }
 

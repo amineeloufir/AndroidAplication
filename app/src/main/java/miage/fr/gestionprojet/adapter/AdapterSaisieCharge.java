@@ -70,7 +70,7 @@ public class AdapterSaisieCharge extends ArrayAdapter<SaisieCharge>{
         holder.action.setText(getItem(position).toString());
 
         //on récupère la première lettre du domaine associé au travail
-        String firstLetter = String.valueOf(getItem(position).getPhase());
+        String firstLetter = String.valueOf(getItem(position).getAction().getPhase());
 
         ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
         // generate random color
@@ -89,7 +89,7 @@ public class AdapterSaisieCharge extends ArrayAdapter<SaisieCharge>{
         holder.avancement.setProgress(Outils.calculerPourcentage(mesure.getNbUnitesMesures(),getItem(position).getNbUnitesCibles()));
 
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        holder.date.setText(df.format(getItem(position).getDtFinPrevue()));
+        holder.date.setText(df.format(getItem(position).getAction().getDtFinPrevue()));
         return convertView;
     }
 

@@ -4,6 +4,7 @@ import com.activeandroid.query.Select;
 
 import java.util.ArrayList;
 
+import miage.fr.gestionprojet.models.Action;
 import miage.fr.gestionprojet.models.SaisieCharge;
 
 /**
@@ -13,18 +14,38 @@ import miage.fr.gestionprojet.models.SaisieCharge;
 public class DaoSaisieCharge {
 
     public static ArrayList<SaisieCharge> loadSaisieChargesByDomaine(int idDomaine){
-        ArrayList<SaisieCharge> result = new Select()
-                .from(SaisieCharge.class)
+        ArrayList<SaisieCharge> lst = new ArrayList<>();
+        ArrayList<Action> results = new Select()
+                .from(Action.class)
                 .where("domaine=?",idDomaine)
                 .execute();
-        return result;
+        for(Action a : results) {
+            SaisieCharge result  = (SaisieCharge) new Select()
+                    .from(SaisieCharge.class)
+                    .where("domaine=?", a.getId())
+                    .execute().get(0);
+            lst.add(result);
+
+        }
+        return lst;
     }
 
     public static ArrayList<SaisieCharge> loadSaisieChargeByUtilisateur(int idUser){
-        ArrayList<SaisieCharge> result = new Select()
-                .from(SaisieCharge.class)
+
+
+        ArrayList<SaisieCharge> lst = new ArrayList<>();
+        ArrayList<Action> results = new Select()
+                .from(Action.class)
                 .where("resp_ouv=? or resp_oeu=?",idUser,idUser)
                 .execute();
-        return result;
+        for(Action a : results) {
+            SaisieCharge result  = (SaisieCharge) new Select()
+                    .from(SaisieCharge.class)
+                    .where("domaine=?", a.getId())
+                    .execute().get(0);
+            lst.add(result);
+
+        }
+        return lst;
     }
 }
