@@ -92,6 +92,13 @@ public class ActivityIndicateursSaisieCharge extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.initial_utilisateur:
+                return true;
+            case R.id.charger_donnees:
+                Intent intent = new Intent(ActivityIndicateursSaisieCharge.this, ChargementDonnees.class);
+                intent.putExtra(EXTRA_INITIAL, (initialUtilisateur));
+                startActivity(intent);
+                return true;
             case R.id.menu_trie_utilisateur:
                 showPopup("utilisateurs");
                 return true;

@@ -27,6 +27,7 @@ public class ActivityBudget extends AppCompatActivity {
     private final static String DOMAINE = "Domaine";
     private final static String TYPE = "Type";
     private final static String UTILISATEUR = "Utilisateur";
+    public final static String EXTRA_INITIAL = "initial";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,12 +91,18 @@ public class ActivityBudget extends AppCompatActivity {
         return true;
     }
 
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
-        if (id == R.id.initial_utilisateur) {
-            return true;
+        switch(id){
+            case R.id.initial_utilisateur:
+                return true;
+            case R.id.charger_donnees:
+                Intent intent = new Intent(ActivityBudget.this, ChargementDonnees.class);
+                intent.putExtra(EXTRA_INITIAL, (initialUtilisateur));
+                startActivity(intent);
+                return true;
+
         }
         return super.onOptionsItemSelected(item);
     }

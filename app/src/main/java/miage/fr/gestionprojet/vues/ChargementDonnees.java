@@ -53,6 +53,7 @@ import miage.fr.gestionprojet.models.Projet;
 import miage.fr.gestionprojet.models.Ressource;
 import miage.fr.gestionprojet.models.dao.DaoAction;
 
+import miage.fr.gestionprojet.models.dao.DaoDomaine;
 import miage.fr.gestionprojet.models.dao.DaoProjet;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -406,6 +407,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
 
             List<List<Object>> valuesDcConso = responseDcConso.getValues();
 
+            mProgress.setProgress(1/7);
             if (values != null && valuesDcConso != null) {
 
 
@@ -419,6 +421,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
 
            //}
             List<List<Object>> valuesformation = responseformation.getValues();
+            mProgress.setProgress(2/7);
             if (valuesformation != null) {
                 intialiserFormation(reglerDonnees(valuesformation));
 
@@ -518,6 +521,8 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
 
         public void initialiserAction(List<List<Object>> values,List<List<Object>> valuesDcConso) throws ParseException {
             new Delete().from(Action.class).execute();
+            new Delete().from(Domaine.class).execute();
+            new Delete().from(Projet.class).execute();
             /*
 
              */
@@ -545,9 +550,11 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                 action.setPhase(row.get(4).toString());
                 action.setCode(row.get(5).toString());
 
-
-                Domaine domaine = new Domaine(row.get(3).toString(), "description demo", projet);
-                domaine.save();
+                Domaine domaine = DaoDomaine.getByName(row.get(3).toString());
+                if(domaine == null) {
+                    domaine = new Domaine(row.get(3).toString(), "description demo", projet);
+                    domaine.save();
+                }
 
                 action.setDomaine(domaine);
 

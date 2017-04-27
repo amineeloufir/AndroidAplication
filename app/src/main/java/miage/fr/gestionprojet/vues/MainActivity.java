@@ -33,11 +33,11 @@ import miage.fr.gestionprojet.models.dao.DaoProjet;
 
 public class MainActivity  extends AppCompatActivity {
 
+    public final static String EXTRA_PROJET = "projetChoisi";
+    public final static String EXTRA_INITIAL = "initial";
     private ListView liste = null;
     private List<Projet> lstProjets = null;
     private String initialUtilisateur = null;
-    public final static String EXTRA_PROJET = "projetChoisi";
-    public final static String EXTRA_INITIAL = "initial";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,8 +105,15 @@ public class MainActivity  extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
-        if (id == R.id.initial_utilisateur) {
-            return true;
+        switch(id){
+            case R.id.initial_utilisateur:
+                return true;
+            case R.id.charger_donnees:
+                Intent intent = new Intent(MainActivity.this, ChargementDonnees.class);
+                intent.putExtra(EXTRA_INITIAL, (initialUtilisateur));
+                startActivity(intent);
+                return true;
+
         }
         return super.onOptionsItemSelected(item);
     }

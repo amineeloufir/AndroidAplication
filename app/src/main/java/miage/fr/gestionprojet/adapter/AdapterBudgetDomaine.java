@@ -68,27 +68,34 @@ public class AdapterBudgetDomaine extends ArrayAdapter<Domaine> {
 
         // on définit le texte à afficher
         holder.domaine.setText(getItem(position).toString());
-        holder.nbActionRealisees.setText(Integer.valueOf(this.lstNbActionsRealisees.get(position))+"/"+Integer.valueOf(this.lstNbActionsRealisees.get(position)));
-        holder.avancement.setProgress(Outils.calculerPourcentage(this.lstNbActionsRealisees.get(position),this.lstNbActionsRealisees.get(position)));
+        holder.nbActionRealisees.setText(Integer.valueOf(this.lstNbActionsRealisees.get(position))+"/"+Integer.valueOf(this.lstNbActions.get(position)));
+        holder.avancement.setProgress(Outils.calculerPourcentage(this.lstNbActionsRealisees.get(position),this.lstNbActions.get(position)));
         return convertView;
     }
 
     private void chargerNbAction(){
         this.lstNbActions = new ArrayList<>();
         this.lstNbActionsRealisees = new ArrayList<>();
-        int i = 0;
         HashMap<String, Integer> results= DaoAction.getNbActionRealiseeGroupByDomaine();
         if(results.size()>0){
-            for(i = 0; i<lstDomaines.size();i++){
-                this.lstNbActionsRealisees.add(i,results.get(this.lstDomaines.get(i).getId()));
+            for(Domaine d : this.lstDomaines){
+                if(results.get(String.valueOf(d.getId()))!=null) {
+                    this.lstNbActionsRealisees.add(results.get(String.valueOf(d.getId())));
+                }else{
+                    this.lstNbActionsRealisees.add(0);
+                }
             }
 
         }
 
         results= DaoAction.getNbActionTotalGroupByDomaine();
         if(results.size()>0){
-            for(i = 0; i<lstDomaines.size();i++){
-                this.lstNbActions.add(i,results.get(this.lstDomaines.get(i).getId()));
+            for(Domaine d : this.lstDomaines){
+                if(results.get(String.valueOf(d.getId()))!=null) {
+                    this.lstNbActions.add(results.get(String.valueOf(d.getId())));
+                }else{
+                    this.lstNbActions.add(0);
+                }
             }
 
         }

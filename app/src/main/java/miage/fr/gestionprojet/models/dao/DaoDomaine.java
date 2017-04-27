@@ -17,4 +17,16 @@ public class DaoDomaine {
                 .from(Domaine.class)
                 .execute();
     }
+
+    public static Domaine getByName(String name){
+        ArrayList<Domaine> lst = new Select()
+                .from(Domaine.class)
+                .where("nom = ?",name)
+                .execute();
+        if(lst.size()>0){
+            return lst.get(0);
+        }else{
+            return null;
+        }
+    }
 }
