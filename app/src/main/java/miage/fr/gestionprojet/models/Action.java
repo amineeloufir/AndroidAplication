@@ -214,4 +214,8 @@ public class Action extends Model{
     public float getEcartProjete() {
         return ecartProjete;
     }
+
+    public void setResteAFaire(float p_RAF) {this.resteAFaire=p_RAF;}
+
+    public void setEcartProjete(float p_ecart) {this.ecartProjete= p_ecart;}
 }
