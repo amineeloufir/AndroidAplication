@@ -46,11 +46,11 @@ public class Action extends Model{
     @Column(name="cout_par_pour")
     private float coutParJour;
 
-    //@Column(name="resp_oeu")
-    //private Ressource RespOeu;
+    @Column(name="resp_oeu")
+    private Ressource RespOeu;
 
-    //@Column(name="resp_ouv")
-   // private Ressource RespOuv;
+    @Column(name="resp_ouv")
+    private Ressource RespOuv;
 
     //@Column(name="utilisateurs_ouv")
    // private ArrayList<Ressource> lstUtilisateursOuv;
@@ -146,7 +146,6 @@ public class Action extends Model{
     public void setCoutParJour(float coutParJour) {
         this.coutParJour = coutParJour;
     }
-/*
     public Ressource getRespOeu() {
         return RespOeu;
     }
@@ -163,14 +162,13 @@ public class Action extends Model{
         RespOuv = respOuv;
     }
 
-    public ArrayList<Ressource> getLstUtilisateursOuv() {
+    /*public ArrayList<Ressource> getLstUtilisateursOuv() {
         return lstUtilisateursOuv;
     }
 
     public void setLstUtilisateursOuv(ArrayList<Ressource> lstUtilisateursOuv) {
         this.lstUtilisateursOuv = lstUtilisateursOuv;
-    }
-*/
+    }*/
     public Date getDtDeb() {
         return dtDeb;
     }

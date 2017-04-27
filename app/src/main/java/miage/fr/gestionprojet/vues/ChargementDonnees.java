@@ -55,6 +55,7 @@ import miage.fr.gestionprojet.models.dao.DaoAction;
 
 import miage.fr.gestionprojet.models.dao.DaoDomaine;
 import miage.fr.gestionprojet.models.dao.DaoProjet;
+import miage.fr.gestionprojet.models.dao.DaoRessource;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -384,7 +385,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             String rangeActions = "Liste des actions projet!A3:Z";
             String rangeDcConso = "DC et détails conso!A5:Z";
 
-            //String rangeRessources = "Ressources!A2:Z";
+            String rangeRessources = "Ressources!A2:Z";
             String rangeFormation = "Indicateurs formation!A3:Z";
 
             List<String> results = new ArrayList<String>();
@@ -397,9 +398,9 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                     .get(spreadsheetId, rangeDcConso)
                     .execute();
 
-           // ValueRange responseressources = this.mService.spreadsheets().values()
-             //       .get(spreadsheetId, rangeRessources)
-               //     .execute();
+            ValueRange responseressources = this.mService.spreadsheets().values()
+                    .get(spreadsheetId, rangeRessources)
+                    .execute();
             ValueRange responseformation = this.mService.spreadsheets().values()
                     .get(spreadsheetId, rangeFormation)
                     .execute();
@@ -407,21 +408,22 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
 
             List<List<Object>> valuesDcConso = responseDcConso.getValues();
 
-            mProgress.setProgress(1/7);
+            mProgress.setProgress(1/3);
             if (values != null && valuesDcConso != null) {
 
 
                initialiserAction(reglerDonnees(values),reglerDonnees(valuesDcConso));
 
             }
-          //  List<List<Object>> valuesressources = responseressources.getValues();
-            //if (valuesressources != null) {
-              //initialiserressource(reglerDonnees(valuesressources));
+            mProgress.setProgress(2/3);
+            List<List<Object>> valuesressources = responseressources.getValues();
+            if (valuesressources != null) {
+              initialiserressource(reglerDonnees(valuesressources));
 
 
-           //}
+           }
             List<List<Object>> valuesformation = responseformation.getValues();
-            mProgress.setProgress(2/7);
+            mProgress.setProgress(3/3);
             if (valuesformation != null) {
                 intialiserFormation(reglerDonnees(valuesformation));
 
@@ -555,6 +557,20 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                     domaine = new Domaine(row.get(3).toString(), "description demo", projet);
                     domaine.save();
                 }
+
+                Ressource respOuv = DaoRessource.getRessourceByInitial(row.get(13).toString());
+                if(respOuv==null){
+                    respOuv = new Ressource();
+                    respOuv.setInitiales(row.get(13).toString());
+                }
+                action.setRespOuv(respOuv);
+
+                Ressource respOeu = DaoRessource.getRessourceByInitial(row.get(12).toString());
+                if(respOeu==null){
+                    respOeu = new Ressource();
+                    respOeu.setInitiales(row.get(12).toString());
+                }
+                action.setRespOuv(respOuv);
 
                 action.setDomaine(domaine);
 

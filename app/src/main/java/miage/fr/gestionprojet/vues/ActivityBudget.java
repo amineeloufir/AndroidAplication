@@ -12,11 +12,17 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import miage.fr.gestionprojet.R;
 import miage.fr.gestionprojet.adapter.AdapterBudgetDomaine;
+import miage.fr.gestionprojet.adapter.AdapterBudgetType;
+import miage.fr.gestionprojet.adapter.AdapterBudgetUtilisateur;
 import miage.fr.gestionprojet.models.Domaine;
+import miage.fr.gestionprojet.models.Ressource;
+import miage.fr.gestionprojet.models.dao.DaoAction;
 import miage.fr.gestionprojet.models.dao.DaoDomaine;
+import miage.fr.gestionprojet.models.dao.DaoRessource;
 
 public class ActivityBudget extends AppCompatActivity {
     private Spinner spinChoixAffichage;
@@ -78,11 +84,15 @@ public class ActivityBudget extends AppCompatActivity {
     }
 
     private void AffichageType(){
-
+        ArrayList<String> lstTypes = DaoAction.getLstTypeTravail();
+        AdapterBudgetType adapter = new AdapterBudgetType(ActivityBudget.this,R.layout.lst_view_budget,lstTypes);
+        this.liste.setAdapter(adapter);
     }
 
     private void AffichageUtilisateur(){
-
+        List<Ressource> lstUtilisateurs = DaoRessource.loadAll();
+        AdapterBudgetUtilisateur adapter = new AdapterBudgetUtilisateur(ActivityBudget.this,R.layout.lst_view_budget,lstUtilisateurs);
+        this.liste.setAdapter(adapter);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

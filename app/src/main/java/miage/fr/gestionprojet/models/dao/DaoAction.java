@@ -105,4 +105,127 @@ public class DaoAction {
 
         return lstResult;
     }
+
+
+    public static HashMap<String,Integer> getNbActionRealiseeGroupByTypeTravail(){
+        Cursor c = ActiveAndroid
+                .getDatabase()
+                .rawQuery("SELECT COUNT(*) as total,typeTravail FROM " + new Action().getTableName() + " WHERE reste_a_faire=0 GROUP BY typeTravail", null);
+        HashMap<String,Integer> lstResult = new HashMap<>();
+
+        try {
+            while (c.moveToNext()) {
+                lstResult.put(c.getString(1),c.getInt(0));
+            }
+        } finally {
+            c.close();
+        }
+
+        return lstResult;
+    }
+
+    public static HashMap<String,Integer> getNbActionTotalGroupByTypeTravail(){
+        Cursor c = ActiveAndroid
+                .getDatabase()
+                .rawQuery("SELECT COUNT(*) as total, typeTravail FROM " + new Action().getTableName() + " GROUP BY typeTravail", null);
+        HashMap<String,Integer> lstResult = new HashMap<>();
+
+        try {
+            while (c.moveToNext()) {
+                lstResult.put(c.getString(1),c.getInt(0));
+            }
+        } finally {
+            c.close();
+        }
+
+        return lstResult;
+    }
+
+    public static ArrayList<String> getLstTypeTravail(){
+        Cursor c = ActiveAndroid
+                .getDatabase()
+                .rawQuery("SELECT DISTINCT(typeTravail) FROM " + new Action().getTableName(), null);
+        ArrayList<String> lstResults = new ArrayList<>();
+
+        try {
+            while (c.moveToNext()) {
+                lstResults.add(c.getString(0));
+            }
+        } finally {
+            c.close();
+        }
+
+        return lstResults;
+    }
+
+
+    public static HashMap<String,Integer> getNbActionRealiseeGroupByUtilisateurOeu(){
+        Cursor c = ActiveAndroid
+                .getDatabase()
+                .rawQuery("SELECT COUNT(*) as total,resp_oeu, FROM " + new Action().getTableName() + " WHERE reste_a_faire=0 GROUP BY resp_oeu", null);
+        HashMap<String,Integer> lstResult = new HashMap<>();
+
+        try {
+            while (c.moveToNext()) {
+                lstResult.put(c.getString(1),c.getInt(0));
+            }
+        } finally {
+            c.close();
+        }
+
+        return lstResult;
+    }
+
+    public static HashMap<String,Integer> getNbActionRealiseeGroupByUtilisateurOuv(){
+        Cursor c = ActiveAndroid
+                .getDatabase()
+                .rawQuery("SELECT COUNT(*) as total,resp_ouv, FROM " + new Action().getTableName() + " WHERE reste_a_faire=0 GROUP BY resp_ouv", null);
+        HashMap<String,Integer> lstResult = new HashMap<>();
+
+        try {
+            while (c.moveToNext()) {
+                lstResult.put(c.getString(1),c.getInt(0));
+            }
+        } finally {
+            c.close();
+        }
+
+        return lstResult;
+    }
+
+    public static HashMap<String,Integer> getNbActionTotalGroupByUtilisateurOeu(){
+        Cursor c = ActiveAndroid
+                .getDatabase()
+                .rawQuery("SELECT COUNT(*) as total, resp_oeu FROM " + new Action().getTableName() + " GROUP BY resp_oeu", null);
+        HashMap<String,Integer> lstResult = new HashMap<>();
+
+        try {
+            while (c.moveToNext()) {
+                lstResult.put(c.getString(1),c.getInt(0));
+            }
+        } finally {
+            c.close();
+        }
+
+        return lstResult;
+    }
+
+    public static HashMap<String,Integer> getNbActionTotalGroupByUtilisateurOuv(){
+        Cursor c = ActiveAndroid
+                .getDatabase()
+                .rawQuery("SELECT COUNT(*) as total, resp_ouv FROM " + new Action().getTableName() + " GROUP BY resp_ouv", null);
+        HashMap<String,Integer> lstResult = new HashMap<>();
+
+        try {
+            while (c.moveToNext()) {
+                lstResult.put(c.getString(1),c.getInt(0));
+            }
+        } finally {
+            c.close();
+        }
+
+        return lstResult;
+    }
+
+
 }

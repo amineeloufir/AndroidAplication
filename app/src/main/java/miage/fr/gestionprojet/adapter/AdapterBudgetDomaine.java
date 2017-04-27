@@ -100,7 +100,7 @@ public class AdapterBudgetDomaine extends ArrayAdapter<Domaine> {
 
         }
     }
-    private class ViewHolder {
+    class ViewHolder {
         private TextView domaine;
         private TextView nbActionRealisees;
         private ProgressBar avancement;
