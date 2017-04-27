@@ -56,6 +56,7 @@ import miage.fr.gestionprojet.models.dao.DaoAction;
 import miage.fr.gestionprojet.models.dao.DaoDomaine;
 import miage.fr.gestionprojet.models.dao.DaoProjet;
 import miage.fr.gestionprojet.models.dao.DaoRessource;
+import miage.fr.gestionprojet.outils.Outils;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -389,41 +390,43 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             String rangeFormation = "Indicateurs formation!A3:Z";
 
             List<String> results = new ArrayList<String>();
-
+            mProgress.setProgress(Outils.calculerPourcentage(0,7));
             ValueRange responseAction = this.mService.spreadsheets().values()
                     .get(spreadsheetId, rangeActions)
                     .execute();
-
+            mProgress.setProgress(Outils.calculerPourcentage(1,7));
             ValueRange responseDcConso = this.mService.spreadsheets().values()
                     .get(spreadsheetId, rangeDcConso)
                     .execute();
-
+            mProgress.setProgress(Outils.calculerPourcentage(2,7));
             ValueRange responseressources = this.mService.spreadsheets().values()
                     .get(spreadsheetId, rangeRessources)
                     .execute();
+            mProgress.setProgress(Outils.calculerPourcentage(3,7));
             ValueRange responseformation = this.mService.spreadsheets().values()
                     .get(spreadsheetId, rangeFormation)
                     .execute();
+            mProgress.setProgress(Outils.calculerPourcentage(4,7));
             List<List<Object>> values = responseAction.getValues();
 
             List<List<Object>> valuesDcConso = responseDcConso.getValues();
 
-            mProgress.setProgress(1/3);
+            mProgress.setProgress(Outils.calculerPourcentage(5,7));
             if (values != null && valuesDcConso != null) {
 
 
                initialiserAction(reglerDonnees(values),reglerDonnees(valuesDcConso));
 
             }
-            mProgress.setProgress(2/3);
+            mProgress.setProgress(Outils.calculerPourcentage(6,7));
             List<List<Object>> valuesressources = responseressources.getValues();
             if (valuesressources != null) {
               initialiserressource(reglerDonnees(valuesressources));
 
 
            }
+            mProgress.setProgress(Outils.calculerPourcentage(7,7));
             List<List<Object>> valuesformation = responseformation.getValues();
-            mProgress.setProgress(3/3);
             if (valuesformation != null) {
                 intialiserFormation(reglerDonnees(valuesformation));
 
@@ -508,6 +511,16 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             new Delete().from(Ressource.class).execute();
 
             Ressource resource = new Ressource();
+            resource.setNom("");
+            resource.setEmail("");
+            resource.setEntreprise("");
+            resource.setFonction("");
+            resource.setInformationsDiverses("");
+            resource.setInitiales("");
+            resource.setPrenom("");
+            resource.setTelephoneFixe("");
+            resource.setTelephoneMobile("");
+            resource.save();
             for (List row : values) {
                 resource.setNom(row.get(2).toString());
                 resource.setEmail(row.get(5).toString());
@@ -557,18 +570,44 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                     domaine = new Domaine(row.get(3).toString(), "description demo", projet);
                     domaine.save();
                 }
-
-                Ressource respOuv = DaoRessource.getRessourceByInitial(row.get(13).toString());
+                Ressource respOuv;
+                if(row.get(13).toString()==null || row.get(13).toString().length()==0){
+                    respOuv = new Ressource();
+                    respOuv.setInitiales("");
+                }
+                respOuv = DaoRessource.getRessourceByInitial(row.get(13).toString());
                 if(respOuv==null){
                     respOuv = new Ressource();
                     respOuv.setInitiales(row.get(13).toString());
+                    respOuv.setNom("");
+                    respOuv.setEmail("");
+                    respOuv.setEntreprise("");
+                    respOuv.setFonction("");
+                    respOuv.setInformationsDiverses("");
+                    respOuv.setPrenom("");
+                    respOuv.setTelephoneFixe("");
+                    respOuv.setTelephoneMobile("");
+                    respOuv.save();
                 }
                 action.setRespOuv(respOuv);
-
-                Ressource respOeu = DaoRessource.getRessourceByInitial(row.get(12).toString());
+                Ressource respOeu;
+                if(row.get(12).toString()==null || row.get(12).toString().length()==0){
+                    respOeu = new Ressource();
+                    respOeu.setInitiales("");
+                }
+                respOeu = DaoRessource.getRessourceByInitial(row.get(12).toString());
                 if(respOeu==null){
                     respOeu = new Ressource();
                     respOeu.setInitiales(row.get(12).toString());
+                    respOeu.setNom("");
+                    respOeu.setEmail("");
+                    respOeu.setEntreprise("");
+                    respOeu.setFonction("");
+                    respOeu.setInformationsDiverses("");
+                    respOeu.setPrenom("");
+                    respOeu.setTelephoneFixe("");
+                    respOeu.setTelephoneMobile("");
+                    respOeu.save();
                 }
                 action.setRespOuv(respOuv);
 

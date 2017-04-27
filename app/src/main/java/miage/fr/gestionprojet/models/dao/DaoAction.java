@@ -162,7 +162,7 @@ public class DaoAction {
     public static HashMap<String,Integer> getNbActionRealiseeGroupByUtilisateurOeu(){
         Cursor c = ActiveAndroid
                 .getDatabase()
-                .rawQuery("SELECT COUNT(*) as total,resp_oeu, FROM " + new Action().getTableName() + " WHERE reste_a_faire=0 GROUP BY resp_oeu", null);
+                .rawQuery("SELECT COUNT(*) as total,resp_oeu FROM " + new Action().getTableName() + " WHERE reste_a_faire=0 GROUP BY resp_oeu", null);
         HashMap<String,Integer> lstResult = new HashMap<>();
 
         try {
@@ -179,7 +179,7 @@ public class DaoAction {
     public static HashMap<String,Integer> getNbActionRealiseeGroupByUtilisateurOuv(){
         Cursor c = ActiveAndroid
                 .getDatabase()
-                .rawQuery("SELECT COUNT(*) as total,resp_ouv, FROM " + new Action().getTableName() + " WHERE reste_a_faire=0 GROUP BY resp_ouv", null);
+                .rawQuery("SELECT COUNT(*) as total,resp_ouv FROM " + new Action().getTableName() + " WHERE reste_a_faire=0 GROUP BY resp_ouv", null);
         HashMap<String,Integer> lstResult = new HashMap<>();
 
         try {
