@@ -109,4 +109,9 @@ public class Ressource extends Model{
     public void setInformationsDiverses(String informationsDiverses) {
         InformationsDiverses = informationsDiverses;
     }
+
+    @Override
+    public String toString() {
+        return this.initiales + "  " + this.prenom + " " + this.nom;
+    }
 }

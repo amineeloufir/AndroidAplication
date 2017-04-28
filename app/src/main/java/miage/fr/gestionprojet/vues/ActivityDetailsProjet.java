@@ -84,6 +84,11 @@ public class ActivityDetailsProjet extends AppCompatActivity {
                             intent.putExtra(EXTRA_INITIAL, initialUtilisateur);
                             startActivity(intent);
                             break;
+                        case 3:
+                            intent = new Intent(ActivityDetailsProjet.this, ActivityBudget.class);
+                            intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
+                            startActivity(intent);
+                            break;
                         default:
                             System.out.println("Non instancié pour le moment");
                             break;
@@ -117,12 +122,18 @@ public class ActivityDetailsProjet extends AppCompatActivity {
         return true;
     }
 
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
-        if (id == R.id.initial_utilisateur) {
-            return true;
+        switch(id){
+            case R.id.initial_utilisateur:
+                return true;
+            case R.id.charger_donnees:
+                Intent intent = new Intent(ActivityDetailsProjet.this, ChargementDonnees.class);
+                intent.putExtra(EXTRA_INITIAL, (initialUtilisateur));
+                startActivity(intent);
+                return true;
+
         }
         return super.onOptionsItemSelected(item);
     }

@@ -6,27 +6,28 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="match_parent"
+        android:layout_marginLeft="15dp"
+        android:orientation="horizontal">
 
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/typeAffiche"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="0dp"
                 android:layout_marginTop="20dp"
                 android:layout_weight="1"
                 android:text="text"
-                android:textSize="26sp"></TextView>
+                android:textSize="18sp"></TextView>
 
             <TextView
                 android:id="@+id/nbActionRealisees"
@@ -34,7 +35,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="TextView"
-                android:textSize="10sp" />
+                android:textAlignment="textStart"
+                android:textSize="14sp" />
 
         </LinearLayout>
 
