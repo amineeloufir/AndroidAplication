@@ -19,8 +19,13 @@ public class DaoFormation {
         for (int i=0; i<10; i++) {
             Action action = new Action();
             action.setCode("Formation "+i);
+            action.setPhase(i+"");
             Formation formation = new Formation();
             formation.setAction(action);
+            formation.setAvancementTotal(i*10);
+            formation.setAvancementObjectif(91);
+            formation.setAvancementPostFormation(30);
+            formation.setAvancementPreRequis(74);
             formationsList.add(formation);
         }
 
