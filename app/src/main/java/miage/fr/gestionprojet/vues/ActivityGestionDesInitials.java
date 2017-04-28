@@ -59,10 +59,18 @@ public class ActivityGestionDesInitials extends AppCompatActivity {
                 // sinon on affiche un message indiquand qu'il n'y a aucun projet en cours
                 ArrayList<String> list = new ArrayList<>(1);
                 list.add("Aucune Ressource");
-                final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,list);
-                liste.setAdapter(adapter);
-        }
+                final ArrayAdapter<String> adapter_2 = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,list);
+                liste.setAdapter(adapter_2);
 
+            liste.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                    Intent intent = new Intent(ActivityGestionDesInitials.this, MainActivity.class);
+                    intent.putExtra(EXTRA_INITIAL,"");
+                    startActivity(intent);
+                }
+            });
+        }
         }
 
 
