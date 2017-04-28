@@ -79,6 +79,11 @@ public class ActivityDetailsProjet extends AppCompatActivity {
                             intent.putExtra(PROJET, proj.getId());
                             startActivity(intent);
                             break;
+                        case 1:
+                            intent = new Intent(ActivityDetailsProjet.this, FormationsActivity.class);
+                            intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
+                            startActivity(intent);
+                            break;
                         case 2:
                             intent = new Intent(ActivityDetailsProjet.this, ActionsActivity.class);
                             intent.putExtra(EXTRA_INITIAL, initialUtilisateur);
