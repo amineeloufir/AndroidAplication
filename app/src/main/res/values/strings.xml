@@ -7,6 +7,7 @@
     <!-- Button labels -->
     <string name="sign_out">Sign Out</string>
     <string name="disconnect">Disconnect</string>
+    <string name="signIn">Se Connecter</string>
     <string name="title_activity_actions">ActionsActivity</string>
     <string name="title_activity_formations">FormationsActivity</string>
 </resources>

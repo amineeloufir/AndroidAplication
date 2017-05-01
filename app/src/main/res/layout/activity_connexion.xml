@@ -8,6 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/projetandroid"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="miage.fr.gestionprojet.vues.ActivityConnexion"
     tools:showIn="@layout/activity_connexion">
@@ -15,6 +16,8 @@
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
         android:layout_width="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:background="#00008B"
         android:layout_height="wrap_content" />
 
 
