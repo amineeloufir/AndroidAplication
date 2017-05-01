@@ -54,16 +54,12 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        is_signInBtn_clicked=true;
         buidNewGoogleApiClient();
         setContentView(R.layout.activity_connexion);
         //Customize sign-in button.a red button may be displayed when Google+ scopes are requested
         custimizeSignBtn();
         setBtnClickListeners();
-        progress_dialog = new ProgressDialog(this);
-        progress_dialog.setMessage("Signing in....");
-
-
     }
 
     /*
@@ -131,28 +127,6 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
         }
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
     @Override
     public void onConnectionFailed(ConnectionResult result) {
         if (!result.hasResolution()) {
@@ -182,8 +156,6 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
         if (requestCode == SIGN_IN_CODE) {
             request_code = requestCode;
             if (responseCode != RESULT_OK) {
-                is_signInBtn_clicked = false;
-                progress_dialog.dismiss();
 
             }
 
@@ -203,34 +175,30 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
         getProfileInfo();
 
         // Update the UI after signin
-        changeUI(true);
+        changeUI();
 
     }
 
     @Override
     public void onConnectionSuspended(int arg0) {
         google_api_client.connect();
-        changeUI(false);
+        changeUI();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button:
-                Toast.makeText(this, "start sign process", Toast.LENGTH_SHORT).show();
                 gPlusSignIn();
                 break;
             case R.id.sign_out_button:
-                Toast.makeText(this, "Sign Out from G+", Toast.LENGTH_LONG).show();
                 gPlusSignOut();
 
                 break;
             case R.id.disconnect_button:
-                Toast.makeText(this, "Revoke Access from G+", Toast.LENGTH_LONG).show();
                 gPlusRevokeAccess();
 
             case R.id.frnd_button:
-                Toast.makeText(this, "G+ Friend List", Toast.LENGTH_LONG).show();
                 Plus.PeopleApi.loadVisible(google_api_client, null)
                         .setResultCallback(this);
 
@@ -250,7 +218,6 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
         if (!google_api_client.isConnecting()) {
             Log.d("user connected","connected");
             is_signInBtn_clicked = true;
-            progress_dialog.show();
             resolveSignInError();
             Intent intent = new Intent(ActivityConnexion.this,ActivityGestionDesInitials.class);
             startActivity(intent);
@@ -272,7 +239,7 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
                             Log.d("ActivityConnexion", "User access revoked!");
                             buidNewGoogleApiClient();
                             google_api_client.connect();
-                            changeUI(false);
+                            changeUI();
                         }
 
                     });
@@ -306,7 +273,7 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
             Plus.AccountApi.clearDefaultAccount(google_api_client);
             google_api_client.disconnect();
             google_api_client.connect();
-            changeUI(false);
+            changeUI();
         }
     }
 
@@ -344,14 +311,10 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
 
         String personName = currentPerson.getDisplayName();
         String personPhotoUrl = currentPerson.getImage().getUrl();
-        String email = Plus.AccountApi.getAccountName(google_api_client);
         TextView user_name = (TextView) findViewById(R.id.userName);
         user_name.setText("Name: "+personName);
         TextView gemail_id = (TextView)findViewById(R.id.emailId);
-        gemail_id.setText("Email Id: " +email);
         setProfilePic(personPhotoUrl);
-        progress_dialog.dismiss();
-        Toast.makeText(this, "Person information is shown!", Toast.LENGTH_LONG).show();
     }
 
     /*
@@ -371,15 +334,10 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
      Show and hide of the Views according to the user login status
      */
 
-    private void changeUI(boolean signedIn) {
-        if (signedIn) {
-            findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-            findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
-        } else {
-
+    private void changeUI() {
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
             findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
-        }
+
     }
 
     @Override
@@ -434,7 +392,5 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
             bitmap_img.setImageBitmap(result_img);
         }
     }
-
-
 
 }
