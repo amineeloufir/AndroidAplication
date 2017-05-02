@@ -26,7 +26,9 @@ public class DaoRessource {
         List<String> listeInitials=new ArrayList<>();
 
         for ( int i=0; i < listeRessource.size();i++){
-            listeInitials.add(listeRessource.get(i).getInitiales());
+            if (!listeRessource.get(i).getInitiales().equals("") && listeRessource.get(i).getInitiales().length()>0) {
+                listeInitials.add(listeRessource.get(i).getInitiales());
+            }
         }
         return listeInitials;
     }

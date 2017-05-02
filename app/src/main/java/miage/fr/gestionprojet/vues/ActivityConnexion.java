@@ -60,6 +60,8 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
         //Customize sign-in button.a red button may be displayed when Google+ scopes are requested
         custimizeSignBtn();
         setBtnClickListeners();
+        progress_dialog = new ProgressDialog(this);
+        progress_dialog.setMessage("Chargement....");
     }
 
     /*
@@ -156,7 +158,8 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
         if (requestCode == SIGN_IN_CODE) {
             request_code = requestCode;
             if (responseCode != RESULT_OK) {
-
+                is_signInBtn_clicked = false;
+                progress_dialog.dismiss();
             }
 
             is_intent_inprogress = false;
@@ -218,6 +221,7 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
         if (!google_api_client.isConnecting()) {
             Log.d("user connected","connected");
             is_signInBtn_clicked = true;
+            progress_dialog.show();
             resolveSignInError();
             Intent intent = new Intent(ActivityConnexion.this,ActivityGestionDesInitials.class);
             startActivity(intent);
@@ -252,7 +256,10 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
      */
 
     private void resolveSignInError() {
-        if (connection_result.hasResolution()) {
+        if (connection_result==null){
+            gPlusRevokeAccess();
+        }
+        else if (connection_result.hasResolution() ) {
             try {
                 is_intent_inprogress = true;
                 connection_result.startResolutionForResult(this, SIGN_IN_CODE);
@@ -314,6 +321,7 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
         TextView user_name = (TextView) findViewById(R.id.userName);
         user_name.setText("Name: "+personName);
         TextView gemail_id = (TextView)findViewById(R.id.emailId);
+        progress_dialog.dismiss();
         setProfilePic(personPhotoUrl);
     }
 
@@ -392,5 +400,6 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
             bitmap_img.setImageBitmap(result_img);
         }
     }
+
 
 }
