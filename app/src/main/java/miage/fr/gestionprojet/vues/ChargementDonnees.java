@@ -681,6 +681,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             }
 
 
+
         }
 
         @Override
