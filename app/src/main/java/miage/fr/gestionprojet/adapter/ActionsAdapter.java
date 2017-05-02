@@ -16,6 +16,7 @@ import miage.fr.gestionprojet.models.Action;
 
 public class ActionsAdapter extends RecyclerView.Adapter<ActionsAdapter.ActionViewHolder> implements View.OnClickListener{
 
+
     private List<Action> actions;
     private ActionClicked mListener;
 

@@ -17,7 +17,7 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file('C:/Users/meloufir/git/android/AndroidAplication/app/my-release-key.jks')
+            storeFile file('my-release-key.jks')
             storePassword "bigfollow"
             keyAlias "bigfollow"
             keyPassword "bigfollow"
@@ -25,7 +25,7 @@ android {
         config {
             keyAlias 'bigfollow'
             keyPassword 'bigfollow'
-            storeFile file('C:/Users/meloufir/git/android/AndroidAplication/app/my-release-key.jks')
+            storeFile file('my-release-key.jks')
             storePassword 'bigfollow'
         }
     }
@@ -58,9 +58,6 @@ sonarRunner {
 */
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'com.google.android.gms:play-services-auth:10.2.0'
-    compile 'pub.devrel:easypermissions:0.2.1'
     compile('com.google.api-client:google-api-client-android:1.22.0') {
         exclude group: 'org.apache.httpcomponents'
     }
@@ -73,18 +70,20 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile files('libs/activeandroid-3.0.jar')
+    compile 'com.google.android.gms:play-services-auth:10.2.0'
     compile 'com.android.support:appcompat-v7:25.3.0'
+    compile 'com.google.android.gms:play-services-auth:10.2.0'
+    compile 'pub.devrel:easypermissions:0.2.1'
     compile 'com.android.support:design:25.3.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'de.hdodenhof:circleimageview:1.3.0'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     compile 'javax.annotation:javax.annotation-api:1.2'
     compile 'com.mikhaellopez:circularprogressbar:1.1.1'
-    compile 'com.google.android.gms:play-services-auth:10.2.0'
     compile 'com.google.android.gms:play-services-plus:10.2.0'
     compile 'com.google.android.gms:play-services-drive:10.2.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
-    testCompile 'junit:junit:4.12'
     compile 'org.jetbrains:annotations-java5:15.0'
+    testCompile 'junit:junit:4.12'
 }
 apply plugin: 'com.google.gms.google-services'

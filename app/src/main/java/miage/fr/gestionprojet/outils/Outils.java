@@ -14,7 +14,7 @@ public class Outils {
         return result;
     }
 
-    public static Date weekOfYearToDate(int week, int year){
+    public static Date weekOfYearToDate(int year, int week){
         Calendar c = Calendar.getInstance();
         c.set(Calendar.WEEK_OF_YEAR,week);
         c.set(Calendar.YEAR,year);

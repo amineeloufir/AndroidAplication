@@ -14,7 +14,7 @@ import miage.fr.gestionprojet.models.Ressource;
 public class DaoRessource {
 
 
-    public List<Ressource> getAllRessource(){
+    public static List<Ressource> loadAll(){
         return new Select()
                 .from(Ressource.class)
                 .execute();
@@ -26,8 +26,22 @@ public class DaoRessource {
         List<String> listeInitials=new ArrayList<>();
 
         for ( int i=0; i < listeRessource.size();i++){
-            listeInitials.add(listeRessource.get(i).getInitiales());
+            if (!listeRessource.get(i).getInitiales().equals("") && listeRessource.get(i).getInitiales().length()>0) {
+                listeInitials.add(listeRessource.get(i).getInitiales());
+            }
         }
         return listeInitials;
+    }
+
+    public static Ressource getRessourceByInitial(String initiales){
+        List<Ressource> lst = new Select()
+                .from(Ressource.class)
+                .where("initiales = ?", initiales)
+                .execute();
+        if(lst.size()>0){
+            return lst.get(0);
+        }else{
+            return null;
+        }
     }
 }

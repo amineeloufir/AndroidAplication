@@ -27,9 +27,17 @@
     <style name="FullHeightDialog" parent="android:style/Theme.Dialog">
         <item name="android:windowNoTitle">true</item>
     </style>
+
     <style name="MyPopupMenu" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:popupBackground">#FFF</item>
         <item name="android:disabledAlpha">0.5</item>
         <item name="android:dropDownHorizontalOffset">-6dp</item>
+    </style>
+    
+    <style name="AppTheme.PopupCustomTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:radius">10dp</item>
+        <item name="android:shadowColor">#000</item>
     </style>
 </resources>
