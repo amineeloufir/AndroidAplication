@@ -21,6 +21,7 @@ import java.util.List;
 
 import miage.fr.gestionprojet.R;
 import miage.fr.gestionprojet.adapter.AdapterSaisieCharge;
+import miage.fr.gestionprojet.models.Action;
 import miage.fr.gestionprojet.models.Domaine;
 import miage.fr.gestionprojet.models.Projet;
 import miage.fr.gestionprojet.models.Ressource;
@@ -53,7 +54,15 @@ public class ActivityIndicateursSaisieCharge extends AppCompatActivity {
             lstSaisieCharge= new ArrayList<SaisieCharge>();
             List<Domaine> lstDomaines = proj.getLstDomaines();
             for(Domaine d : lstDomaines){
-                lstSaisieCharge.addAll(d.getLstSaisieCharge());
+                for(Action a: d.getLstActions()){
+                    if(a.getTypeTravail().equals("Saisie")||a.getTypeTravail().equals("Test")){
+                        SaisieCharge s = DaoSaisieCharge.loadSaisieChargeByAction(a.getId());
+                        if(s!=null){
+                            lstSaisieCharge.add(s);
+                        }
+                    }
+                }
+
             }
 
             //on affiche cette liste

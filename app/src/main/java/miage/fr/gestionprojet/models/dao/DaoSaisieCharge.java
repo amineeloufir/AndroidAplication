@@ -48,4 +48,16 @@ public class DaoSaisieCharge {
         }
         return lst;
     }
+
+    public static SaisieCharge loadSaisieChargeByAction(long idAction){
+        ArrayList<SaisieCharge> lst = new Select()
+                .from(SaisieCharge.class)
+                .where("action = ?", idAction)
+                .execute();
+        if(lst.size()>0) {
+            return lst.get(0);
+        }else{
+            return null;
+        }
+    }
 }

@@ -5,7 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -30,6 +32,7 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
     private SaisieCharge saisieCharge = null;
     private TextView txtSaisieCharge;
     public final static String EXTRA_INITIAL = "initial";
+    public static final String EXTRA_SAISIECHARGE = "saisie charge";
     public String initialUtilisateur =null;
 
     @Override
@@ -39,7 +42,7 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 
         Intent intent = getIntent();
         long id = intent.getLongExtra(ActivityIndicateursSaisieCharge.SAISIECHARGE,0);
-        initialUtilisateur = intent.getStringExtra(ActivityIndicateursSaisieCharge.EXTRA_INITIAL);
+        initialUtilisateur = intent.getStringExtra(EXTRA_INITIAL);
 
 
         if(id > 0){
@@ -75,6 +78,17 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
             indicateurs.add("Dernière mesure saisie:"+mesure.getDtMesure());
             final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, indicateurs);
             lstViewIndicateur.setAdapter(adapter);
+
+            Button btnMessures = (Button) findViewById(R.id.btnMesures);
+            btnMessures.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(ActivityDetailsIndicateursSaisieCharge.this, ActivityMesures.class);
+                    intent.putExtra(EXTRA_SAISIECHARGE, saisieCharge.getId());
+                    intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
+                    startActivity(intent);
+                }
+            });
 
         }
 
