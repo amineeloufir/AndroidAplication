@@ -677,7 +677,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
 
                 formation.setAction(action);
 
-
+                formation.save();
             }
 
 
