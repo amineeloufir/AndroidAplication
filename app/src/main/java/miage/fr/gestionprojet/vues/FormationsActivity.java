@@ -46,7 +46,7 @@ public class FormationsActivity extends AppCompatActivity {
         formationsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(FormationsActivity.this, FormationActivity.class);
+                Intent intent = new Intent(getApplicationContext(), FormationActivity.class);
                 intent.putExtra(FORMATION_SELECTED, (formationsData.get(i).getId()));
                 startActivity(intent);
             }

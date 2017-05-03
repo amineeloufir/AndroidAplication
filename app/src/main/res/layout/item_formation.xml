@@ -21,10 +21,11 @@
 
             <TextView
                 android:id="@+id/formationPhase"
-                android:layout_width="?actionBarSize"
+                android:layout_width="56dp"
                 android:layout_height="?actionBarSize"
                 android:layout_marginRight="10dp"
-                android:layout_weight="0.7"
+                android:width="56dp"
+                android:height="56dp"
                 android:background="@drawable/action_phase_shape"
                 android:gravity="center"
                 android:textColor="#FFF"
