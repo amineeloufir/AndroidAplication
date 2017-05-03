@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import miage.fr.gestionprojet.models.Action;
+import miage.fr.gestionprojet.models.Domaine;
+import miage.fr.gestionprojet.models.Projet;
 
 /**
  * Created by Audrey on 07/04/2017.
@@ -225,6 +227,36 @@ public class DaoAction {
         }
 
         return lstResult;
+    }
+
+    public static ArrayList<Action> getActionRealiseesByProjet(long idProjet){
+        Projet proj = Model.load(Projet.class,idProjet);
+        List<Domaine> lstDomaines = proj.getLstDomaines();
+        ArrayList<Action> lstActionRealisees = new ArrayList<>();
+        ArrayList<Action> lstActionRecuperees = new ArrayList<>();
+        for(Domaine d: lstDomaines){
+            lstActionRecuperees = new Select()
+                    .from(Action.class)
+                    .where("reste_a_faire=0 and domaine=?",d.getId())
+                    .execute();
+            lstActionRealisees.addAll(lstActionRecuperees);
+        }
+        return lstActionRealisees;
+    }
+
+    public static ArrayList<Action> getAllActionsByProjet(long idProjet){
+        Projet proj = Model.load(Projet.class,idProjet);
+        List<Domaine> lstDomaines = proj.getLstDomaines();
+        ArrayList<Action> lstAction = new ArrayList<>();
+        ArrayList<Action> lstActionRecuperees = new ArrayList<>();
+        for(Domaine d: lstDomaines){
+            lstActionRecuperees = new Select()
+                    .from(Action.class)
+                    .where("domaine=?",d.getId())
+                    .execute();
+            lstAction.addAll(lstActionRecuperees);
+        }
+        return lstAction;
     }
 
 

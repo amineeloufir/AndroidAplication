@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import com.activeandroid.Model;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +21,7 @@ import miage.fr.gestionprojet.adapter.AdapterBudgetDomaine;
 import miage.fr.gestionprojet.adapter.AdapterBudgetType;
 import miage.fr.gestionprojet.adapter.AdapterBudgetUtilisateur;
 import miage.fr.gestionprojet.models.Domaine;
+import miage.fr.gestionprojet.models.Projet;
 import miage.fr.gestionprojet.models.Ressource;
 import miage.fr.gestionprojet.models.dao.DaoAction;
 import miage.fr.gestionprojet.models.dao.DaoDomaine;
@@ -29,6 +32,7 @@ public class ActivityBudget extends AppCompatActivity {
     private ListView liste;
     private ArrayList<String> lstChoixAffichage;
     private String initialUtilisateur;
+    private Projet proj;
 
     private final static String DOMAINE = "Domaine";
     private final static String TYPE = "Type";
@@ -51,7 +55,14 @@ public class ActivityBudget extends AppCompatActivity {
         this.liste = (ListView) findViewById(R.id.lstViewBudget);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lstChoixAffichage);
         spinChoixAffichage.setAdapter(adapter);
-
+        //on récupère le projet sélectionné
+        Intent intent = getIntent();
+        long id =  intent.getLongExtra(ActivityDetailsProjet.PROJET,0);
+        if(id>0){
+            proj = Model.load(Projet.class, id);
+        }else{
+            proj = new Projet();
+        }
         spinChoixAffichage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -78,7 +89,7 @@ public class ActivityBudget extends AppCompatActivity {
     }
 
     private void AffichageDomaine(){
-        ArrayList<Domaine> lstDomaines = DaoDomaine.loadAll();
+        List<Domaine> lstDomaines = proj.getLstDomaines();
         AdapterBudgetDomaine adapter = new AdapterBudgetDomaine(ActivityBudget.this,R.layout.lst_view_budget,lstDomaines);
         this.liste.setAdapter(adapter);
     }

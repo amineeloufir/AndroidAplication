@@ -1,8 +1,10 @@
 package miage.fr.gestionprojet.vues;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.util.DiffUtil;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.activeandroid.Model;
@@ -17,9 +20,14 @@ import com.activeandroid.Model;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import miage.fr.gestionprojet.R;
 import miage.fr.gestionprojet.models.Projet;
+import miage.fr.gestionprojet.models.dao.DaoAction;
+import miage.fr.gestionprojet.models.dao.DaoProjet;
+import miage.fr.gestionprojet.outils.Outils;
 
 public class ActivityDetailsProjet extends AppCompatActivity {
 
@@ -94,19 +102,19 @@ public class ActivityDetailsProjet extends AppCompatActivity {
                             intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
                             startActivity(intent);
                             break;
-                        default:
-                            System.out.println("Non instancié pour le moment");
-                            break;
 
                     }
 
-                    //intent.putExtra(PROJET, proj.getId());
-                    //startActivity(intent);
                 }
             });
+            ProgressBar progress = (ProgressBar) findViewById(R.id.progressBarProjet);
+            int nbActionsRealise = DaoAction.getActionRealiseesByProjet(this.proj.getId()).size();
+            int nbActions = DaoAction.getAllActionsByProjet(this.proj.getId()).size();
+            int ratioBudget = Outils.calculerPourcentage(nbActionsRealise,nbActions);
+            progress.setProgress(ratioBudget);
 
-            final Button button = (Button) findViewById(R.id.btnActions);
-            button.setOnClickListener(new View.OnClickListener() {
+            final Button buttonActions = (Button) findViewById(R.id.btnActions);
+            buttonActions.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = new Intent(ActivityDetailsProjet.this, ActivityIndicateursSaisieCharge.class);
                     intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
@@ -115,6 +123,36 @@ public class ActivityDetailsProjet extends AppCompatActivity {
                 }
             });
 
+            final Button buttonFormations = (Button) findViewById(R.id.btnFormations);
+            buttonFormations.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent intent = new Intent(ActivityDetailsProjet.this, FormationsActivity.class);
+                    intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
+                    startActivity(intent);
+                }
+            });
+
+            final Button buttonBudget = (Button) findViewById(R.id.btnBudget);
+            buttonBudget.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent intent = new Intent(ActivityDetailsProjet.this, ActivityBudget.class);
+                    intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
+                    intent.putExtra(PROJET, proj.getId());
+                    startActivity(intent);
+                }
+            });
+
+            Date dateFin = DaoProjet.getDateFin(this.proj.getId());
+            long dureeRestante = Outils.dureeEntreDeuxDate(Calendar.getInstance().getTime(),dateFin);
+            long dureeTotal = Outils.dureeEntreDeuxDate(DaoProjet.getDateDebut(this.proj.getId()),DaoProjet.getDateFin(this.proj.getId()));
+            int ratioDuree  = Outils.calculerPourcentage(dureeRestante,dureeTotal);
+            if(ratioDuree<ratioBudget){
+                buttonBudget.setBackgroundColor(Color.RED);
+            }else if(ratioDuree>ratioBudget){
+                buttonBudget.setBackgroundColor(Color.GREEN);
+            }else{
+                buttonBudget.setBackgroundColor(Color.YELLOW);
+            }
         }
 
     }
