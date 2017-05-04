@@ -22,27 +22,41 @@ import miage.fr.gestionprojet.models.Projet;
 
 public class DaoAction {
 
-    public static List<Action> loadActionsByType(String type) {
-        List<Action> actions = new Select().from(Action.class)
-                .where("typeTravail = ?", type)
-                .execute();
-        return actions;
+    public static List<Action> loadActionsByType(String type, long idProjet) {
+        Projet proj = Model.load(Projet.class, idProjet);
+        ArrayList<Action> lstActions = new ArrayList<>();
+        for(Domaine d : proj.getLstDomaines()) {
+            List<Action> actions = new Select().from(Action.class)
+                    .where("typeTravail = ? and domaine=?", type, d.getId())
+                    .execute();
+            lstActions.addAll(actions);
+        }
+        return lstActions;
     }
 
-    public static List<Action> loadActionsByPhaseAndDate(String phase,Date d) {
-        List<Action> actions = new Select().from(Action.class)
-                .where("phase = ? and dt_fin_prevue>=? and dt_debut<=?", phase,d.getTime(),d.getTime())
-                .execute();
-        return actions;
+    public static List<Action> loadActionsByPhaseAndDate(String phase,Date d, long idProjet) {
+        Projet proj = Model.load(Projet.class, idProjet);
+        ArrayList<Action> lstActions = new ArrayList<>();
+        for(Domaine dom : proj.getLstDomaines()) {
+            List<Action> actions = new Select().from(Action.class)
+                    .where("phase = ? and dt_fin_prevue>=? and dt_debut<=? and domaine=?", phase, d.getTime(), d.getTime(), dom.getId())
+                    .execute();
+            lstActions.addAll(actions);
+        }
+        return lstActions;
     }
 
-    public static List<Action> loadActionsByDate(Date d) {
-        //getAll
-        List<Action> actions = new Select()
-                .from(Action.class)
-                .where("dt_fin_prevue>=? and dt_debut<=?",d.getTime(),d.getTime())
-                .execute();
-        return actions;
+    public static List<Action> loadActionsByDate(Date d, long idProjet) {
+        Projet proj = Model.load(Projet.class, idProjet);
+        ArrayList<Action> lstActions = new ArrayList<>();
+        for(Domaine dom : proj.getLstDomaines()) {
+            List<Action> actions = new Select()
+                    .from(Action.class)
+                    .where("dt_fin_prevue>=? and dt_debut<=? and domaine = ?", d.getTime(), d.getTime(), dom.getId())
+                    .execute();
+            lstActions.addAll(actions);
+        }
+        return lstActions;
     }
 
     public static List<Action> loadAll(){
@@ -50,21 +64,31 @@ public class DaoAction {
         return actions;
     }
 
-    public static List<Action> loadActionsOrderByNomAndDate(Date d){
-        List<Action> actions = new Select()
-                .from(Action.class)
-                .where("dt_fin_prevue>=? and dt_debut<=?",d.getTime(),d.getTime())
-                .orderBy("code ASC")
-                .execute();
-        return actions;
+    public static List<Action> loadActionsOrderByNomAndDate(Date d, long idProjet){
+        Projet proj = Model.load(Projet.class, idProjet);
+        ArrayList<Action> lstActions = new ArrayList<>();
+        for(Domaine dom : proj.getLstDomaines()) {
+            List<Action> actions = new Select()
+                    .from(Action.class)
+                    .where("dt_fin_prevue>=? and dt_debut<=? and domaine=?", d.getTime(), d.getTime(), dom.getId())
+                    .orderBy("code ASC")
+                    .execute();
+            lstActions.addAll(actions);
+        }
+        return lstActions;
     }
 
-    public static ArrayList<Action> loadActionsByDomaineAndDate(int idDomaine,Date d){
-        ArrayList<Action> result = new Select()
-                .from(Action.class)
-                .where("domaine=? and dt_fin_prevue>=? and dt_debut<=?",idDomaine,d.getTime(),d.getTime())
-                .execute();
-        return result;
+    public static ArrayList<Action> loadActionsByDomaineAndDate(int idDomaine,Date d, long idProjet){
+        Projet proj = Model.load(Projet.class, idProjet);
+        ArrayList<Action> lstActions = new ArrayList<>();
+        for(Domaine dom : proj.getLstDomaines()) {
+            ArrayList<Action> result = new Select()
+                    .from(Action.class)
+                    .where("domaine=? and dt_fin_prevue>=? and dt_debut<=? and domaine=?", idDomaine, d.getTime(), d.getTime(),dom.getId())
+                    .execute();
+            lstActions.addAll(result);
+        }
+        return lstActions;
     }
     public static ArrayList<Action> getActionbyCode(String id) {
         return new Select()

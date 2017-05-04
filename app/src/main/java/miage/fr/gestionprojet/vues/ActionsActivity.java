@@ -28,6 +28,7 @@ import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.activeandroid.Model;
 import com.activeandroid.query.Select;
 
 import java.text.DateFormat;
@@ -42,6 +43,7 @@ import miage.fr.gestionprojet.R;
 import miage.fr.gestionprojet.adapter.ActionsAdapter;
 import miage.fr.gestionprojet.models.Action;
 import miage.fr.gestionprojet.models.Domaine;
+import miage.fr.gestionprojet.models.Projet;
 import miage.fr.gestionprojet.models.dao.DaoAction;
 import miage.fr.gestionprojet.models.dao.DaoDomaine;
 import miage.fr.gestionprojet.models.dao.DaoRessource;
@@ -61,8 +63,10 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
     private int year;
     private int week;
     private Date dateSaisie;
+    private long idProjet;
 
     public final static String EXTRA_INITIAL = "initial";
+    public final static String EXTRA_PROJET = "projet visu";
     @Override
 
     //TODO voir problème de date
@@ -71,6 +75,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_actions);
         try {
             initial = getIntent().getStringExtra(ActivityDetailsProjet.EXTRA_INITIAL);
+            idProjet = getIntent().getLongExtra(EXTRA_PROJET,0);
         }catch(Exception e){
             e.printStackTrace();
             finish();
@@ -127,7 +132,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                 try {
                     year = Integer.parseInt(editable.toString());
                     dateSaisie = Outils.weekOfYearToDate(year,week);
-                    refreshAdapter(DaoAction.loadActionsByDate(dateSaisie));
+                    refreshAdapter(DaoAction.loadActionsByDate(dateSaisie, idProjet));
                 }catch(Exception e){
                     e.printStackTrace();
                     yearEditText.setError("");
@@ -150,7 +155,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                 try {
                     week = Integer.parseInt(editable.toString());
                     dateSaisie = Outils.weekOfYearToDate(year,week);
-                    refreshAdapter(DaoAction.loadActionsByDate(dateSaisie));
+                    refreshAdapter(DaoAction.loadActionsByDate(dateSaisie, idProjet));
                 }catch(Exception e){
                     e.printStackTrace();
                     weekEditText.setError("");
@@ -160,7 +165,8 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void insererDateFictive() throws ParseException {
-        ArrayList<Domaine> doms = DaoDomaine.loadAll();
+        Projet proj = Model.load(Projet.class,idProjet);
+       List<Domaine> doms = proj.getLstDomaines();
         Action action = new Action();
         action.setRespOuv(DaoRessource.getRessourceByInitial(this.initial));
         action.setRespOeu(DaoRessource.getRessourceByInitial(this.initial));
@@ -179,6 +185,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
         action.setTarif("test");
         action.setTypeFacturation("test");
         action.setTypeTravail("travail");
+        action.setPhase("1");
         action.save();
 
     }
@@ -187,7 +194,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
     protected void onStart() {
         super.onStart();
         dateSaisie = Outils.weekOfYearToDate(year,week);
-        refreshAdapter(DaoAction.loadActionsByDate(dateSaisie));
+        refreshAdapter(DaoAction.loadActionsByDate(dateSaisie, idProjet));
     }
 
 
@@ -244,7 +251,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                 break;
         }
 
-        refreshAdapter(DaoAction.loadActionsByDate(dateSaisie));
+        refreshAdapter(DaoAction.loadActionsByDate(dateSaisie,idProjet));
     }
 
     @Override
@@ -295,7 +302,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nom:
-                refreshAdapter(DaoAction.loadActionsOrderByNomAndDate(dateSaisie));
+                refreshAdapter(DaoAction.loadActionsOrderByNomAndDate(dateSaisie,idProjet));
                 return true;
             case R.id.type:
                 showPopUp("type");
@@ -333,9 +340,9 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     if(item.getItemId()==R.id.all) {
-                        refreshAdapter(DaoAction.loadActionsByDate(dateSaisie));
+                        refreshAdapter(DaoAction.loadActionsByDate(dateSaisie,idProjet));
                     }else{
-                        refreshAdapter(DaoAction.loadActionsByType(item.getTitle().toString()));
+                        refreshAdapter(DaoAction.loadActionsByType(item.getTitle().toString(),idProjet));
                     }
                     return true;
                 }
@@ -356,9 +363,9 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                 public boolean onMenuItemClick(MenuItem item) {
 
                     if(item.getItemId()==R.id.all) {
-                        refreshAdapter(DaoAction.loadActionsByDate(dateSaisie));
+                        refreshAdapter(DaoAction.loadActionsByDate(dateSaisie,idProjet));
                     }else{
-                        refreshAdapter(DaoAction.loadActionsByPhaseAndDate(item.getTitle().toString(),dateSaisie));
+                        refreshAdapter(DaoAction.loadActionsByPhaseAndDate(item.getTitle().toString(),dateSaisie,idProjet));
                     }
                     return true;
                 }
@@ -379,9 +386,9 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                 public boolean onMenuItemClick(MenuItem item) {
 
                     if(item.getItemId()==R.id.all) {
-                        refreshAdapter(DaoAction.loadActionsByDate(dateSaisie));
+                        refreshAdapter(DaoAction.loadActionsByDate(dateSaisie,idProjet));
                     }else{
-                        refreshAdapter(DaoAction.loadActionsByDomaineAndDate(item.getItemId(),dateSaisie));
+                        refreshAdapter(DaoAction.loadActionsByDomaineAndDate(item.getItemId(),dateSaisie,idProjet));
                     }
                     return true;
                 }
@@ -393,7 +400,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
 
     private ArrayList<String> getTypeTravailAffiche(){
         ArrayList<String> result = new ArrayList<>();
-        List<Action> lstActions = DaoAction.loadActionsByDate(dateSaisie);
+        List<Action> lstActions = DaoAction.loadActionsByDate(dateSaisie,idProjet);
         for(Action a : lstActions){
             if(result.indexOf(a.getTypeTravail())<0){
                 result.add(a.getTypeTravail());
@@ -405,7 +412,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
 
     private ArrayList<String> getPhasesAffiches(){
         ArrayList<String> result = new ArrayList<>();
-        List<Action> lstActions = DaoAction.loadActionsByDate(dateSaisie);
+        List<Action> lstActions = DaoAction.loadActionsByDate(dateSaisie,idProjet);
         for(Action a : lstActions){
             if(result.indexOf(a.getPhase())<0){
                 result.add(a.getPhase());
@@ -417,7 +424,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
 
     private ArrayList<Domaine> getDomainesAffiches() {
         ArrayList<Domaine> result = new ArrayList<>();
-        List<Action> lstActions = DaoAction.loadActionsByDate(dateSaisie);
+        List<Action> lstActions = DaoAction.loadActionsByDate(dateSaisie,idProjet);
         for(Action a : lstActions){
             if(result.indexOf(a.getDomaine())<0){
                 result.add(a.getDomaine());
