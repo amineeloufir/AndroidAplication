@@ -531,7 +531,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
 
             boolean flag = s.matches(".*[a-zA-Z]+.*");
             if (s.equals("") || (s == null) || s.equals("-") || flag || s.equals("RETARD") || s.equals("#DIV/0!")) {
-                resultat = 0.0f;
+                resultat = (float)0.0;
 
             } else {
 
@@ -693,23 +693,27 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
 
 
             ArrayList<Action> actionList = new ArrayList<>();
+            Action action = new Action();
+            ActiveAndroid.beginTransaction();
+            try {
 
                 for (List row : values) {
                     Formation formation = new Formation();
 
-                    formation.setAvancementObjectif(chainetofloat(row.get(8).toString().replace('%', '0')));
-                    formation.setAvancementTotal(chainetofloat(row.get(6).toString().replace('%', '0')));
-                    formation.setAvancementPreRequis(chainetofloat(row.get(7).toString().replace('%', '0')));
-
-                    formation.setAvancementPostFormation(chainetofloat(row.get(9).toString().replace('%', '0')));
+               ;
 
                     actionList = DaoAction.getActionbyCode(row.get(5).toString());
 
                     if (actionList.size() >0){
-                        Action action = new Action();
-                        action = actionList.get(0);
-                        formation.setAction(action);
 
+                        action = actionList.get(0);
+
+                        formation.setAction(action);
+                        formation.setAvancementObjectif(chainetofloat(row.get(8).toString().replace('%', '0')));
+                        formation.setAvancementTotal(chainetofloat(row.get(6).toString().replace('%', '0')));
+                        formation.setAvancementPreRequis(chainetofloat(row.get(7).toString().replace('%', '0')));
+
+                        formation.setAvancementPostFormation(chainetofloat(row.get(9).toString().replace('%', '0')));
 
                     }
                     formation.save();
@@ -719,9 +723,13 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                 }
 
 
-            ArrayList<Formation> formationslistes = (ArrayList<Formation>) DaoFormation.loadAll();
 
+
+           ActiveAndroid.setTransactionSuccessful();
+        } finally {
+            ActiveAndroid.endTransaction();
         }
+    }
 
         public void initialiserPojet(List<List<Object>> values) throws ParseException {
             new Delete().from(Projet.class).execute();
@@ -793,10 +801,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
 
         public void initialiserMesures(List<List<Object>> values) throws ParseException {
             new Delete().from(Mesure.class).execute();
-            /**test**/
-            List<SaisieCharge> listes = DaoSaisieCharge.loadAll();
-            List<Formation>listesformations= DaoFormation.loadAll();
-            List<Action> listesAction = DaoAction.loadAll();
+
             List<Mesure>listfi = new ArrayList<>();
 
             SaisieCharge action = new SaisieCharge();
@@ -818,8 +823,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                     mesure.setDtMesure(chainetoDate(row.get(2).toString()));
                     mesure.setNbUnitesMesures(chainetoint(row.get(1).toString()));
                     mesure.save();
-                listfi=DaoMesure.loadAll();
-                }
+                              }
 
                 ActiveAndroid.setTransactionSuccessful();
             } finally {
