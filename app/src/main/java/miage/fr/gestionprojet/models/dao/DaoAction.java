@@ -21,6 +21,14 @@ import miage.fr.gestionprojet.models.Projet;
  */
 
 public class DaoAction {
+    public static List<Action> loadActionsByCode(String code) {
+        //getAll
+        List<Action> actions = new Select()
+                .from(Action.class)
+                .where("code=?",code)
+                .execute();
+        return actions;
+    }
 
     public static List<Action> loadActionsByType(String type, long idProjet) {
         Projet proj = Model.load(Projet.class, idProjet);

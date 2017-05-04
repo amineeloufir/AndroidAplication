@@ -18,6 +18,18 @@ import miage.fr.gestionprojet.models.SaisieCharge;
 
 public class DaoSaisieCharge {
 
+
+    public static List<SaisieCharge> loadSaisiebyAction(Action action) {
+        List<SaisieCharge> saisieCharge= new Select().from(SaisieCharge.class).where("action=?",action.getCode()).execute();
+        return saisieCharge;
+
+    }
+    public static List<SaisieCharge> loadAll() {
+        List<SaisieCharge> saisieCharge= new Select().from(SaisieCharge.class).execute();
+        return saisieCharge;
+
+    }
+
     public static ArrayList<SaisieCharge> loadSaisieChargesByDomaine(int idDomaine){
         ArrayList<SaisieCharge> lst = new ArrayList<>();
         ArrayList<Action> results = new Select()
