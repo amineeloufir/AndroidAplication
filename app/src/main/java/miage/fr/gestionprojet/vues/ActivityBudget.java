@@ -45,7 +45,7 @@ public class ActivityBudget extends AppCompatActivity {
         setContentView(R.layout.activity_budget);
 
         Intent intentInitial = getIntent();
-        initialUtilisateur = intentInitial.getStringExtra(ActivityGestionDesInitials.EXTRA_INITIAL);
+        initialUtilisateur = intentInitial.getStringExtra(EXTRA_INITIAL);
         lstChoixAffichage = new ArrayList<>();
         lstChoixAffichage.add(DOMAINE);
         lstChoixAffichage.add(TYPE);

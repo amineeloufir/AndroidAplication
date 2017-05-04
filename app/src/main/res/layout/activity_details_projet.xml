@@ -27,14 +27,6 @@
                 android:layout_weight="1"
                 android:text="Projet" />
 
-            <TextView
-                android:id="@+id/textViewDtProjet"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Date début - Date fin"
-                android:textAlignment="textEnd" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -68,12 +60,16 @@
             android:id="@+id/progressBarProjet"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="20dp"
+            android:minHeight="50dip"
+            android:maxHeight="0dip"/>
 
         <ListView
             android:id="@+id/listViewAction"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:dividerHeight="25dp"
+            android:divider="#00FFFFFF"/>
 
     </LinearLayout>
 

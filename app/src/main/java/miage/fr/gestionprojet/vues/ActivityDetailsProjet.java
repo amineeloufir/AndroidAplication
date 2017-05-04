@@ -60,12 +60,9 @@ public class ActivityDetailsProjet extends AppCompatActivity {
 
             // on récupère les différents élements de la vue
             TextView txtNomProj = (TextView) findViewById(R.id.textViewNomProjet);
-            TextView txtDatesProjet = (TextView) findViewById(R.id.textViewDtProjet);
 
             // on alimente ces différents éléments
             txtNomProj.setText(proj.getNom());
-            DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-            txtDatesProjet.setText(df.format(proj.getDateDebut()) + "-" + df.format(proj.getDateFinInitiale()));
 
             // on constitue une liste d'action
             liste = (ListView) findViewById(R.id.listViewAction);
@@ -102,6 +99,7 @@ public class ActivityDetailsProjet extends AppCompatActivity {
                         case 3:
                             intent = new Intent(ActivityDetailsProjet.this, ActivityBudget.class);
                             intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
+                            intent.putExtra(PROJET, proj.getId());
                             startActivity(intent);
                             break;
 
@@ -118,8 +116,8 @@ public class ActivityDetailsProjet extends AppCompatActivity {
             progress.setProgress(ratioBudget);
 
             //action lors du clic sur le bouton action
-            final Button buttonActions = (Button) findViewById(R.id.btnActions);
-            buttonActions.setOnClickListener(new View.OnClickListener() {
+            final Button buttonSaisies = (Button) findViewById(R.id.btnSaisies);
+            buttonSaisies.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = new Intent(ActivityDetailsProjet.this, ActivityIndicateursSaisieCharge.class);
                     intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
@@ -180,11 +178,11 @@ public class ActivityDetailsProjet extends AppCompatActivity {
             int nbUniteesCibles = DaoSaisieCharge.getNbUnitesCibles(this.proj.getId());
             int ratioSaisies = Outils.calculerPourcentage(nbUniteesSaisies,nbUniteesCibles);
             if(ratioDuree<100-ratioSaisies){
-                buttonActions.setBackgroundColor(Color.RED);
+                buttonSaisies.setBackgroundColor(Color.RED);
             }else if(ratioDuree>100-ratioSaisies){
-                buttonActions.setBackgroundColor(Color.GREEN);
+                buttonSaisies.setBackgroundColor(Color.GREEN);
             }else{
-                buttonActions.setBackgroundColor(Color.YELLOW);
+                buttonSaisies.setBackgroundColor(Color.YELLOW);
             }
         }
 
