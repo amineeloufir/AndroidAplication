@@ -12,6 +12,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
+import android.widget.Toast;
 
 import com.google.api.services.sheets.v4.SheetsScopes;
 
@@ -35,6 +36,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -64,8 +66,11 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
     GoogleAccountCredential mCredential;
     private TextView mOutputText;
     private Button mCallApiButton;
+    private Button idButtonParDefaut;
+    private EditText buttonInput;
     ProgressDialog mProgress;
-
+    private static String spreadsheetId ;
+    private static String spreadsheetIdParDefaut= "1yw_8OO4oFYR6Q25KH0KE4LOr86UfwoNl_E6hGgq2UD4";
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
@@ -73,6 +78,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
 
 
     private static final String BUTTON_TEXT = "Charger la base de données ";
+    private static final String BUTTON_ID = "Id par defaut";
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = {SheetsScopes.SPREADSHEETS_READONLY};
 
@@ -116,11 +122,24 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
         mOutputText.setVerticalScrollBarEnabled(true);
         mOutputText.setMovementMethod(new ScrollingMovementMethod());
         mOutputText.setText(
-                "Clicker sur \'" + BUTTON_TEXT + "\' pour charger ou mettre à jour les données .");
+                "Renseignez l'ID du projet et Clickez sur \'" + BUTTON_TEXT + "\' pour charger ou mettre à jour les données .");
         activityLayout.addView(mOutputText);
+
+        buttonInput=new EditText(this);
+        activityLayout.addView(buttonInput);
 
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("préparation de la base de données  ...");
+
+        idButtonParDefaut = new Button(this);
+        idButtonParDefaut.setText(BUTTON_ID);
+        idButtonParDefaut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getIdProjetParDefaut();
+            }
+        });
+        activityLayout.addView(idButtonParDefaut);
 
         setContentView(activityLayout);
 
@@ -139,15 +158,31 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
      * appropriate.
      */
     private void getResultsFromApi() {
-        if (!isGooglePlayServicesAvailable()) {
-            acquireGooglePlayServices();
-        } else if (mCredential.getSelectedAccountName() == null) {
-            chooseAccount();
-        } else if (!isDeviceOnline()) {
-            mOutputText.setText("No network connection available.");
-        } else {
-            new MakeRequestTask(mCredential).execute();
+
+        boolean projetIdVide=true;
+
+        if (buttonInput.length()>0){
+            projetIdVide=false;
+        };
+
+        if(!projetIdVide) {
+            spreadsheetId=buttonInput.getText().toString();
+            if (!isGooglePlayServicesAvailable()) {
+                acquireGooglePlayServices();
+            } else if (mCredential.getSelectedAccountName() == null) {
+                chooseAccount();
+            } else if (!isDeviceOnline()) {
+                mOutputText.setText("No network connection available.");
+            } else {
+                new MakeRequestTask(mCredential).execute();
+            }
+        }else{
+            Toast.makeText(this, "Renseignez Id du projet", Toast.LENGTH_SHORT).show();
         }
+
+    }
+    private void getIdProjetParDefaut() {
+        buttonInput.setText(spreadsheetIdParDefaut);
     }
 
     /**
@@ -382,7 +417,6 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             feuilles.put("rangeActions","Liste des actions projet!A3:Z");
             feuilles.put("rangeRessources","Ressources!A2:Z");
             */
-            String spreadsheetId = "1yw_8OO4oFYR6Q25KH0KE4LOr86UfwoNl_E6hGgq2UD4";
             String rangeActions = "Liste des actions projet!A3:Z";
             String rangeDcConso = "DC et détails conso!A5:Z";
 
