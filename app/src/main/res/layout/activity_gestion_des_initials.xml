@@ -11,7 +11,7 @@
     tools:context="miage.fr.gestionprojet.vues.ActivityGestionDesInitials">
 
     <TextView
-        android:text="Choisissez votre initial"
+        android:text="Choisissez votre initiale"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -27,5 +27,6 @@
         android:layout_alignParentTop="true"
         android:layout_below="@id/listViewInitials"
         android:listSelector="#87CEFA"
+        android:textAlignment="center"
         />
 </RelativeLayout>
