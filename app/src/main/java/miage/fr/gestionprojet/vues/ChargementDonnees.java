@@ -1,5 +1,6 @@
 package miage.fr.gestionprojet.vues;
 
+import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Delete;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -12,7 +13,6 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
-import android.widget.Toast;
 
 import com.google.api.services.sheets.v4.SheetsScopes;
 
@@ -36,7 +36,6 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -48,16 +47,23 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import miage.fr.gestionprojet.models.EtapeFormation;
 import miage.fr.gestionprojet.models.Formation;
 import miage.fr.gestionprojet.models.Action;
 import miage.fr.gestionprojet.models.Domaine;
+import miage.fr.gestionprojet.models.Mesure;
 import miage.fr.gestionprojet.models.Projet;
 import miage.fr.gestionprojet.models.Ressource;
+import miage.fr.gestionprojet.models.SaisieCharge;
 import miage.fr.gestionprojet.models.dao.DaoAction;
 
 import miage.fr.gestionprojet.models.dao.DaoDomaine;
+import miage.fr.gestionprojet.models.dao.DaoFormation;
+import miage.fr.gestionprojet.models.dao.DaoMesure;
 import miage.fr.gestionprojet.models.dao.DaoProjet;
 import miage.fr.gestionprojet.models.dao.DaoRessource;
+import miage.fr.gestionprojet.models.dao.DaoSaisieCharge;
 import miage.fr.gestionprojet.outils.Outils;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -66,11 +72,8 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
     GoogleAccountCredential mCredential;
     private TextView mOutputText;
     private Button mCallApiButton;
-    private Button idButtonParDefaut;
-    private EditText buttonInput;
     ProgressDialog mProgress;
-    private static String spreadsheetId ;
-    private static String spreadsheetIdParDefaut= "1yw_8OO4oFYR6Q25KH0KE4LOr86UfwoNl_E6hGgq2UD4";
+
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
@@ -78,7 +81,6 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
 
 
     private static final String BUTTON_TEXT = "Charger la base de données ";
-    private static final String BUTTON_ID = "Id par defaut";
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = {SheetsScopes.SPREADSHEETS_READONLY};
 
@@ -122,24 +124,11 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
         mOutputText.setVerticalScrollBarEnabled(true);
         mOutputText.setMovementMethod(new ScrollingMovementMethod());
         mOutputText.setText(
-                "Renseignez l'ID du projet et Cliquez sur \'" + BUTTON_TEXT + "\' pour charger ou mettre à jour les données .");
+                "Clicker sur \'" + BUTTON_TEXT + "\' pour charger ou mettre à jour les données .");
         activityLayout.addView(mOutputText);
-
-        buttonInput=new EditText(this);
-        activityLayout.addView(buttonInput);
 
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("préparation de la base de données  ...");
-
-        idButtonParDefaut = new Button(this);
-        idButtonParDefaut.setText(BUTTON_ID);
-        idButtonParDefaut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getIdProjetParDefaut();
-            }
-        });
-        activityLayout.addView(idButtonParDefaut);
 
         setContentView(activityLayout);
 
@@ -158,31 +147,15 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
      * appropriate.
      */
     private void getResultsFromApi() {
-
-        boolean projetIdVide=true;
-
-        if (buttonInput.length()>0){
-            projetIdVide=false;
-        };
-
-        if(!projetIdVide) {
-            spreadsheetId=buttonInput.getText().toString();
-            if (!isGooglePlayServicesAvailable()) {
-                acquireGooglePlayServices();
-            } else if (mCredential.getSelectedAccountName() == null) {
-                chooseAccount();
-            } else if (!isDeviceOnline()) {
-                mOutputText.setText("No network connection available.");
-            } else {
-                new MakeRequestTask(mCredential).execute();
-            }
-        }else{
-            Toast.makeText(this, "Renseignez Id du projet", Toast.LENGTH_SHORT).show();
+        if (!isGooglePlayServicesAvailable()) {
+            acquireGooglePlayServices();
+        } else if (mCredential.getSelectedAccountName() == null) {
+            chooseAccount();
+        } else if (!isDeviceOnline()) {
+            mOutputText.setText("No network connection available.");
+        } else {
+            new MakeRequestTask(mCredential).execute();
         }
-
-    }
-    private void getIdProjetParDefaut() {
-        buttonInput.setText(spreadsheetIdParDefaut);
     }
 
     /**
@@ -417,60 +390,83 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             feuilles.put("rangeActions","Liste des actions projet!A3:Z");
             feuilles.put("rangeRessources","Ressources!A2:Z");
             */
+            String spreadsheetId = "1yw_8OO4oFYR6Q25KH0KE4LOr86UfwoNl_E6hGgq2UD4";
+            String rangeProject = "Informations générales!A2:E";
             String rangeActions = "Liste des actions projet!A3:Z";
             String rangeDcConso = "DC et détails conso!A5:Z";
+            String rangeSaisieCharge = "Indicateurs de saisie/charge!A5:Z";
 
             String rangeRessources = "Ressources!A2:Z";
-            String rangeFormation = "Indicateurs formation!A3:Z";
-
+            String rangeformation = "Indicateurs formation!A3:Z";
+            String rangeMesure = "Mesures de saisie/charge!A2:D";
+            ValueRange reponsesmesure = this.mService.spreadsheets().values()
+                    .get(spreadsheetId, rangeMesure)
+                    .execute();
             List<String> results = new ArrayList<String>();
-            mProgress.setProgress(Outils.calculerPourcentage(0,7));
+            ValueRange responseproject = this.mService.spreadsheets().values()
+                    .get(spreadsheetId, rangeProject)
+                    .execute();
+            mProgress.setProgress(Outils.calculerPourcentage(0, 7));
             ValueRange responseAction = this.mService.spreadsheets().values()
                     .get(spreadsheetId, rangeActions)
                     .execute();
-            mProgress.setProgress(Outils.calculerPourcentage(1,7));
+            mProgress.setProgress(Outils.calculerPourcentage(1, 7));
             ValueRange responseDcConso = this.mService.spreadsheets().values()
                     .get(spreadsheetId, rangeDcConso)
                     .execute();
-            mProgress.setProgress(Outils.calculerPourcentage(2,7));
+            mProgress.setProgress(Outils.calculerPourcentage(2, 7));
             ValueRange responseressources = this.mService.spreadsheets().values()
                     .get(spreadsheetId, rangeRessources)
                     .execute();
-            mProgress.setProgress(Outils.calculerPourcentage(3,7));
-            ValueRange responseformation = this.mService.spreadsheets().values()
-                    .get(spreadsheetId, rangeFormation)
+            ValueRange responsesaisieCharge = this.mService.spreadsheets().values()
+                    .get(spreadsheetId, rangeSaisieCharge)
                     .execute();
-            mProgress.setProgress(Outils.calculerPourcentage(4,7));
+            mProgress.setProgress(Outils.calculerPourcentage(3, 7));
+            ValueRange responseformation = this.mService.spreadsheets().values()
+                    .get(spreadsheetId, rangeformation)
+                    .execute();
+            mProgress.setProgress(Outils.calculerPourcentage(4, 7));
             List<List<Object>> values = responseAction.getValues();
-
+            List<List<Object>> valueproject = responseproject.getValues();
+            List<List<Object>> valuesSaisieCharge = responsesaisieCharge.getValues();
             List<List<Object>> valuesDcConso = responseDcConso.getValues();
-            mProgress.setProgress(Outils.calculerPourcentage(5,7));
+            List<List<Object>> valuesMEsure = reponsesmesure.getValues();
+            mProgress.setProgress(Outils.calculerPourcentage(5, 7));
             List<List<Object>> valuesressources = responseressources.getValues();
+            if (valueproject != null) {
+               initialiserPojet(valueproject);
+            }
             if (valuesressources != null) {
                 initialiserressource(reglerDonnees(valuesressources));
 
 
             }
-            mProgress.setProgress(Outils.calculerPourcentage(6,7));
+            mProgress.setProgress(Outils.calculerPourcentage(6, 7));
             if (values != null && valuesDcConso != null) {
 
 
-               initialiserAction(reglerDonnees(values),reglerDonnees(valuesDcConso));
+                initialiserAction(reglerDonnees(values), reglerDonnees(valuesDcConso));
 
             }
 
-            mProgress.setProgress(Outils.calculerPourcentage(7,7));
+            mProgress.setProgress(Outils.calculerPourcentage(7, 7));
             List<List<Object>> valuesformation = responseformation.getValues();
             if (valuesformation != null) {
-                intialiserFormation(reglerDonnees(valuesformation));
+               intialiserFormation(reglerDonnees(valuesformation));
 
 
             }
 
+            if (valuesSaisieCharge != null) {
+                initialiserSaisieCharge(reglerDonnees(valuesSaisieCharge));
+            }
+            if (valuesMEsure != null) {
+                initialiserMesures(reglerDonnees(valuesMEsure));
+            }
             for (List row : valuesformation) {
-                results.add(row.get(6) + ", " + row.get(8));
 
-            }
+
+             }
             return results;
         }
 
@@ -513,13 +509,14 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             } else {
                 resultat = false;
             }
-            ;
+
             return resultat;
         }
 
         public int chainetoint(String s) {
             int resultat;
-            if (s.equals("")) {
+            boolean flag = s.matches("%[a-zA-Z]%");
+            if (s.equals("") || (flag)) {
                 resultat = 0;
 
             } else {
@@ -531,10 +528,13 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
 
         public Float chainetofloat(String s) {
             Float resultat;
-            if (s.equals("") || (s == null) || s.equals("-")) {
-                resultat = 0.0f;
+
+            boolean flag = s.matches(".*[a-zA-Z]+.*");
+            if (s.equals("") || (s == null) || s.equals("-") || flag || s.equals("RETARD") || s.equals("#DIV/0!")) {
+                resultat = (float)0.0;
 
             } else {
+
                 resultat = Float.parseFloat(s.replace(',', '.'));
             }
             ;
@@ -555,167 +555,280 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             resource.setTelephoneFixe("");
             resource.setTelephoneMobile("");
             resource.save();
-            for (List row : values) {
-                resource.setNom(row.get(2).toString());
-                resource.setEmail(row.get(5).toString());
-                resource.setEntreprise(row.get(3).toString());
-                resource.setFonction(row.get(4).toString());
-                resource.setInformationsDiverses(row.get(8).toString());
-                resource.setInitiales(row.get(0).toString());
-                resource.setPrenom(row.get(1).toString());
-                resource.setTelephoneFixe(row.get(6).toString());
-                resource.setTelephoneMobile(row.get(7).toString());
-                resource.save();
+            ActiveAndroid.beginTransaction();
+            try {
+                for (List row : values) {
+                    resource.setNom(row.get(2).toString());
+                    resource.setEmail(row.get(5).toString());
+                    resource.setEntreprise(row.get(3).toString());
+                    resource.setFonction(row.get(4).toString());
+                    resource.setInformationsDiverses(row.get(8).toString());
+                    resource.setInitiales(row.get(0).toString());
+                    resource.setPrenom(row.get(1).toString());
+                    resource.setTelephoneFixe(row.get(6).toString());
+                    resource.setTelephoneMobile(row.get(7).toString());
+                    resource.save();
+
+                }
+                ActiveAndroid.setTransactionSuccessful();
+            } finally {
+                ActiveAndroid.endTransaction();
             }
+
         }
 
-        public void initialiserAction(List<List<Object>> values,List<List<Object>> valuesDcConso) throws ParseException {
+        public void initialiserAction(List<List<Object>> values, List<List<Object>> valuesDcConso) throws ParseException {
             new Delete().from(Action.class).execute();
             new Delete().from(Domaine.class).execute();
-            new Delete().from(Projet.class).execute();
+
             /*
 
              */
-            Projet projet = new Projet();
-
-            projet.setNom("Projet processus de dév");
-            Date datedeb = chainetoDate("10/01/2017");
-            Date datefinproj = chainetoDate("10/06/2017");
-            projet.setDateDebut(datedeb);
-            projet.setDateFinInitiale(datefinproj);
-            projet.setDateFinReelle(datefinproj);
-            projet.setDescription("projet M2 MIAGE ");
-
-            projet.save();
+            Projet projet = DaoProjet.loadAll().get(0);
             /*
 
              */
-            for (List row : values) {
-                Action action = new Action();
-                action.setCode(row.get(5).toString());
-                action.setOrdre(chainetoint(row.get(1).toString()));
-                action.setTarif(row.get(2).toString());
+            ActiveAndroid.beginTransaction();
+            try {
+                for (List row : values) {
+                    Action action = new Action();
+                    action.setCode(row.get(5).toString());
+                    action.setOrdre(chainetoint(row.get(1).toString()));
+                    action.setTarif(row.get(2).toString());
 
-                action.setTypeTravail(row.get(0).toString());
-                action.setPhase(row.get(4).toString());
-                action.setCode(row.get(5).toString());
+                    action.setTypeTravail(row.get(0).toString());
+                    action.setPhase(row.get(4).toString());
+                    action.setCode(row.get(5).toString());
 
-                Domaine domaine = DaoDomaine.getByName(row.get(3).toString());
-                if(domaine == null) {
-                    domaine = new Domaine(row.get(3).toString(), "description demo", projet);
-                    domaine.save();
-                }
-                Ressource respOuv;
-                if(row.get(13).toString()==null || row.get(13).toString().length()==0){
-                    respOuv = new Ressource();
-                    respOuv.setInitiales("");
-                }
-                respOuv = DaoRessource.getRessourceByInitial(row.get(13).toString());
-                if(respOuv==null){
-                    respOuv = new Ressource();
-                    respOuv.setInitiales(row.get(13).toString());
-                    respOuv.setNom("");
-                    respOuv.setEmail("");
-                    respOuv.setEntreprise("");
-                    respOuv.setFonction("");
-                    respOuv.setInformationsDiverses("");
-                    respOuv.setPrenom("");
-                    respOuv.setTelephoneFixe("");
-                    respOuv.setTelephoneMobile("");
-                    respOuv.save();
-                }
-                action.setRespOuv(respOuv);
-                Ressource respOeu;
-                if(row.get(12).toString()==null || row.get(12).toString().length()==0){
-                    respOeu = new Ressource();
-                    respOeu.setInitiales("");
-                }
-                respOeu = DaoRessource.getRessourceByInitial(row.get(12).toString());
-                if(respOeu==null){
-                    respOeu = new Ressource();
-                    respOeu.setInitiales(row.get(12).toString());
-                    respOeu.setNom("");
-                    respOeu.setEmail("");
-                    respOeu.setEntreprise("");
-                    respOeu.setFonction("");
-                    respOeu.setInformationsDiverses("");
-                    respOeu.setPrenom("");
-                    respOeu.setTelephoneFixe("");
-                    respOeu.setTelephoneMobile("");
-                    respOeu.save();
-                }
-                action.setRespOuv(respOuv);
+                    Domaine domaine = DaoDomaine.getByName(row.get(3).toString());
+                    if (domaine == null) {
+                        domaine = new Domaine(row.get(3).toString(), "description demo", projet);
+                        domaine.save();
+                    }
+                    Ressource respOuv;
+                    if (row.get(13).toString() == null || row.get(13).toString().length() == 0) {
+                        respOuv = new Ressource();
+                        respOuv.setInitiales("");
+                    }
+                    respOuv = DaoRessource.getRessourceByInitial(row.get(13).toString());
+                    if (respOuv == null) {
+                        respOuv = new Ressource();
+                        respOuv.setInitiales(row.get(13).toString());
+                        respOuv.setNom("");
+                        respOuv.setEmail("");
+                        respOuv.setEntreprise("");
+                        respOuv.setFonction("");
+                        respOuv.setInformationsDiverses("");
+                        respOuv.setPrenom("");
+                        respOuv.setTelephoneFixe("");
+                        respOuv.setTelephoneMobile("");
+                        respOuv.save();
+                    }
+                    action.setRespOuv(respOuv);
+                    Ressource respOeu;
+                    if (row.get(12).toString() == null || row.get(12).toString().length() == 0) {
+                        respOeu = new Ressource();
+                        respOeu.setInitiales("");
+                    }
+                    respOeu = DaoRessource.getRessourceByInitial(row.get(12).toString());
+                    if (respOeu == null) {
+                        respOeu = new Ressource();
+                        respOeu.setInitiales(row.get(12).toString());
+                        respOeu.setNom("");
+                        respOeu.setEmail("");
+                        respOeu.setEntreprise("");
+                        respOeu.setFonction("");
+                        respOeu.setInformationsDiverses("");
+                        respOeu.setPrenom("");
+                        respOeu.setTelephoneFixe("");
+                        respOeu.setTelephoneMobile("");
+                        respOeu.save();
+                    }
+                    action.setRespOuv(respOuv);
 
-                action.setDomaine(domaine);
+                    action.setDomaine(domaine);
 
-                action.setApparaitrePlanning(chainetoBoolean(row.get(6).toString()));
-                action.setTypeFacturation(row.get(7).toString());
-                action.setNbJoursPrevus(chainetofloat(row.get(8).toString()));
-                action.setCoutParJour(chainetofloat(row.get(11).toString()));
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
-                Date datedebut = chainetoDate(row.get(9).toString());
-                Date datefin = chainetoDate(row.get(10).toString());
-                action.setDtDeb(datedebut);
-                action.setDtFinPrevue(datefin);
-                action.setDtFinReelle(datefin);
+                    action.setApparaitrePlanning(chainetoBoolean(row.get(6).toString()));
+                    action.setTypeFacturation(row.get(7).toString());
+                    action.setNbJoursPrevus(chainetofloat(row.get(8).toString()));
+                    action.setCoutParJour(chainetofloat(row.get(11).toString()));
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
+                    Date datedebut = chainetoDate(row.get(9).toString());
+                    Date datefin = chainetoDate(row.get(10).toString());
+                    action.setDtDeb(datedebut);
+                    action.setDtFinPrevue(datefin);
+                    action.setDtFinReelle(datefin);
 
-                for (List row_Dc : valuesDcConso) {
+                    for (List row_Dc : valuesDcConso) {
 
-                    if(action.getCode().equals(row_Dc.get(5).toString())){
+                        if (action.getCode().equals(row_Dc.get(5).toString())) {
 
-                        if(row_Dc.get(20).toString() ==null || row_Dc.get(20).toString().length()==0){
-                            action.setEcartProjete(0);
-                        }else {
-                            action.setEcartProjete(chainetofloat(row_Dc.get(20).toString()));
-                        }
+                            if (row_Dc.get(20).toString() == null || row_Dc.get(20).toString().length() == 0) {
+                                action.setEcartProjete(0);
+                            } else {
+                                action.setEcartProjete(chainetofloat(row_Dc.get(20).toString()));
+                            }
 
-                        if(row_Dc.get(18).toString() ==null || row_Dc.get(18).toString().length()==0){
-                            action.setResteAFaire(0);
-                        }else {
-                            action.setResteAFaire(chainetofloat(row_Dc.get(18).toString()));
+                            if (row_Dc.get(18).toString() == null || row_Dc.get(18).toString().length() == 0) {
+                                action.setResteAFaire(0);
+                            } else {
+                                action.setResteAFaire(chainetofloat(row_Dc.get(18).toString()));
+                            }
                         }
                     }
-                }
 
                /*  */
-                action.save();
+                    action.save();
+                }
+
+                ActiveAndroid.setTransactionSuccessful();
+            } finally {
+                ActiveAndroid.endTransaction();
             }
 
         }
+
         public void intialiserFormation(List<List<Object>> values) {
             new Delete().from(Formation.class).execute();
 
-            Formation formation = new Formation();
+
             ArrayList<Action> actionList = new ArrayList<>();
+            Action action = new Action();
+            ActiveAndroid.beginTransaction();
+            try {
+
+                for (List row : values) {
+                    Formation formation = new Formation();
+
+               ;
+
+                    actionList = DaoAction.getActionbyCode(row.get(5).toString());
+
+                    if (actionList.size() >0){
+
+                        action = actionList.get(0);
+
+                        formation.setAction(action);
+                        formation.setAvancementObjectif(chainetofloat(row.get(8).toString().replace('%', '0')));
+                        formation.setAvancementTotal(chainetofloat(row.get(6).toString().replace('%', '0')));
+                        formation.setAvancementPreRequis(chainetofloat(row.get(7).toString().replace('%', '0')));
+
+                        formation.setAvancementPostFormation(chainetofloat(row.get(9).toString().replace('%', '0')));
+
+                    }
+                    formation.save();
+
+
+
+                }
+
+
+
+
+           ActiveAndroid.setTransactionSuccessful();
+        } finally {
+            ActiveAndroid.endTransaction();
+        }
+    }
+
+        public void initialiserPojet(List<List<Object>> values) throws ParseException {
+            new Delete().from(Projet.class).execute();
+            Projet projet = new Projet();
+            projet.setDescription("");
+            projet.setNom("");
+            projet.setDateDebut(chainetoDate("20/01/2017"));
+            projet.setDateFinReelle(chainetoDate("20/05/2017"));
+            projet.setDateFinInitiale(chainetoDate("20/05/2017"));
+            ActiveAndroid.beginTransaction();
+            try {
+
+                for (List row : values) {
+                    projet.setNom(row.get(0).toString());
+                    projet.setDescription("Projet_Master2_MIAGE");
+                    projet.save();
+                }
+
+                ActiveAndroid.setTransactionSuccessful();
+            } finally {
+                ActiveAndroid.endTransaction();
+            }
+        }
+
+        public void initialiserSaisieCharge(List<List<Object>> values) throws ParseException {
+            new Delete().from(SaisieCharge.class).execute();
+
+
+
 
 
             for (List row : values) {
+                SaisieCharge saisiecharge = new SaisieCharge();
+                if (!row.get(0).equals("")) {
+                    ActiveAndroid.beginTransaction();
+                    try {
+                        saisiecharge.setNbSemainePassee(chainetoint(row.get(11).toString()));
+                        saisiecharge.setNbSemaines(chainetofloat(row.get(8).toString()));
+                        saisiecharge.setChargeEstimeeParSemaine(chainetofloat(row.get(9).toString()));
+                        saisiecharge.setChargeRestanteEstimeeEnHeure(chainetofloat(row.get(12).toString()));
+                        saisiecharge.setChargeTotaleEstimeeEnHeure(chainetofloat(row.get(5).toString()));
+                        saisiecharge.setHeureParUnite(chainetofloat(row.get(4).toString()));
+
+                        saisiecharge.setNbUnitesCibles(chainetoint(row.get(3).toString()));
+
+                        saisiecharge.setChargeRestanteParSemaine(chainetofloat(row.get(15).toString()));
+
+                        saisiecharge.setPrctChargeFaiteParSemaineParChargeEstimee(chainetofloat(row.get(17).toString().replace('%', ' ')));
+                        ArrayList<Action> listesActions = DaoAction.getActionbyCode(row.get(2).toString());
+
+                        if (listesActions.size() > 0) {
+                            Action actionsaisie = new Action();
+                            actionsaisie = listesActions.get(0);
+                            saisiecharge.setAction(actionsaisie);
+                        }
 
 
-                formation.setAvancementObjectif(chainetofloat(row.get(8).toString().replace('%', ' ')));
-                formation.setAvancementTotal(chainetofloat(row.get(6).toString().replace('%', ' ')));
-                formation.setAvancementPreRequis(chainetofloat(row.get(7).toString().replace('%', ' ')));
+                        saisiecharge.save();
+                        List<SaisieCharge> listes = DaoSaisieCharge.loadAll();
 
-                formation.setAvancementPostFormation(chainetofloat(row.get(9).toString().replace('%', ' ')));
-                ArrayList<Action> arrayAction= (ArrayList<Action>) DaoAction.loadAll();
-                ArrayList<Projet> projets = (ArrayList<Projet>) DaoProjet.loadAll();
 
-                actionList = DaoAction.getActionbyCode(row.get(5).toString());
-                Action action = new Action();
-                if (actionList.size() == 0) {
-                    action = new Action();
-                    action.save();
-                } else {
-                    action = actionList.get(0);
+                        ActiveAndroid.setTransactionSuccessful();
+                    } finally {
+                        ActiveAndroid.endTransaction();
+                    }
                 }
-
-                formation.setAction(action);
-
-                formation.save();
             }
+        }
 
+        public void initialiserMesures(List<List<Object>> values) throws ParseException {
+            new Delete().from(Mesure.class).execute();
 
+            List<Mesure>listfi = new ArrayList<>();
 
+            SaisieCharge action = new SaisieCharge();
+            ActiveAndroid.beginTransaction();
+            try {
+                for (List row : values) {
+                    Mesure mesure = new Mesure();
+                    List<SaisieCharge> listsaisieCharges= new ArrayList<>();
+                    List<Action> listeaction = DaoAction.getActionbyCode(row.get(0).toString());
+                    if (listeaction.size() > 0){
+                   listsaisieCharges=DaoSaisieCharge.loadSaisiebyAction(listeaction.get(0));
+                    }
+
+                    if(listsaisieCharges.size()>0) {
+                        action =  listsaisieCharges.get(0);
+                        mesure.setAction(action);
+                    }
+
+                    mesure.setDtMesure(chainetoDate(row.get(2).toString()));
+                    mesure.setNbUnitesMesures(chainetoint(row.get(1).toString()));
+                    mesure.save();
+                              }
+
+                ActiveAndroid.setTransactionSuccessful();
+            } finally {
+                ActiveAndroid.endTransaction();
+            }
         }
 
         @Override
