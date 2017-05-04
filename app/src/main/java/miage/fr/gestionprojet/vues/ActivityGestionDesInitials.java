@@ -60,7 +60,7 @@ public class ActivityGestionDesInitials extends AppCompatActivity {
         }else{
                 // sinon on affiche un message indiquand qu'il n'y a aucun projet en cours
                 ArrayList<String> list = new ArrayList<>(1);
-                list.add("Aucune Ressource");
+                list.add("Cliquez ici !!");
                 final ArrayAdapter<String> adapter_2 = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,list);
                 liste.setAdapter(adapter_2);
 

@@ -122,7 +122,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
         mOutputText.setVerticalScrollBarEnabled(true);
         mOutputText.setMovementMethod(new ScrollingMovementMethod());
         mOutputText.setText(
-                "Renseignez l'ID du projet et Clickez sur \'" + BUTTON_TEXT + "\' pour charger ou mettre à jour les données .");
+                "Renseignez l'ID du projet et Cliquez sur \'" + BUTTON_TEXT + "\' pour charger ou mettre à jour les données .");
         activityLayout.addView(mOutputText);
 
         buttonInput=new EditText(this);
