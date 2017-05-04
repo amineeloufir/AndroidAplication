@@ -13,6 +13,7 @@ import java.util.ArrayList;
 @Table(name = "Formation")
 public class Formation extends Model {
 
+
     @Column(name="action")
     private Action action;
 
@@ -83,7 +84,5 @@ public class Formation extends Model {
         this.action = action;
     }
 
-    public String toString(){
-        return this.action.getCode();
-    }
+
 }
