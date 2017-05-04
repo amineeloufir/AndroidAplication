@@ -1,78 +1,86 @@
-package miage.fr.gestionprojet.vues;
 
-import com.activeandroid.ActiveAndroid;
-import com.activeandroid.query.Delete;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+      package miage.fr.gestionprojet.vues;
 
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.ExponentialBackOff;
+        import com.activeandroid.ActiveAndroid;
+        import com.activeandroid.query.Delete;
+        import com.google.android.gms.common.ConnectionResult;
+        import com.google.android.gms.common.GoogleApiAvailability;
+        import com.google.api.client.extensions.android.http.AndroidHttp;
+        import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+        import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
+        import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
-import com.google.api.services.sheets.v4.SheetsScopes;
+        import com.google.api.client.http.HttpTransport;
+        import com.google.api.client.json.JsonFactory;
+        import com.google.api.client.json.jackson2.JacksonFactory;
+        import com.google.api.client.util.ExponentialBackOff;
 
-import com.google.api.services.sheets.v4.model.*;
+        import com.google.api.services.sheets.v4.SheetsScopes;
 
-import android.Manifest;
-import android.accounts.AccountManager;
-import android.app.Activity;
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.text.TextUtils;
-import android.text.method.ScrollingMovementMethod;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+        import com.google.api.services.sheets.v4.model.*;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+        import android.Manifest;
+        import android.accounts.AccountManager;
+        import android.app.Activity;
+        import android.app.Dialog;
+        import android.app.ProgressDialog;
+        import android.content.Context;
+        import android.content.Intent;
+        import android.content.SharedPreferences;
+        import android.net.ConnectivityManager;
+        import android.net.NetworkInfo;
+        import android.os.AsyncTask;
+        import android.os.Bundle;
+        import android.support.annotation.NonNull;
+        import android.text.TextUtils;
+        import android.text.method.ScrollingMovementMethod;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.widget.Button;
+        import android.widget.EditText;
+        import android.widget.LinearLayout;
+        import android.widget.TextView;
+        import android.widget.Toast;
 
-import miage.fr.gestionprojet.models.EtapeFormation;
-import miage.fr.gestionprojet.models.Formation;
-import miage.fr.gestionprojet.models.Action;
-import miage.fr.gestionprojet.models.Domaine;
-import miage.fr.gestionprojet.models.Mesure;
-import miage.fr.gestionprojet.models.Projet;
-import miage.fr.gestionprojet.models.Ressource;
-import miage.fr.gestionprojet.models.SaisieCharge;
-import miage.fr.gestionprojet.models.dao.DaoAction;
+        import java.io.IOException;
+        import java.text.ParseException;
+        import java.text.SimpleDateFormat;
+        import java.util.ArrayList;
+        import java.util.Arrays;
+        import java.util.Date;
+        import java.util.HashMap;
+        import java.util.List;
 
-import miage.fr.gestionprojet.models.dao.DaoDomaine;
-import miage.fr.gestionprojet.models.dao.DaoFormation;
-import miage.fr.gestionprojet.models.dao.DaoMesure;
-import miage.fr.gestionprojet.models.dao.DaoProjet;
-import miage.fr.gestionprojet.models.dao.DaoRessource;
-import miage.fr.gestionprojet.models.dao.DaoSaisieCharge;
-import miage.fr.gestionprojet.outils.Outils;
-import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.EasyPermissions;
+        import miage.fr.gestionprojet.models.EtapeFormation;
+        import miage.fr.gestionprojet.models.Formation;
+        import miage.fr.gestionprojet.models.Action;
+        import miage.fr.gestionprojet.models.Domaine;
+        import miage.fr.gestionprojet.models.Mesure;
+        import miage.fr.gestionprojet.models.Projet;
+        import miage.fr.gestionprojet.models.Ressource;
+        import miage.fr.gestionprojet.models.SaisieCharge;
+        import miage.fr.gestionprojet.models.dao.DaoAction;
+
+        import miage.fr.gestionprojet.models.dao.DaoDomaine;
+        import miage.fr.gestionprojet.models.dao.DaoFormation;
+        import miage.fr.gestionprojet.models.dao.DaoMesure;
+        import miage.fr.gestionprojet.models.dao.DaoProjet;
+        import miage.fr.gestionprojet.models.dao.DaoRessource;
+        import miage.fr.gestionprojet.models.dao.DaoSaisieCharge;
+        import miage.fr.gestionprojet.outils.Outils;
+        import pub.devrel.easypermissions.AfterPermissionGranted;
+        import pub.devrel.easypermissions.EasyPermissions;
 
 public class ChargementDonnees extends Activity implements EasyPermissions.PermissionCallbacks {
     GoogleAccountCredential mCredential;
     private TextView mOutputText;
     private Button mCallApiButton;
     ProgressDialog mProgress;
+    private Button idButtonParDefaut;
+    private EditText buttonInput;
+
+    private static String spreadsheetId ;
+    private static String spreadsheetIdParDefaut= "1yw_8OO4oFYR6Q25KH0KE4LOr86UfwoNl_E6hGgq2UD4";
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
@@ -81,6 +89,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
 
 
     private static final String BUTTON_TEXT = "Charger la base de données ";
+    private static final String BUTTON_ID = "Id par defaut";
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = {SheetsScopes.SPREADSHEETS_READONLY};
 
@@ -127,8 +136,25 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                 "Clicker sur \'" + BUTTON_TEXT + "\' pour charger ou mettre à jour les données .");
         activityLayout.addView(mOutputText);
 
+        buttonInput=new EditText(this);
+        activityLayout.addView(buttonInput);
+
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("préparation de la base de données  ...");
+        idButtonParDefaut = new Button(this);
+        idButtonParDefaut.setText(BUTTON_ID);
+        idButtonParDefaut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getIdProjetParDefaut();
+            }
+
+
+            private void getIdProjetParDefaut() {
+                buttonInput.setText(spreadsheetIdParDefaut);
+            }
+        });
+        activityLayout.addView(idButtonParDefaut);
 
         setContentView(activityLayout);
 
@@ -147,14 +173,25 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
      * appropriate.
      */
     private void getResultsFromApi() {
-        if (!isGooglePlayServicesAvailable()) {
-            acquireGooglePlayServices();
-        } else if (mCredential.getSelectedAccountName() == null) {
-            chooseAccount();
-        } else if (!isDeviceOnline()) {
-            mOutputText.setText("No network connection available.");
-        } else {
-            new MakeRequestTask(mCredential).execute();
+        boolean projetIdVide=true;
+
+        if (buttonInput.length()>0){
+            projetIdVide=false;
+        };
+
+        if(!projetIdVide) {
+            spreadsheetId=buttonInput.getText().toString();
+            if (!isGooglePlayServicesAvailable()) {
+                acquireGooglePlayServices();
+            } else if (mCredential.getSelectedAccountName() == null) {
+                chooseAccount();
+            } else if (!isDeviceOnline()) {
+                mOutputText.setText("No network connection available.");
+            } else {
+                new MakeRequestTask(mCredential).execute();
+            }
+        }else{
+            Toast.makeText(this, "Renseignez Id du projet", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -434,7 +471,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             mProgress.setProgress(Outils.calculerPourcentage(5, 7));
             List<List<Object>> valuesressources = responseressources.getValues();
             if (valueproject != null) {
-               initialiserPojet(valueproject);
+                initialiserPojet(valueproject);
             }
             if (valuesressources != null) {
                 initialiserressource(reglerDonnees(valuesressources));
@@ -452,7 +489,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             mProgress.setProgress(Outils.calculerPourcentage(7, 7));
             List<List<Object>> valuesformation = responseformation.getValues();
             if (valuesformation != null) {
-               intialiserFormation(reglerDonnees(valuesformation));
+                intialiserFormation(reglerDonnees(valuesformation));
 
 
             }
@@ -466,12 +503,11 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             for (List row : valuesformation) {
 
 
-             }
+            }
             return results;
         }
 
         /*
-
             homogéner les données
          */
         public List<List<Object>> reglerDonnees(List<List<Object>> values) {
@@ -582,11 +618,9 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             new Delete().from(Domaine.class).execute();
 
             /*
-
              */
             Projet projet = DaoProjet.loadAll().get(0);
             /*
-
              */
             ActiveAndroid.beginTransaction();
             try {
@@ -700,7 +734,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                 for (List row : values) {
                     Formation formation = new Formation();
 
-               ;
+                    ;
 
                     actionList = DaoAction.getActionbyCode(row.get(5).toString());
 
@@ -725,11 +759,11 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
 
 
 
-           ActiveAndroid.setTransactionSuccessful();
-        } finally {
-            ActiveAndroid.endTransaction();
+                ActiveAndroid.setTransactionSuccessful();
+            } finally {
+                ActiveAndroid.endTransaction();
+            }
         }
-    }
 
         public void initialiserPojet(List<List<Object>> values) throws ParseException {
             new Delete().from(Projet.class).execute();
@@ -812,7 +846,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                     List<SaisieCharge> listsaisieCharges= new ArrayList<>();
                     List<Action> listeaction = DaoAction.getActionbyCode(row.get(0).toString());
                     if (listeaction.size() > 0){
-                   listsaisieCharges=DaoSaisieCharge.loadSaisiebyAction(listeaction.get(0));
+                        listsaisieCharges=DaoSaisieCharge.loadSaisiebyAction(listeaction.get(0));
                     }
 
                     if(listsaisieCharges.size()>0) {
@@ -823,7 +857,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
                     mesure.setDtMesure(chainetoDate(row.get(2).toString()));
                     mesure.setNbUnitesMesures(chainetoint(row.get(1).toString()));
                     mesure.save();
-                              }
+                }
 
                 ActiveAndroid.setTransactionSuccessful();
             } finally {
