@@ -48,4 +48,10 @@ public class DaoFormation {
         return avancementTotal;
 
     }
+    public static List<Formation> loadAll() {
+        List<Formation> formations= new Select().from(Formation.class).execute();
+        return formations;
+
+    }
+
 }

@@ -4,6 +4,7 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
+import java.nio.channels.FileLock;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -28,7 +29,7 @@ public class SaisieCharge extends Model {
     private float chargeTotaleEstimeeEnHeure;
 
     @Column(name="nb_semaines")
-    private int nbSemaines;
+    private Float nbSemaines;
 
     @Column(name="charge_estime_par_semaine")
     private float chargeEstimeeParSemaine;
@@ -54,7 +55,7 @@ public class SaisieCharge extends Model {
 
 
 
-    private ArrayList<Mesure> lstMesures;
+     private ArrayList<Mesure> lstMesures;
 
     public SaisieCharge() {
         super();
@@ -84,11 +85,11 @@ public class SaisieCharge extends Model {
         this.chargeTotaleEstimeeEnHeure = chargeTotaleEstimeeEnHeure;
     }
 
-    public int getNbSemaines() {
+    public Float getNbSemaines() {
         return nbSemaines;
     }
 
-    public void setNbSemaines(int nbSemaines) {
+    public void setNbSemaines(Float nbSemaines) {
         this.nbSemaines = nbSemaines;
     }
 
@@ -150,11 +151,11 @@ public class SaisieCharge extends Model {
 
     public ArrayList<Mesure> getLstMesures() {
         this.lstMesures = getMany(Mesure.class, "action");
-        return this.lstMesures;
+       return this.lstMesures;
     }
 
     public void setLstMesures(ArrayList<Mesure> lstMesures) {
-        this.lstMesures = lstMesures;
+      this.lstMesures = lstMesures;
     }
 
     public String toString(){
