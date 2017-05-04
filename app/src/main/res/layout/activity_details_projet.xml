@@ -50,11 +50,11 @@
                 android:text="Budget" />
 
             <Button
-                android:id="@+id/btnActions"
+                android:id="@+id/btnSaisies"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Actions" />
+                android:text="Saisies" />
 
             <Button
                 android:id="@+id/btnFormations"
@@ -73,7 +73,7 @@
         <ListView
             android:id="@+id/listViewAction"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 

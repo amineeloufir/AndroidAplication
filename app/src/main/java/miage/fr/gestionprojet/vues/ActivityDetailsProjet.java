@@ -26,7 +26,9 @@ import java.util.Date;
 import miage.fr.gestionprojet.R;
 import miage.fr.gestionprojet.models.Projet;
 import miage.fr.gestionprojet.models.dao.DaoAction;
+import miage.fr.gestionprojet.models.dao.DaoFormation;
 import miage.fr.gestionprojet.models.dao.DaoProjet;
+import miage.fr.gestionprojet.models.dao.DaoSaisieCharge;
 import miage.fr.gestionprojet.outils.Outils;
 
 public class ActivityDetailsProjet extends AppCompatActivity {
@@ -107,12 +109,15 @@ public class ActivityDetailsProjet extends AppCompatActivity {
 
                 }
             });
+
+            //avancement du projet
             ProgressBar progress = (ProgressBar) findViewById(R.id.progressBarProjet);
             int nbActionsRealise = DaoAction.getActionRealiseesByProjet(this.proj.getId()).size();
             int nbActions = DaoAction.getAllActionsByProjet(this.proj.getId()).size();
             int ratioBudget = Outils.calculerPourcentage(nbActionsRealise,nbActions);
             progress.setProgress(ratioBudget);
 
+            //action lors du clic sur le bouton action
             final Button buttonActions = (Button) findViewById(R.id.btnActions);
             buttonActions.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -123,6 +128,7 @@ public class ActivityDetailsProjet extends AppCompatActivity {
                 }
             });
 
+            //action lors du clic sur le bouton formation
             final Button buttonFormations = (Button) findViewById(R.id.btnFormations);
             buttonFormations.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -132,6 +138,7 @@ public class ActivityDetailsProjet extends AppCompatActivity {
                 }
             });
 
+            //action lors du clic sur le bouton budget
             final Button buttonBudget = (Button) findViewById(R.id.btnBudget);
             buttonBudget.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -142,16 +149,42 @@ public class ActivityDetailsProjet extends AppCompatActivity {
                 }
             });
 
+            //proportion de durée
             Date dateFin = DaoProjet.getDateFin(this.proj.getId());
             long dureeRestante = Outils.dureeEntreDeuxDate(Calendar.getInstance().getTime(),dateFin);
             long dureeTotal = Outils.dureeEntreDeuxDate(DaoProjet.getDateDebut(this.proj.getId()),DaoProjet.getDateFin(this.proj.getId()));
             int ratioDuree  = Outils.calculerPourcentage(dureeRestante,dureeTotal);
-            if(ratioDuree<ratioBudget){
+
+            //détermination de la couleur du bouton budget en fonction du temps restant et du nombre d'actions déjà réalisées
+            if(ratioDuree<100-ratioBudget){
                 buttonBudget.setBackgroundColor(Color.RED);
-            }else if(ratioDuree>ratioBudget){
+            }else if(ratioDuree>100-ratioBudget){
                 buttonBudget.setBackgroundColor(Color.GREEN);
             }else{
                 buttonBudget.setBackgroundColor(Color.YELLOW);
+            }
+
+            //détermination de la couleur du bouton formation
+            float avancementTotalFormation = DaoFormation.getAvancementTotal(this.proj.getId());
+            int ratioFormation = Outils.calculerPourcentage(avancementTotalFormation,100);
+            if(ratioDuree<100-ratioFormation){
+                buttonFormations.setBackgroundColor(Color.RED);
+            }else if(ratioDuree>100-ratioFormation){
+                buttonFormations.setBackgroundColor(Color.GREEN);
+            }else{
+                buttonFormations.setBackgroundColor(Color.YELLOW);
+            }
+
+            //détermination de la couleur du bouton action
+            int nbUniteesSaisies = DaoSaisieCharge.getNbUnitesSaisies(this.proj.getId());
+            int nbUniteesCibles = DaoSaisieCharge.getNbUnitesCibles(this.proj.getId());
+            int ratioSaisies = Outils.calculerPourcentage(nbUniteesSaisies,nbUniteesCibles);
+            if(ratioDuree<100-ratioSaisies){
+                buttonActions.setBackgroundColor(Color.RED);
+            }else if(ratioDuree>100-ratioSaisies){
+                buttonActions.setBackgroundColor(Color.GREEN);
+            }else{
+                buttonActions.setBackgroundColor(Color.YELLOW);
             }
         }
 

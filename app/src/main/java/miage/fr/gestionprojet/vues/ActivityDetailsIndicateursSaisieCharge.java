@@ -47,8 +47,7 @@ public class ActivityDetailsIndicateursSaisieCharge extends AppCompatActivity {
 
         if(id > 0){
             saisieCharge = Model.load(SaisieCharge.class, id);
-            DaoMesure dao = new DaoMesure();
-            Mesure mesure = dao.getLastMesureBySaisieCharge(saisieCharge);
+            Mesure mesure = DaoMesure.getLastMesureBySaisieCharge(saisieCharge.getId());
             txtSaisieCharge = (TextView) findViewById(R.id.textViewSaisieCharge);
             txtSaisieCharge.setText(saisieCharge.toString());
 

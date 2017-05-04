@@ -1,10 +1,15 @@
 package miage.fr.gestionprojet.models.dao;
 
+import com.activeandroid.Model;
 import com.activeandroid.query.Select;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import miage.fr.gestionprojet.models.Action;
+import miage.fr.gestionprojet.models.Domaine;
+import miage.fr.gestionprojet.models.Mesure;
+import miage.fr.gestionprojet.models.Projet;
 import miage.fr.gestionprojet.models.SaisieCharge;
 
 /**
@@ -20,11 +25,13 @@ public class DaoSaisieCharge {
                 .where("domaine=?",idDomaine)
                 .execute();
         for(Action a : results) {
-            SaisieCharge result  = (SaisieCharge) new Select()
-                    .from(SaisieCharge.class)
-                    .where("domaine=?", a.getId())
-                    .execute().get(0);
-            lst.add(result);
+            if(a.getTypeTravail().equalsIgnoreCase("Saisie")||a.getTypeTravail().equalsIgnoreCase("Test")) {
+                SaisieCharge result = (SaisieCharge) new Select()
+                        .from(SaisieCharge.class)
+                        .where("domaine=?", a.getId())
+                        .execute().get(0);
+                lst.add(result);
+            }
 
         }
         return lst;
@@ -39,11 +46,13 @@ public class DaoSaisieCharge {
                 .where("resp_ouv=? or resp_oeu=?",idUser,idUser)
                 .execute();
         for(Action a : results) {
-            SaisieCharge result  = (SaisieCharge) new Select()
-                    .from(SaisieCharge.class)
-                    .where("domaine=?", a.getId())
-                    .execute().get(0);
-            lst.add(result);
+            if(a.getTypeTravail().equalsIgnoreCase("Saisie")||a.getTypeTravail().equalsIgnoreCase("Test")) {
+                SaisieCharge result = (SaisieCharge) new Select()
+                        .from(SaisieCharge.class)
+                        .where("domaine=?", a.getId())
+                        .execute().get(0);
+                lst.add(result);
+            }
 
         }
         return lst;
@@ -60,4 +69,44 @@ public class DaoSaisieCharge {
             return null;
         }
     }
+
+    public static int getNbUnitesSaisies(long idProjet){
+        Projet projet = Model.load(Projet.class, idProjet);
+        List<Domaine> doms = projet.getLstDomaines();
+        ArrayList<Action> lstActions = new ArrayList<>();
+        for(Domaine d : doms){
+            lstActions.addAll(d.getLstActions());
+        }
+        int nbUnitesSaisies = 0;
+        for(Action a : lstActions){
+            if(a.getTypeTravail().equalsIgnoreCase("Saisie")||a.getTypeTravail().equalsIgnoreCase("Test")){
+                SaisieCharge s = DaoSaisieCharge.loadSaisieChargeByAction(a.getId());
+                if(s!=null) {
+                    Mesure m = DaoMesure.getLastMesureBySaisieCharge(s.getId());
+                    nbUnitesSaisies += m.getNbUnitesMesures();
+                }
+            }
+        }
+        return nbUnitesSaisies;
+    }
+
+    public static int getNbUnitesCibles(long idProjet){
+        Projet projet = Model.load(Projet.class, idProjet);
+        List<Domaine> doms = projet.getLstDomaines();
+        ArrayList<Action> lstActions = new ArrayList<>();
+        for(Domaine d : doms){
+            lstActions.addAll(d.getLstActions());
+        }
+        int nbUnitesCibles = 0;
+        for(Action a : lstActions){
+            if(a.getTypeTravail().equalsIgnoreCase("Saisie")||a.getTypeTravail().equalsIgnoreCase("Test")){
+                SaisieCharge s = DaoSaisieCharge.loadSaisieChargeByAction(a.getId());
+                if(s!=null) {
+                    nbUnitesCibles += s.getNbUnitesCibles();
+                }
+            }
+        }
+        return nbUnitesCibles;
+    }
+
 }

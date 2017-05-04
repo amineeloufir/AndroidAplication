@@ -13,11 +13,11 @@ import miage.fr.gestionprojet.models.SaisieCharge;
 
 public class DaoMesure {
 
-    public Mesure getLastMesureBySaisieCharge(SaisieCharge saisieCharge){
+    public static Mesure getLastMesureBySaisieCharge(long idSaisieCharge){
         ArrayList<Mesure> lstMesures =
                 new Select()
                 .from(Mesure.class)
-                .where("action=?", saisieCharge.getId())
+                .where("action=?", idSaisieCharge)
                 .orderBy("dt_mesure DESC")
                 .execute();
         if(lstMesures.size()>0){
