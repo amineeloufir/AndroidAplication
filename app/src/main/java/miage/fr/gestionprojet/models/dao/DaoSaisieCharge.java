@@ -20,7 +20,7 @@ public class DaoSaisieCharge {
 
 
     public static List<SaisieCharge> loadSaisiebyAction(Action action) {
-        List<SaisieCharge> saisieCharge= new Select().from(SaisieCharge.class).where("action=?",action.getCode()).execute();
+        List<SaisieCharge> saisieCharge= new Select().from(SaisieCharge.class).where("action=?",action.getId()).execute();
         return saisieCharge;
 
     }

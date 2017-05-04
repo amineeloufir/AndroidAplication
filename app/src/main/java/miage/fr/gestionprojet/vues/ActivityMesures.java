@@ -18,6 +18,7 @@ import miage.fr.gestionprojet.adapter.AdapterBudgetType;
 import miage.fr.gestionprojet.adapter.AdapterMesure;
 import miage.fr.gestionprojet.models.Mesure;
 import miage.fr.gestionprojet.models.SaisieCharge;
+import miage.fr.gestionprojet.models.dao.DaoMesure;
 
 public class ActivityMesures extends AppCompatActivity {
     public final static String EXTRA_INITIAL = "initial";
@@ -37,7 +38,8 @@ public class ActivityMesures extends AppCompatActivity {
         if(id > 0) {
             saisieCharge = Model.load(SaisieCharge.class, id);
             ListView lstViewMesures = (ListView) findViewById(R.id.lstViewMesures);
-            final AdapterMesure adapter = new AdapterMesure(this, R.layout.lst_view_mesures,saisieCharge.getLstMesures());
+            List<Mesure> lstMesures = DaoMesure.getListtMesureByAction(id);
+            final AdapterMesure adapter = new AdapterMesure(this, R.layout.lst_view_mesures, lstMesures);
             lstViewMesures.setAdapter(adapter);
         }
     }

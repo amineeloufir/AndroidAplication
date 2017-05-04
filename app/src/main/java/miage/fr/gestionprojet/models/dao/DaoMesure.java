@@ -30,11 +30,12 @@ public class DaoMesure {
         }
     }
 
-    public static ArrayList<Mesure> getListtMesureByAction(Action action) {
+    public static ArrayList<Mesure> getListtMesureByAction(long idSaisieCharge) {
+        ArrayList<Mesure> mesures = new Select().from(Mesure.class).execute();
         ArrayList<Mesure> lstMesures =
                 new Select()
                         .from(Mesure.class)
-                        .where("action=?", action)
+                        .where("action=?", idSaisieCharge)
                         .execute();
 
         return lstMesures;
