@@ -8,13 +8,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.activeandroid.ActiveAndroid;
-import com.activeandroid.query.Delete;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import miage.fr.gestionprojet.R;
+import miage.fr.gestionprojet.adapter.AdapterInitiales;
 import miage.fr.gestionprojet.models.Ressource;
 import miage.fr.gestionprojet.models.dao.DaoRessource;
 
@@ -25,7 +24,7 @@ import miage.fr.gestionprojet.models.dao.DaoRessource;
 public class ActivityGestionDesInitials extends AppCompatActivity {
 
     private ListView liste = null;
-    private List<String> lstInitials = null;
+    private List<Ressource> lstRessourceInitials = null;
     public final static String EXTRA_INITIAL = "Initial";
 
     @Override
@@ -39,19 +38,22 @@ public class ActivityGestionDesInitials extends AppCompatActivity {
 
         //on récupère la liste des ressources
         DaoRessource daoRessource = new DaoRessource();
-        lstInitials = daoRessource.getAllRessourceInitials();
+        lstRessourceInitials = daoRessource.loadAllWithInitialNotEmpty();
         liste = (ListView) findViewById(R.id.listViewInitials);
 
         // si le nombre de ressource est supérieur à 1 on affiche une liste
-        if(lstInitials.size()>0) {
-            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lstInitials);
-            liste.setAdapter(adapter);
+        if(lstRessourceInitials.size()>0) {
+            //on affiche cette liste
+            final ArrayAdapter<Ressource> adapter2 = new AdapterInitiales(this, R.layout.list_view_initiales, lstRessourceInitials);
+            liste.setAdapter(adapter2);
+
+            //liste.setAdapter(adapter);
 
             liste.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                     Intent intent = new Intent(ActivityGestionDesInitials.this, MainActivity.class);
-                    intent.putExtra(EXTRA_INITIAL, (lstInitials.get(position)));
+                    intent.putExtra(EXTRA_INITIAL, (lstRessourceInitials.get(position).getInitiales()));
                     startActivity(intent);
                 }
             });

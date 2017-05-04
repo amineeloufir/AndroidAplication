@@ -20,6 +20,18 @@ public class DaoRessource {
                 .execute();
     }
 
+    public  List<Ressource> loadAllWithInitialNotEmpty(){
+
+        List<Ressource> listeRessource=loadAll();
+        List<Ressource> listeRessourceFinal=new ArrayList<>();
+
+        for ( int i=0; i < listeRessource.size();i++){
+            if (!listeRessource.get(i).getInitiales().equals("") && listeRessource.get(i).getInitiales().length()>0) {
+                listeRessourceFinal.add(listeRessource.get(i));
+            }
+        }
+        return listeRessourceFinal;
+    }
 
     public List<String> getAllRessourceInitials(){
         List<Ressource> listeRessource=new Select().from(Ressource.class).execute();

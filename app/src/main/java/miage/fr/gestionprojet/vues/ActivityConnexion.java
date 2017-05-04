@@ -192,13 +192,16 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button:
+                progress_dialog.show();
                 gPlusSignIn();
                 break;
             case R.id.sign_out_button:
+                progress_dialog.show();
                 gPlusSignOut();
 
                 break;
             case R.id.disconnect_button:
+                progress_dialog.show();
                 gPlusRevokeAccess();
 
             case R.id.frnd_button:
