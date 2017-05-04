@@ -17,7 +17,7 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file('C:\\Users\\meloufir\\git\\android\\AndroidAplication\\app\\my-release-key.jks')
+            storeFile file('D:\\DOCUMENTS\\DEVELOPPEMENT\\ANDROIDSTUDIO\\AndroidAplication\\app\\my-release-key.jks')
             storePassword "bigfollow"
             keyAlias "bigfollow"
             keyPassword "bigfollow"
@@ -25,7 +25,7 @@ android {
         config {
             keyAlias 'bigfollow'
             keyPassword 'bigfollow'
-            storeFile file('C:\\Users\\meloufir\\git\\android\\AndroidAplication\\app\\my-release-key.jks')
+            storeFile file('D:\\DOCUMENTS\\DEVELOPPEMENT\\ANDROIDSTUDIO\\AndroidAplication\\app\\my-release-key.jks')
             storePassword 'bigfollow'
         }
     }
