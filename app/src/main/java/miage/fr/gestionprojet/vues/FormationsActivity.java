@@ -3,7 +3,7 @@ package miage.fr.gestionprojet.vues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -18,9 +18,11 @@ import miage.fr.gestionprojet.outils.DividerItemDecoration;
 
 public class FormationsActivity extends AppCompatActivity {
 
+    private static final String EXTRA_INITIAL = "initial";
     protected ListView formationsList;
     protected List<Formation> formationsData;
     public static final String FORMATION_SELECTED = "formation-selected";
+    private String initialUtilisateur = null;
 
 
     @Override
@@ -28,11 +30,18 @@ public class FormationsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formations);
 
+        initialUtilisateur = getIntent().getStringExtra(EXTRA_INITIAL);
         formationsList = (ListView) findViewById(R.id.formationsList);
         formationsData = DaoFormation.getFormations();
 
         fillFormationsList();
         setFormationItemClickListener();
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.initial_utilisateur, menu);
+        menu.findItem(R.id.initial_utilisateur).setTitle(initialUtilisateur);
+        return true;
     }
 
     protected void fillFormationsList() {
