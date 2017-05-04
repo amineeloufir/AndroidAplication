@@ -1,7 +1,13 @@
 package miage.fr.gestionprojet.vues;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.PopupMenu;
@@ -10,18 +16,22 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.activeandroid.query.Select;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,6 +43,8 @@ import miage.fr.gestionprojet.adapter.ActionsAdapter;
 import miage.fr.gestionprojet.models.Action;
 import miage.fr.gestionprojet.models.Domaine;
 import miage.fr.gestionprojet.models.dao.DaoAction;
+import miage.fr.gestionprojet.models.dao.DaoDomaine;
+import miage.fr.gestionprojet.models.dao.DaoRessource;
 import miage.fr.gestionprojet.outils.DividerItemDecoration;
 import miage.fr.gestionprojet.outils.Outils;
 
@@ -49,12 +61,25 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
     private int year;
     private int week;
     private Date dateSaisie;
+
+    public final static String EXTRA_INITIAL = "initial";
     @Override
 
     //TODO voir problème de date
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actions);
+        try {
+            initial = getIntent().getStringExtra(ActivityDetailsProjet.EXTRA_INITIAL);
+        }catch(Exception e){
+            e.printStackTrace();
+            finish();
+        }
+        try {
+            insererDateFictive();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Calendar c = Calendar.getInstance();
         week = c.get(Calendar.WEEK_OF_YEAR);
@@ -69,12 +94,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                 }
             });
         }
-        try {
-            initial = getIntent().getStringExtra(ActivityDetailsProjet.EXTRA_INITIAL);
-        }catch(Exception e){
-            e.printStackTrace();
-            finish();
-        }
+
         mEmptyView = (TextView) findViewById(R.id.emptyView);
         mRecyclerView = (RecyclerView) findViewById(R.id.actionRecycler);
         mRecyclerView.setHasFixedSize(true);
@@ -139,11 +159,35 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
+    private void insererDateFictive() throws ParseException {
+        ArrayList<Domaine> doms = DaoDomaine.loadAll();
+        Action action = new Action();
+        action.setRespOuv(DaoRessource.getRessourceByInitial(this.initial));
+        action.setRespOeu(DaoRessource.getRessourceByInitial(this.initial));
+        action.setApparaitrePlanning(true);
+        action.setCode("nouvelle action");
+        action.setCoutParJour(200);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        action.setDtDeb(sdf.parse("02/03/2017"));
+        action.setDtFinPrevue(sdf.parse("12/12/2017"));
+        action.setDomaine(doms.get(0));
+        action.setDtFinReelle(sdf.parse("12/12/2017"));
+        action.setEcartProjete(10);
+        action.setNbJoursPrevus(500);
+        action.setOrdre(2);
+        action.setResteAFaire(50);
+        action.setTarif("test");
+        action.setTypeFacturation("test");
+        action.setTypeTravail("travail");
+        action.save();
+
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
         dateSaisie = Outils.weekOfYearToDate(year,week);
-        refreshAdapter(DaoAction.loadAll());
+        refreshAdapter(DaoAction.loadActionsByDate(dateSaisie));
     }
 
 
@@ -209,37 +253,41 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void showDialog(final Action action){
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_details_action);
-        TextView phase = (TextView) dialog.findViewById(R.id.phase);
-        TextView name = (TextView) dialog.findViewById(R.id.name);
-        TextView dtDebut = (TextView) dialog.findViewById(R.id.dtDebut);
-        TextView dtFin = (TextView) dialog.findViewById(R.id.dtFin);
-        TextView nbJr = (TextView) dialog.findViewById(R.id.nbJr);
-        TextView estimation = (TextView) dialog.findViewById(R.id.estimation);
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.dialog_details_action, null, false);
+        TextView phase = (TextView) layout.findViewById(R.id.phase);
+        TextView name = (TextView) layout.findViewById(R.id.name);
+        TextView dtDebut = (TextView) layout.findViewById(R.id.dtDebut);
+        TextView dtFin = (TextView) layout.findViewById(R.id.dtFin);
+        TextView nbJr = (TextView) layout.findViewById(R.id.nbJr);
+        TextView estimation = (TextView) layout.findViewById(R.id.estimation);
         phase.setText(action.getPhase());
         name.setText(action.getCode());
-        dtDebut.setText("Date Debut : "+ action.getDtDeb());
-        dtFin.setText("Date Fin Prevue: "+ action.getDtFinPrevue());
+        SimpleDateFormat sf = new SimpleDateFormat("dd/MM/yyyy");
+        dtDebut.setText("Date Debut : "+ sf.format(action.getDtDeb()));
+        dtFin.setText("Date Fin Prevue: "+ sf.format(action.getDtFinPrevue()));
         nbJr.setText("Nombre de jour prevu : " +action.getNbJoursPrevus());
         estimation.setText("Cout par jour : "+action.getCoutParJour());
-
-        Button dialogButton = (Button) dialog.findViewById(R.id.cancel);
-        dialogButton.setOnClickListener(new View.OnClickListener() {
+        final PopupWindow popup = new PopupWindow(layout,400,400, true);
+        popup.setOutsideTouchable(true);
+        popup.setTouchable(true);
+        Drawable drawable = ContextCompat.getDrawable(ActionsActivity.this, R.drawable.background_ounded_border);
+        popup.setBackgroundDrawable(drawable);
+        popup.setTouchInterceptor(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                dialog.dismiss();
+            public boolean onTouch(View v, MotionEvent event) {
+                popup.dismiss();
+                return true;
             }
         });
-
-        dialog.show();
+        popup.showAtLocation(this.findViewById(R.id.actionRecycler), Gravity.CENTER, 0, 0);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actionmenu, menu);
+        getMenuInflater().inflate(R.menu.initial_utilisateur, menu);
+        menu.findItem(R.id.initial_utilisateur).setTitle(initial);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -257,6 +305,13 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
                 return true;
             case R.id.phase:
                 showPopUp("phase");
+                return true;
+            case R.id.initial_utilisateur:
+                return true;
+            case R.id.charger_donnees:
+                Intent intent = new Intent(ActionsActivity.this, ChargementDonnees.class);
+                intent.putExtra(EXTRA_INITIAL, (initial));
+                startActivity(intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -373,6 +428,9 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
 
         return result;
     }
+
+
+
 
 
 

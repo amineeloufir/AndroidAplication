@@ -69,10 +69,6 @@ public class Domaine extends Model {
         return this.lstActions;
     }
 
-    public ArrayList<SaisieCharge> getLstSaisieCharge() {
-        this.lstSaisieCharge = getMany(SaisieCharge.class, "domaine");
-        return this.lstSaisieCharge;
-    }
 
     @Override
     public String toString() {

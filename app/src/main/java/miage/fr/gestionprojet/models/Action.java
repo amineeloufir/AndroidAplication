@@ -135,7 +135,7 @@ public class Action extends Model{
         return nbJoursPrevus;
     }
 
-    public void setNbJoursPrevus(Float nbJoursPrevus) {
+    public void setNbJoursPrevus(float nbJoursPrevus) {
         this.nbJoursPrevus = nbJoursPrevus;
     }
 

@@ -39,9 +39,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar" />
         <activity android:name=".vues.ActivityBudget" />
-        <activity android:name=".vues.FormationsActivity"/>
-        <activity android:name=".vues.FormationActivity"
+        <activity android:name=".vues.FormationsActivity" />
+        <activity
+            android:name=".vues.FormationActivity"
             android:theme="@style/AppTheme.PopupCustomTheme" />
+        <activity android:name=".vues.ActivityMesures"></activity>
     </application>
 
 </manifest>

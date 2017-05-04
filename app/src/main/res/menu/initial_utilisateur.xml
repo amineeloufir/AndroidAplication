@@ -10,7 +10,7 @@
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            app:showAsAction="ifRoom" />
+            app:showAsAction="always" />
         <item
             android:id="@+id/charger_donnees"
             android:layout_width="fill_parent"
@@ -19,6 +19,6 @@
             android:orderInCategory="1"
             android:orientation="vertical"
             android:title=""
-            app:showAsAction="ifRoom" />
+            app:showAsAction="always" />
 
 </menu>
