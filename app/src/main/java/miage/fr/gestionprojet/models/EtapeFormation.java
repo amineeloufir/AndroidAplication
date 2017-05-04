@@ -76,4 +76,9 @@ public class EtapeFormation extends Model{
     public void setObjectifAtteint(boolean objectifAtteint) {
         this.objectifAtteint = objectifAtteint;
     }
+
+    @Override
+    public String toString() {
+        return description;
+    }
 }

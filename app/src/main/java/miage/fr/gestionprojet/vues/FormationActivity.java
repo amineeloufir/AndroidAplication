@@ -2,7 +2,6 @@ package miage.fr.gestionprojet.vues;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceGroup;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
@@ -10,10 +9,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.text.Normalizer;
-
 import miage.fr.gestionprojet.R;
+import miage.fr.gestionprojet.models.EtapeFormation;
 import miage.fr.gestionprojet.models.Formation;
+import miage.fr.gestionprojet.models.Projet;
 import miage.fr.gestionprojet.models.dao.DaoFormation;
 
 /**
@@ -67,6 +66,8 @@ public class FormationActivity extends AppCompatActivity {
         formationPreRequisProgressBar.setProgress((int) formationData.getAvancementPreRequis());
         formationObjectifProgressBar.setProgress((int) formationData.getAvancementObjectif());
         formationPostFormatProgressBar.setProgress((int) formationData.getAvancementPostFormation());
+        ArrayAdapter<EtapeFormation> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, formationData.getEtapesFormation());
+        formationDescriptionsList.setAdapter(adapter);
 
         // TODO where are formation's descriptions ?
 //        ArrayAdapter<Formation> formationDescriptionsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, formationData.getAction());
