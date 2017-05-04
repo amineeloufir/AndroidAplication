@@ -85,7 +85,7 @@ public class AdapterSaisieCharge extends ArrayAdapter<SaisieCharge>{
 
         // on affiche l'état d'avancment du travail
         DaoMesure dao = new DaoMesure();
-        Mesure mesure = dao.getLastMesureBySaisieCharge(getItem(position));
+        Mesure mesure = dao.getLastMesureBySaisieCharge(getItem(position).getId());
         holder.avancement.setProgress(Outils.calculerPourcentage(mesure.getNbUnitesMesures(),getItem(position).getNbUnitesCibles()));
 
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");

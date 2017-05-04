@@ -1,8 +1,10 @@
 package miage.fr.gestionprojet.vues;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.util.DiffUtil;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.activeandroid.Model;
@@ -17,9 +20,16 @@ import com.activeandroid.Model;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import miage.fr.gestionprojet.R;
 import miage.fr.gestionprojet.models.Projet;
+import miage.fr.gestionprojet.models.dao.DaoAction;
+import miage.fr.gestionprojet.models.dao.DaoFormation;
+import miage.fr.gestionprojet.models.dao.DaoProjet;
+import miage.fr.gestionprojet.models.dao.DaoSaisieCharge;
+import miage.fr.gestionprojet.outils.Outils;
 
 public class ActivityDetailsProjet extends AppCompatActivity {
 
@@ -50,12 +60,9 @@ public class ActivityDetailsProjet extends AppCompatActivity {
 
             // on récupère les différents élements de la vue
             TextView txtNomProj = (TextView) findViewById(R.id.textViewNomProjet);
-            TextView txtDatesProjet = (TextView) findViewById(R.id.textViewDtProjet);
 
             // on alimente ces différents éléments
             txtNomProj.setText(proj.getNom());
-            DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-            txtDatesProjet.setText(df.format(proj.getDateDebut()) + "-" + df.format(proj.getDateFinInitiale()));
 
             // on constitue une liste d'action
             liste = (ListView) findViewById(R.id.listViewAction);
@@ -92,21 +99,25 @@ public class ActivityDetailsProjet extends AppCompatActivity {
                         case 3:
                             intent = new Intent(ActivityDetailsProjet.this, ActivityBudget.class);
                             intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
+                            intent.putExtra(PROJET, proj.getId());
                             startActivity(intent);
-                            break;
-                        default:
-                            System.out.println("Non instancié pour le moment");
                             break;
 
                     }
 
-                    //intent.putExtra(PROJET, proj.getId());
-                    //startActivity(intent);
                 }
             });
 
-            final Button button = (Button) findViewById(R.id.btnActions);
-            button.setOnClickListener(new View.OnClickListener() {
+            //avancement du projet
+            ProgressBar progress = (ProgressBar) findViewById(R.id.progressBarProjet);
+            int nbActionsRealise = DaoAction.getActionRealiseesByProjet(this.proj.getId()).size();
+            int nbActions = DaoAction.getAllActionsByProjet(this.proj.getId()).size();
+            int ratioBudget = Outils.calculerPourcentage(nbActionsRealise,nbActions);
+            progress.setProgress(ratioBudget);
+
+            //action lors du clic sur le bouton action
+            final Button buttonSaisies = (Button) findViewById(R.id.btnSaisies);
+            buttonSaisies.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = new Intent(ActivityDetailsProjet.this, ActivityIndicateursSaisieCharge.class);
                     intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
@@ -115,6 +126,64 @@ public class ActivityDetailsProjet extends AppCompatActivity {
                 }
             });
 
+            //action lors du clic sur le bouton formation
+            final Button buttonFormations = (Button) findViewById(R.id.btnFormations);
+            buttonFormations.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent intent = new Intent(ActivityDetailsProjet.this, FormationsActivity.class);
+                    intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
+                    startActivity(intent);
+                }
+            });
+
+            //action lors du clic sur le bouton budget
+            final Button buttonBudget = (Button) findViewById(R.id.btnBudget);
+            buttonBudget.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent intent = new Intent(ActivityDetailsProjet.this, ActivityBudget.class);
+                    intent.putExtra(EXTRA_INITIAL,initialUtilisateur);
+                    intent.putExtra(PROJET, proj.getId());
+                    startActivity(intent);
+                }
+            });
+
+            //proportion de durée
+            Date dateFin = DaoProjet.getDateFin(this.proj.getId());
+            long dureeRestante = Outils.dureeEntreDeuxDate(Calendar.getInstance().getTime(),dateFin);
+            long dureeTotal = Outils.dureeEntreDeuxDate(DaoProjet.getDateDebut(this.proj.getId()),DaoProjet.getDateFin(this.proj.getId()));
+            int ratioDuree  = Outils.calculerPourcentage(dureeRestante,dureeTotal);
+
+            //détermination de la couleur du bouton budget en fonction du temps restant et du nombre d'actions déjà réalisées
+            if(ratioDuree<100-ratioBudget){
+                buttonBudget.setBackgroundColor(Color.RED);
+            }else if(ratioDuree>100-ratioBudget){
+                buttonBudget.setBackgroundColor(Color.GREEN);
+            }else{
+                buttonBudget.setBackgroundColor(Color.YELLOW);
+            }
+
+            //détermination de la couleur du bouton formation
+            float avancementTotalFormation = DaoFormation.getAvancementTotal(this.proj.getId());
+            int ratioFormation = Outils.calculerPourcentage(avancementTotalFormation,100);
+            if(ratioDuree<100-ratioFormation){
+                buttonFormations.setBackgroundColor(Color.RED);
+            }else if(ratioDuree>100-ratioFormation){
+                buttonFormations.setBackgroundColor(Color.GREEN);
+            }else{
+                buttonFormations.setBackgroundColor(Color.YELLOW);
+            }
+
+            //détermination de la couleur du bouton action
+            int nbUniteesSaisies = DaoSaisieCharge.getNbUnitesSaisies(this.proj.getId());
+            int nbUniteesCibles = DaoSaisieCharge.getNbUnitesCibles(this.proj.getId());
+            int ratioSaisies = Outils.calculerPourcentage(nbUniteesSaisies,nbUniteesCibles);
+            if(ratioDuree<100-ratioSaisies){
+                buttonSaisies.setBackgroundColor(Color.RED);
+            }else if(ratioDuree>100-ratioSaisies){
+                buttonSaisies.setBackgroundColor(Color.GREEN);
+            }else{
+                buttonSaisies.setBackgroundColor(Color.YELLOW);
+            }
         }
 
     }
