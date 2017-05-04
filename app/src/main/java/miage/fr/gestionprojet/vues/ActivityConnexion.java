@@ -223,7 +223,7 @@ public class ActivityConnexion extends AppCompatActivity implements GoogleApiCli
             is_signInBtn_clicked = true;
             progress_dialog.show();
             resolveSignInError();
-            Intent intent = new Intent(ActivityConnexion.this,ActivityGestionDesInitials.class);
+            Intent intent = new Intent(ActivityConnexion.this,ChargementDonnees.class);
             startActivity(intent);
 
         }

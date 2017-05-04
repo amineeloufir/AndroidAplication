@@ -19,6 +19,14 @@ import miage.fr.gestionprojet.models.Action;
  */
 
 public class DaoAction {
+    public static List<Action> loadActionsByCode(String code) {
+        //getAll
+        List<Action> actions = new Select()
+                .from(Action.class)
+                .where("code=?",code)
+                .execute();
+        return actions;
+    }
 
     public static List<Action> loadActionsByType(String type) {
         List<Action> actions = new Select().from(Action.class)

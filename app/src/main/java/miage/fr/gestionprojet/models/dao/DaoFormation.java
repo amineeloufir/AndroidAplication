@@ -52,4 +52,10 @@ public class DaoFormation {
         // TODO replace when data will be loaded
 //        return new Select().from(Formation.class).where("Id = ?", id).executeSingle();
     }
+    public static List<Formation> loadAll() {
+        List<Formation> formations= new Select().from(Formation.class).execute();
+        return formations;
+
+    }
+
 }
