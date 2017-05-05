@@ -80,11 +80,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
             e.printStackTrace();
             finish();
         }
-        try {
-            insererDateFictive();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Calendar c = Calendar.getInstance();
         week = c.get(Calendar.WEEK_OF_YEAR);
@@ -164,31 +160,7 @@ public class ActionsActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
-    private void insererDateFictive() throws ParseException {
-        Projet proj = Model.load(Projet.class,idProjet);
-       List<Domaine> doms = proj.getLstDomaines();
-        Action action = new Action();
-        action.setRespOuv(DaoRessource.getRessourceByInitial(this.initial));
-        action.setRespOeu(DaoRessource.getRessourceByInitial(this.initial));
-        action.setApparaitrePlanning(true);
-        action.setCode("nouvelle action");
-        action.setCoutParJour(200);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        action.setDtDeb(sdf.parse("02/03/2017"));
-        action.setDtFinPrevue(sdf.parse("12/12/2017"));
-        action.setDomaine(doms.get(0));
-        action.setDtFinReelle(sdf.parse("12/12/2017"));
-        action.setEcartProjete(10);
-        action.setNbJoursPrevus(500);
-        action.setOrdre(2);
-        action.setResteAFaire(50);
-        action.setTarif("test");
-        action.setTypeFacturation("test");
-        action.setTypeTravail("travail");
-        action.setPhase("1");
-        action.save();
 
-    }
 
     @Override
     protected void onStart() {

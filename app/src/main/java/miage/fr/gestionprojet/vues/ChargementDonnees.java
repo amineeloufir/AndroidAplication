@@ -883,7 +883,7 @@ public class ChargementDonnees extends Activity implements EasyPermissions.Permi
             }
             Intent intentInitial = getIntent();
             String initialUtilisateur = intentInitial.getStringExtra(ActivityGestionDesInitials.EXTRA_INITIAL);
-            Intent intent = new Intent(ChargementDonnees.this, MainActivity.class);
+            Intent intent = new Intent(ChargementDonnees.this,ActivityGestionDesInitials.class);
             intent.putExtra(ActivityGestionDesInitials.EXTRA_INITIAL, initialUtilisateur);
             startActivity(intent);
         }
